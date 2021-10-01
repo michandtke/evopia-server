@@ -6,6 +6,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @EnableWebSecurity
 public class MemorySecurityConfiguration extends WebSecurityConfigurerAdapter {
+    protected MemorySecurityConfiguration() {
+        super();
+    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
