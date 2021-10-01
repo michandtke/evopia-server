@@ -1,5 +1,8 @@
 package de.mwa.evopiaserver;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -25,6 +28,8 @@ public class MemorySecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                .and().passwordEncoder(new BCryptPasswordEncoder());
 //    }
 
+    private static final Log logger = LogFactory.getLog(MemorySecurityConfiguration.class);
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
@@ -44,7 +49,7 @@ public class MemorySecurityConfiguration extends WebSecurityConfigurerAdapter {
         users.put("emma","emma,boss,enabled"); //add whatever other user you need
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager(users);
         UserDetails emma = manager.loadUserByUsername("emma");
-        System.out.println("What about emma? " + emma.getPassword());
+        logger.info("What about emma? " + emma.getPassword());
         return manager;
     }
 }
