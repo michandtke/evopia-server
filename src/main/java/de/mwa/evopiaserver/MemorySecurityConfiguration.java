@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
@@ -41,6 +42,9 @@ public class MemorySecurityConfiguration extends WebSecurityConfigurerAdapter {
     public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
         final Properties users = new Properties();
         users.put("emma","emma,boss,enabled"); //add whatever other user you need
-        return new InMemoryUserDetailsManager(users);
+        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager(users);
+        UserDetails emma = manager.loadUserByUsername("emma");
+        System.out.println("What about emma? " + emma.getPassword());
+        return manager;
     }
 }
