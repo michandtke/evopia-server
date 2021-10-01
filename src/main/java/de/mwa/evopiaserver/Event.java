@@ -23,18 +23,8 @@ public class Event {
     private String time;
     private String place;
     private String tags;
-    private String rebuild = "";
 
     public Event() {}
-
-    public Event(String name, String description, String date, String time, String place, String tags) {
-        this.name = name;
-        this.description = description;
-        this.date = date;
-        this.time = time;
-        this.place = place;
-        this.tags = tags;
-    }
 
     @Override
     public boolean equals(Object o) {
