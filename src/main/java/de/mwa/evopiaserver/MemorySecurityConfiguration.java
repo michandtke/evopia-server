@@ -17,10 +17,7 @@ public class MemorySecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .inMemoryAuthentication()
                 .withUser("emma")
                     .password("emma")
-                    .roles("boss", "dev")
-                .and()
-                .withUser("chris")
-                    .roles("dev");
+                    .roles("boss", "dev");
     }
 
     @Override
