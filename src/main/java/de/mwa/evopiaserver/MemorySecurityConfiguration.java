@@ -46,10 +46,10 @@ public class MemorySecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
         final Properties users = new Properties();
-        users.put("emma","emma,boss,enabled"); //add whatever other user you need
+        users.put("emma","emma,ROLE_boss,enabled"); //add whatever other user you need
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager(users);
         UserDetails emma = manager.loadUserByUsername("emma");
-        logger.info("What about emma? " + emma.getPassword());
+        logger.info("What about emma? " + emma.toString());
         return manager;
     }
 }
