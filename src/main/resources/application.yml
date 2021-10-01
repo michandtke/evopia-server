@@ -1,16 +1,9 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    ##url: "jdbc:postgresql://localhost:5432/postgres"
     url: "${spring.datasource.url}"
-    ##username: postgres
-    ##password: postgres
     username: "${spring.datasource.username}"
     password: "${spring.datasource.password}"
-
-    ##serverName = "ec2-54-91-188-254.compute-1.amazonaws.com"
-    ##portNumber = "5432"
-    ##databaseName = "daicvbkb3r86p2"
