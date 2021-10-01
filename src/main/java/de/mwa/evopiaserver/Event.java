@@ -23,6 +23,7 @@ public class Event {
     private String time;
     private String place;
     private String tags;
+    private String rebuild = "";
 
     public Event() {}
 
