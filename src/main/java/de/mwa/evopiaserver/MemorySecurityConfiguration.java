@@ -11,17 +11,17 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 //@EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableWebSecurity
 public class MemorySecurityConfiguration extends WebSecurityConfigurerAdapter {
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth
-//                .inMemoryAuthentication()
-//                .withUser("emma")
-//                    .password("emma")
-//                    .roles("boss", "dev")
-//                .and()
-//                .withUser("chris")
-//                    .roles("dev");
-//    }
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+                .inMemoryAuthentication()
+                .withUser("emma")
+                    .password("emma")
+                    .roles("boss", "dev")
+                .and()
+                .withUser("chris")
+                    .roles("dev");
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
