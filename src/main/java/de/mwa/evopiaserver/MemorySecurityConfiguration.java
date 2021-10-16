@@ -16,12 +16,12 @@ public class MemorySecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/events").hasAnyRole("boss", "dev")
-                .antMatchers("/events/*").hasRole("boss")
-                .antMatchers("/event").hasAnyRole("boss", "dev")
-                .antMatchers("/event/*").hasRole("boss")
-                .antMatchers("/").permitAll().and().httpBasic();
+//        http.authorizeRequests()
+//                .antMatchers("/events").hasAnyRole("boss", "dev")
+//                .antMatchers("/events/*").hasRole("boss")
+//                .antMatchers("/event").hasAnyRole("boss", "dev")
+//                .antMatchers("/event/*").hasRole("boss")
+//                .antMatchers("/").permitAll().and().httpBasic();
     }
 
     @Override
