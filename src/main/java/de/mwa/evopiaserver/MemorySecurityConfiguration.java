@@ -22,6 +22,7 @@ public class MemorySecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/event").hasAnyRole("boss", "dev")
 //                .antMatchers("/event/*").hasRole("boss")
 //                .antMatchers("/").permitAll().and().httpBasic();
+        http.csrf().disable().cors().and().authorizeRequests().anyRequest().permitAll();
     }
 
     @Override
