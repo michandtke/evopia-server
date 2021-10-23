@@ -23,6 +23,7 @@ public class Event {
     private String time;
     private String place;
     private String tags;
+    private String image;
 
     public Event() {}
 
@@ -37,11 +38,12 @@ public class Event {
                 Objects.equals(date, event.date) &&
                 Objects.equals(time, event.time) &&
                 Objects.equals(place, event.place) &&
-                Objects.equals(tags, event.tags);
+                Objects.equals(tags, event.tags) &&
+                Objects.equals(image, event.image) ;
     }
 
     @Override
     public int hashCode() {
-        return 0;
+        return Objects.hash(id, name, description, date, time, place, tags, image);
     }
 }
