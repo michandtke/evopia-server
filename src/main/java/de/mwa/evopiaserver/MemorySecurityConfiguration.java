@@ -1,5 +1,7 @@
 package de.mwa.evopiaserver;
 
+import de.mwa.evopiaserver.registration.service.MyUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,6 +16,10 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @EnableWebSecurity
 public class MemorySecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    MyUserDetailsService userDetailsService;
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -25,7 +31,7 @@ public class MemorySecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService());
+        auth.userDetailsService(userDetailsService);
     }
 
     @Bean
