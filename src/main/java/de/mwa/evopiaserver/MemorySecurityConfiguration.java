@@ -28,25 +28,25 @@ public class MemorySecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                        "/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
 //                        "/badUser*", "/user/resendRegistrationToken*" ,"/forgetPassword*", "/user/resetPassword*","/user/savePassword*","/updatePassword*",
 //                        "/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/qrcode*","/user/enableNewLoc*").permitAll()
-                .antMatchers("/events").hasAnyRole("boss", "dev")
-                .antMatchers("/events/*").hasRole("boss")
+//                .antMatchers("/events").hasAnyRole("boss", "dev")
+//                .antMatchers("/events/*").hasRole("boss")
                 .antMatchers("/").permitAll().and().httpBasic();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService);
     }
 
 //    @Override
 //    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userDetailsService);
+//        auth.userDetailsService(userDetailsService());
 //    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService());
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withDefaultPasswordEncoder().username("emma").password("emmaisboss").roles("boss").build());
-        return manager;
-    }
+//
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+//        manager.createUser(User.withDefaultPasswordEncoder().username("emma").password("emmaisboss").roles("boss").build());
+//        return manager;
+//    }
 }
