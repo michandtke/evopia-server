@@ -24,14 +24,23 @@ public class MemorySecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.csrf().disable().cors().and().authorizeRequests()
+//                .antMatchers("/login*", "/logout*", "/signin/**", "/signup/**", "/customLogin",
+//                        "/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
+//                        "/badUser*", "/user/resendRegistrationToken*" ,"/forgetPassword*", "/user/resetPassword*","/user/savePassword*","/updatePassword*",
+//                        "/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/qrcode*","/user/enableNewLoc*").permitAll()
                 .antMatchers("/events").hasAnyRole("boss", "dev")
                 .antMatchers("/events/*").hasRole("boss")
                 .antMatchers("/").permitAll().and().httpBasic();
     }
 
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(userDetailsService);
+//    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
+        auth.userDetailsService(userDetailsService());
     }
 
     @Bean
