@@ -13,6 +13,9 @@ public class UserService implements IUserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @Override
     public User registerNewUserAccount(UserDto userDto) throws UserAlreadyExistsException {
         if (emailExists(userDto.getEmail())) {
@@ -28,9 +31,9 @@ public class UserService implements IUserService {
         user.setLastName(userDto.getLastName());
         user.setPassword(userDto.getPassword());
         user.setEmail(userDto.getEmail());
-        user.setRoles(List.of(userRole));
+        user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
 
-        return null;
+        return userRepository.save(user);
     }
 
     private boolean emailExists(String email) {

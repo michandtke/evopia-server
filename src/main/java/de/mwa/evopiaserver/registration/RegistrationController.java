@@ -18,14 +18,14 @@ public class RegistrationController {
     @Autowired
     IUserService userService;
 
-    @GetMapping("/user/registration")
+    @GetMapping("/old/user/registration")
     public String showRegistrationForm(WebRequest request, Model model) {
         UserDto userDto = new UserDto();
         model.addAttribute("user", userDto);
         return "registration";
     }
 
-    @PostMapping("/user/registration")
+    @PostMapping("/old/user/registration")
     public ModelAndView registerUserAccount(@ModelAttribute("user") @Valid UserDto userDto,
                                             HttpServletRequest request, Errors errors) {
         ModelAndView mav = new ModelAndView();

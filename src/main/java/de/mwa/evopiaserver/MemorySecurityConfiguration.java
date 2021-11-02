@@ -27,9 +27,11 @@ public class MemorySecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/login*", "/logout*", "/signin/**", "/signup/**", "/customLogin",
 //                        "/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
 //                        "/badUser*", "/user/resendRegistrationToken*" ,"/forgetPassword*", "/user/resetPassword*","/user/savePassword*","/updatePassword*",
-//                        "/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/qrcode*","/user/enableNewLoc*").permitAll()
+//                        "/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/qrcode*","/user/enableNewLoc*",
+//                        "/user/registration*").permitAll()
 //                .antMatchers("/events").hasAnyRole("boss", "dev")
 //                .antMatchers("/events/*").hasRole("boss")
+                .antMatchers("/user/registration").permitAll()
                 .antMatchers("/").permitAll().and().httpBasic();
     }
 
