@@ -88,8 +88,8 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             user = new User();
             user.setFirstName(firstName);
             user.setLastName(lastName);
-            user.setPassword(passwordEncoder.encode(password));
-//            user.setPassword(password);
+            String encode = passwordEncoder.encode(password);
+            user.setPassword(encode);
             user.setEmail(email);
 //            user.setEnabled(true);
         }
