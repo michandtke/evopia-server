@@ -1,6 +1,4 @@
-package de.mwa.evopiaserver.adjusted_registration;
-
-import de.mwa.evopiaserver.registration.Role;
+package de.mwa.evopiaserver.registration;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -25,8 +23,6 @@ public class Privilege {
         super();
         this.name = name;
     }
-
-    //
 
     public Long getId() {
         return id;

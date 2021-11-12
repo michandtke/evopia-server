@@ -1,6 +1,5 @@
 package de.mwa.evopiaserver.registration;
 
-import de.mwa.evopiaserver.adjusted_registration.Privilege;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

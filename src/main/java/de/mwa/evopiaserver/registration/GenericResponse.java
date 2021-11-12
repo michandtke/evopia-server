@@ -1,4 +1,4 @@
-package de.mwa.evopiaserver.adjusted_registration;
+package de.mwa.evopiaserver.registration;
 
 import lombok.Getter;
 import lombok.Setter;

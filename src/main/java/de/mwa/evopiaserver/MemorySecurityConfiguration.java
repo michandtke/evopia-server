@@ -27,13 +27,6 @@ public class MemorySecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.csrf().disable().cors().and().authorizeRequests()
-//                .antMatchers("/login*", "/logout*", "/signin/**", "/signup/**", "/customLogin",
-//                        "/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
-//                        "/badUser*", "/user/resendRegistrationToken*" ,"/forgetPassword*", "/user/resetPassword*","/user/savePassword*","/updatePassword*",
-//                        "/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/qrcode*","/user/enableNewLoc*",
-//                        "/user/registration*").permitAll()
-//                .antMatchers("/events").hasAnyRole("boss", "dev")
-//                .antMatchers("/events/*").hasRole("boss")
                 .antMatchers("/user/registration").permitAll()
                 .antMatchers("/events*").hasAnyRole("boss", "dev", "USER")
                 .antMatchers("/").permitAll().and().httpBasic();
@@ -48,16 +41,4 @@ public class MemorySecurityConfiguration extends WebSecurityConfigurerAdapter {
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder(11);
     }
-
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userDetailsService());
-//    }
-//
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-//        manager.createUser(User.withDefaultPasswordEncoder().username("emma").password("emmaisboss").roles("boss").build());
-//        return manager;
-//    }
 }

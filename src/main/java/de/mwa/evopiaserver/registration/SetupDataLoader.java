@@ -1,10 +1,6 @@
-package de.mwa.evopiaserver.adjusted_registration;
+package de.mwa.evopiaserver.registration;
 
 
-import de.mwa.evopiaserver.registration.Role;
-import de.mwa.evopiaserver.registration.RoleRepository;
-import de.mwa.evopiaserver.registration.User;
-import de.mwa.evopiaserver.registration.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;

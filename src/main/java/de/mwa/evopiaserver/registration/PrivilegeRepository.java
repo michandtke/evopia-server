@@ -1,4 +1,4 @@
-package de.mwa.evopiaserver.adjusted_registration;
+package de.mwa.evopiaserver.registration;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
