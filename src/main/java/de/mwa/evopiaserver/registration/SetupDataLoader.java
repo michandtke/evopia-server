@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
@@ -25,9 +24,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private RoleRepository roleRepository;
 
     @Autowired
-    private PrivilegeRepository privilegeRepository;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     // API
@@ -39,16 +35,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             return;
         }
 
-        // == create initial privileges
-        final Privilege readPrivilege = createPrivilegeIfNotFound("READ_PRIVILEGE");
-        final Privilege writePrivilege = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
-        final Privilege passwordPrivilege = createPrivilegeIfNotFound("CHANGE_PASSWORD_PRIVILEGE");
-
         // == create initial roles
-        final List<Privilege> adminPrivileges = new ArrayList<>(Arrays.asList(readPrivilege, writePrivilege, passwordPrivilege));
-        final List<Privilege> userPrivileges = new ArrayList<>(Arrays.asList(readPrivilege, passwordPrivilege));
-        final Role adminRole = createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
-        final Role userRole = createRoleIfNotFound("ROLE_USER", userPrivileges);
+        final Role adminRole = createRoleIfNotFound("ROLE_ADMIN");
+        final Role userRole = createRoleIfNotFound("ROLE_USER");
 
         // == create initial user
         createUserIfNotFound("test@test.com", "Test", "Test", "test", new ArrayList<>(Arrays.asList(adminRole, userRole)));
@@ -57,22 +46,11 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     }
 
     @Transactional
-    Privilege createPrivilegeIfNotFound(final String name) {
-        Privilege privilege = privilegeRepository.findByName(name);
-        if (privilege == null) {
-            privilege = new Privilege(name);
-            privilege = privilegeRepository.save(privilege);
-        }
-        return privilege;
-    }
-
-    @Transactional
-    Role createRoleIfNotFound(final String name, final Collection<Privilege> privileges) {
+    Role createRoleIfNotFound(final String name) {
         Role role = roleRepository.findByName(name);
         if (role == null) {
             role = new Role(name);
         }
-        role.setPrivileges(privileges);
         role = roleRepository.save(role);
         return role;
     }
