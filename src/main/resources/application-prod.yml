@@ -7,6 +7,8 @@ spring:
     url: "${spring.datasource.url}"
     username: "${spring.datasource.username}"
     password: "${spring.datasource.password}"
+  liquibase:
+    change-log: db/changelog/db.changelog-master.yaml
 #logging:
 #  level:
 #    org:

@@ -14,11 +14,11 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @ToString
-@Table(name = "user_account")
+@Table(name = "useraccount")
 public class User {
     @Id
     @Column(unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
     private String lastName;
@@ -27,7 +27,7 @@ public class User {
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name="user_roles",
+    @JoinTable(name="userroles",
             joinColumns = @JoinColumn(name="user_id",referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
