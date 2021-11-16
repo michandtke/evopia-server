@@ -1,6 +1,6 @@
 create table useraccount
 (
-    id                   bigserial   not null auto_increment,
+    id                   bigserial   not null,
     first_name           varchar(50) not null,
     last_name            varchar(50) not null,
     date_of_registration varchar(50),
@@ -11,7 +11,7 @@ create table useraccount
 
 create table role
 (
-    id   bigserial   not null auto_increment,
+    id   bigserial   not null,
     name varchar(50) not null,
     primary key (id)
 );
@@ -25,7 +25,7 @@ create table userroles
 
 create table event
 (
-    id          bigserial    not null auto_increment,
+    id          bigserial    not null,
     name        varchar(255) not null,
     description varchar(1048),
     date        varchar(255) not null,
@@ -34,4 +34,4 @@ create table event
     tags        varchar(255) not null,
     image       varchar(255),
     primary key (id)
-)
+);
