@@ -1,8 +1,12 @@
 spring:
   jpa:
+    show-sql: true
     hibernate:
       ddl-auto: create
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        format_sql: true
   datasource:
     url: "${spring.datasource.url}"
     username: "${spring.datasource.username}"
