@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
-public class ProfileController {
+public class ProfileRestController {
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     @Autowired
