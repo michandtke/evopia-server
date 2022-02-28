@@ -33,7 +33,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
 
-    @OneToOne(mappedBy = "userId")
+    @OneToOne(mappedBy = "user_id")
     private Profile profile;
 
     @Override
