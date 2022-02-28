@@ -17,7 +17,7 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     @OneToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
     private String image;
     private String tags;
