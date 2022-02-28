@@ -1,5 +1,6 @@
 package de.mwa.evopiaserver.registration;
 
+import de.mwa.evopiaserver.profile.Profile;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,10 +28,13 @@ public class User {
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name="userroles",
-            joinColumns = @JoinColumn(name="user_id",referencedColumnName = "id"),
+    @JoinTable(name = "userroles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
+
+    @OneToOne(mappedBy = "userId")
+    private Profile profile;
 
     @Override
     public boolean equals(Object o) {
@@ -42,11 +46,12 @@ public class User {
                 && Objects.equals(lastName, user.lastName)
                 && Objects.equals(dateOfRegistration, user.dateOfRegistration)
                 && Objects.equals(email, user.email)
-                && Objects.equals(password, user.password);
+                && Objects.equals(password, user.password)
+                && Objects.equals(profile, user.profile);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, dateOfRegistration, email, password);
+        return Objects.hash(id, firstName, lastName, dateOfRegistration, email, password, profile);
     }
 }
