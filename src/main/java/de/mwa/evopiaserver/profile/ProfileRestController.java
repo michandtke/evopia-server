@@ -45,7 +45,7 @@ public class ProfileRestController {
 
     @GetMapping("/profile")
     public Profile getProfile(@PathVariable String email) {
-        return profileRepository.findByEmail(email);
+        return userRepository.findByEmail(email).getProfile();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
