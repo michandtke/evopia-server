@@ -22,7 +22,7 @@ public class ProfileRestController {
     @Autowired
     private UserRepository userRepository;
 
-    @PostMapping("/profile")
+    @PostMapping("/register/profile")
     public GenericResponse registerProfile(@RequestBody @Valid NewProfile newProfile,
                                            final HttpServletRequest request) {
         LOGGER.info("Trying to register a new profile: " + newProfile.toString());
