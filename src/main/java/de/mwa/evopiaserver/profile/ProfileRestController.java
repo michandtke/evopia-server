@@ -44,8 +44,7 @@ public class ProfileRestController {
     }
 
     @GetMapping("/profile")
-    public GenericResponse getProfile(@PathVariable String email,
-                              final HttpServletRequest request) {
+    public GenericResponse getProfile(final HttpServletRequest request) {
         LOGGER.info("Trying to get the profile for "+ request.getRemoteUser());
         LOGGER.info("Trying to get the profile for "+ request.getParameterNames());
 //        return userRepository.findByEmail(email).getProfile();
