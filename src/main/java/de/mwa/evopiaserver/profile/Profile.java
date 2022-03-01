@@ -1,5 +1,6 @@
 package de.mwa.evopiaserver.profile;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.mwa.evopiaserver.registration.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,7 @@ public class Profile {
     private @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
