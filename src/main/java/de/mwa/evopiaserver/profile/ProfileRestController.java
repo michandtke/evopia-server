@@ -43,6 +43,11 @@ public class ProfileRestController {
         return new GenericResponse("success as id : " + saved.getId());
     }
 
+    @GetMapping("/profile")
+    public Profile getProfile(@PathVariable String email) {
+        return profileRepository.findByEmail(email);
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationExceptions(
