@@ -45,6 +45,7 @@ public class ProfileRestController {
 
     @GetMapping("/profile")
     public Profile getProfile(@PathVariable String email) {
+        LOGGER.info("Trying to get the profile for "+ email);
         return userRepository.findByEmail(email).getProfile();
     }
 
