@@ -3,6 +3,7 @@ package de.mwa.evopiaserver.profile;
 
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -12,12 +13,12 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewProfile {
-    @NotNull
+    @NotBlank
     private String email;
-    @NotNull
+    @NotBlank
     private String image;
-    @NotNull
+    @NotBlank
     private String tags;
-    @NotNull
+    @NotBlank
     private String channels;
 }
