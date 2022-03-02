@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -22,7 +23,12 @@ public class Profile {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
     private String image;
-    private String tags;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "profiletags",
+            joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
+    private List<Tag> tags;
     private String channels;
 
     public Profile() {
@@ -34,14 +40,14 @@ public class Profile {
         if (o == null || getClass() != o.getClass()) return false;
         Profile profile = (Profile) o;
         return Objects.equals(id, profile.id)
+                && Objects.equals(user, profile.user)
                 && Objects.equals(image, profile.image)
                 && Objects.equals(tags, profile.tags)
-                && Objects.equals(channels, profile.channels)
-                && Objects.equals(user, profile.user);
+                && Objects.equals(channels, profile.channels);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, image, tags, channels, user);
+        return Objects.hash(id, user, image, tags, channels);
     }
 }
