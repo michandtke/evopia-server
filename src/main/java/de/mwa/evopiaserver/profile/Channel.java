@@ -13,13 +13,13 @@ import java.util.Objects;
 @Setter
 @ToString(exclude = "profiles")
 @Entity
-public class Tag {
+public class Channel {
     private @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     private String name;
 
-    @ManyToMany(mappedBy = "tags")
+    @ManyToMany(mappedBy = "channels")
     @JsonIgnore
     private Collection<Profile> profiles;
 
@@ -27,10 +27,10 @@ public class Tag {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Tag tag = (Tag) o;
-        return Objects.equals(id, tag.id)
-                && Objects.equals(name, tag.name)
-                && Objects.equals(profiles, tag.profiles);
+        Channel channel = (Channel) o;
+        return Objects.equals(id, channel.id)
+                && Objects.equals(name, channel.name)
+                && Objects.equals(profiles, channel.profiles);
     }
 
     @Override

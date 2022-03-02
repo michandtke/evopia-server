@@ -12,7 +12,7 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "user")
 @Entity
 public class Profile {
     private @Id
@@ -29,7 +29,12 @@ public class Profile {
             joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
     private List<Tag> tags;
-    private String channels;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "profilechannels",
+            joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "channel_id", referencedColumnName = "id"))
+    private List<Channel> channels;
 
     public Profile() {
     }

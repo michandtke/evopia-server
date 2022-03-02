@@ -17,6 +17,8 @@ public class ProfileControllerIntegrationTest {
 
     private ProfileRepository profileRepositoryMock;
     private UserRepository userRepositoryMock;
+    private TagRepository tagRepositoryMock;
+    private ChannelRepository channelRepositoryMock;
 
     ProfileRestController profileController;
 
@@ -25,7 +27,10 @@ public class ProfileControllerIntegrationTest {
     ProfileControllerIntegrationTest() {
         profileRepositoryMock = Mockito.mock(ProfileRepository.class);
         userRepositoryMock = Mockito.mock(UserRepository.class);
-        profileController = new ProfileRestController(profileRepositoryMock, userRepositoryMock);
+        tagRepositoryMock = Mockito.mock(TagRepository.class);
+        channelRepositoryMock = Mockito.mock(ChannelRepository.class);
+
+        profileController = new ProfileRestController(profileRepositoryMock, userRepositoryMock, tagRepositoryMock, channelRepositoryMock);
         mockMvc = MockMvcBuilders
                 .standaloneSetup(profileController)
                 .build();

@@ -4,6 +4,7 @@ package de.mwa.evopiaserver.profile;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -13,12 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewProfile {
-    @NotBlank(message = "Email is mandatory.")
     private String email;
     @NotBlank(message = "Image is mandatory.")
     private String image;
-    @NotBlank(message = "Tags are mandatory.")
+    @NotNull(message = "Tags are mandatory.")
     private List<Tag> tags;
-    @NotBlank(message = "Channels are mandatory.")
-    private String channels;
+    @NotNull(message = "Channels are mandatory.")
+    private List<Channel> channels;
 }
