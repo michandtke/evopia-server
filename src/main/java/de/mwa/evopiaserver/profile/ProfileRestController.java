@@ -39,6 +39,7 @@ public class ProfileRestController {
                                            final HttpServletRequest request) {
         LOGGER.info("Trying to register a new profile: " + newProfile.toString());
         var currentUser = getEmail(request);
+        LOGGER.info("Current user: " + currentUser);
         var newChannelNames = newProfile.getChannels().stream().map(Channel::getName).collect(Collectors.toList());
         var newTagNames = newProfile.getTags().stream().map(Tag::getName).collect(Collectors.toList());
         var user = userRepository.findByEmail(currentUser);

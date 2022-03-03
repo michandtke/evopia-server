@@ -28,9 +28,8 @@ public class MemorySecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable().cors().and().authorizeRequests()
                 .antMatchers("/user/registration").permitAll()
-                .antMatchers("/events*").hasAnyRole("boss", "dev", "USER")
-                .antMatchers("/profile*").hasAnyRole("boss", "dev", "USER")
-                .antMatchers("/").permitAll().and().httpBasic();
+                .antMatchers("/**").hasAnyRole("boss", "dev", "USER")
+                .and().httpBasic();
     }
 
     @Override
