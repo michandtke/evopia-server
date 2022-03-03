@@ -8,6 +8,6 @@ create table if not exists tag
 create table if not exists profiletags
 (
     profile_id int not null references profile (id),
-    tag_id int not null references tags (id),
+    tag_id int not null references tag (id),
     primary key (profile_id, tag_id)
 );
