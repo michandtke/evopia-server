@@ -1,8 +1,3 @@
-alter table tags
-RENAME COLUMN channels TO name;
-
-alter table tags
-DROP COLUMN profile_ids;
 
 alter table profile
 DROP COLUMN tags;
@@ -23,5 +18,3 @@ create table if not exists profilechannels
     channel_id int not null references channel (id),
     primary key (profile_id, channel_id)
 );
-
-ALTER TABLE tags RENAME TO tag;

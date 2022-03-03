@@ -1,8 +1,7 @@
-create table if not exists tags
+create table if not exists tag
 (
     id          bigserial      not null,
-    profile_ids varchar(255)   not null,
-    channels    varchar(1048)  not null,
+    name        varchar(255)   not null,
     primary key (id)
 );
 
