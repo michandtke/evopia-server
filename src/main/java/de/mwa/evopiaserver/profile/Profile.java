@@ -30,11 +30,8 @@ public class Profile {
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
     private List<Tag> tags;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "profilechannels",
-            joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "channel_id", referencedColumnName = "id"))
-    private List<Channel> channels;
+    @OneToMany(mappedBy = "profileId")
+    private List<ProfileChannel> profileChannels;
 
     public Profile() {
     }
@@ -48,11 +45,11 @@ public class Profile {
                 && Objects.equals(user, profile.user)
                 && Objects.equals(image, profile.image)
                 && Objects.equals(tags, profile.tags)
-                && Objects.equals(channels, profile.channels);
+                && Objects.equals(profileChannels, profile.profileChannels);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, image, tags, channels);
+        return Objects.hash(id, user, image, tags, profileChannels);
     }
 }

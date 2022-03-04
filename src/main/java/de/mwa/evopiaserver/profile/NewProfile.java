@@ -6,6 +6,7 @@ import lombok.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -19,6 +20,6 @@ public class NewProfile {
     private String image;
     @NotNull(message = "Tags are mandatory.")
     private List<Tag> tags;
-    @NotNull(message = "Channels are mandatory.")
-    private List<Channel> channels;
+    @NotNull(message = "Channels with values are mandatory.")
+    private Map<String, String> channelWithValue;
 }

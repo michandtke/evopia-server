@@ -25,13 +25,16 @@ public class ProfileRestController {
     private final UserRepository userRepository;
 
     private final TagRepository tagRepository;
-    private final ChannelRepository channelRepository;
+    private final IProfileChannelService profileChannelService;
 
-    public ProfileRestController(ProfileRepository profileRepository, UserRepository userRepository, TagRepository tagRepository, ChannelRepository channelRepository) {
+    public ProfileRestController(ProfileRepository profileRepository,
+                                 UserRepository userRepository,
+                                 TagRepository tagRepository,
+                                 IProfileChannelService profileChannelService) {
         this.profileRepository = profileRepository;
         this.userRepository = userRepository;
         this.tagRepository = tagRepository;
-        this.channelRepository = channelRepository;
+        this.profileChannelService = profileChannelService;
     }
 
     @PostMapping("/register/profile")
@@ -40,10 +43,12 @@ public class ProfileRestController {
         LOGGER.info("Trying to register a new profile: " + newProfile.toString());
         var currentUser = getEmail(request);
         LOGGER.info("Current user: " + currentUser);
-        var newChannelNames = newProfile.getChannels().stream().map(Channel::getName).collect(Collectors.toList());
+
         var newTagNames = newProfile.getTags().stream().map(Tag::getName).collect(Collectors.toList());
         var user = userRepository.findByEmail(currentUser);
+
         Profile profile = new Profile();
+
         if (user.getProfile() != null) {
             var oldId = user.getProfile().getId();
             profile.setId(oldId);
@@ -52,20 +57,19 @@ public class ProfileRestController {
             LOGGER.info("Old profile not found for email address, register a new one.");
         }
         profile.setUser(user);
-        List<Channel> channels = channelRepository.findAll().stream()
-                .filter(chan -> newChannelNames.contains(chan.getName()))
-                .collect(Collectors.toList());
+
         List<Tag> tags = tagRepository.findAll().stream()
                 .filter(tag -> newTagNames.contains(tag.getName()))
                 .collect(Collectors.toList());
         profile.setTags(tags);
-        profile.setChannels(channels);
         profile.setImage(newProfile.getImage());
         Profile saved = profileRepository.save(profile);
         if (saved == null)
             return new GenericResponse("Unfortunately, an error.", "Not saved - it is null!");
-//        return new GenericResponse("success as id : " + saved.getId());
-        return new GenericResponse("success: " + saved);
+        List<String> profileChannels =
+                profileChannelService.upsert(profile.getId(), newProfile.getChannelWithValue())
+                        .stream().map(ProfileChannel::toString).collect(Collectors.toList());
+        return new GenericResponse("success: " + saved + " | profileChannels: " + String.join(",", profileChannels));
     }
 
     @GetMapping("/profile")

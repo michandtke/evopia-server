@@ -18,3 +18,5 @@ create table if not exists profilechannels
     channel_id int not null references channel (id),
     primary key (profile_id, channel_id)
 );
+
+alter table profilechannels ADD value varchar(255);
