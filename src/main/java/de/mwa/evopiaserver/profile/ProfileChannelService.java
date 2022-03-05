@@ -24,14 +24,14 @@ public class ProfileChannelService implements IProfileChannelService {
 
     @Override
     public List<ProfileChannel> upsert(Long profileId, List<NewProfileChannel> profileChannels) {
-        List<ProfileChannel> profileChannelUpserts = knownChannelIdsWithValues(profileChannels).stream()
+        List<ProfileChannel> profileChannelUpserts = knownChannelsWithValues(profileChannels).stream()
                 .map(chanWithValue -> new ProfileChannel(profileId, chanWithValue.getKey(), chanWithValue.getValue()))
                 .collect(Collectors.toList());
 
         return profileChannelRepository.saveAll(profileChannelUpserts);
     }
 
-    List<Map.Entry<Long, String>> knownChannelIdsWithValues(List<NewProfileChannel> profileChannels) {
+    List<Map.Entry<Channel, String>> knownChannelsWithValues(List<NewProfileChannel> profileChannels) {
         Set<String> neededChannelNames = profileChannels.stream().map(NewProfileChannel::getName).collect(Collectors.toSet());
         List<Channel> channels = channelRepository.findAll();
         List<String> channelNames = channels.stream().map(Channel::getName).collect(Collectors.toList());
@@ -41,16 +41,16 @@ public class ProfileChannelService implements IProfileChannelService {
         LOGGER.warn("unknown channels: " + String.join(",", unknownChannels));
 
         return profileChannels.stream()
-                .map(chanWithValue -> getChannelIdIfExists(channels, chanWithValue))
+                .map(chanWithValue -> getChannelIfExists(channels, chanWithValue))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    private Optional<Map.Entry<Long, String>> getChannelIdIfExists(List<Channel> channels, NewProfileChannel newProfileChannel) {
+    private Optional<Map.Entry<Channel, String>> getChannelIfExists(List<Channel> channels, NewProfileChannel newProfileChannel) {
         return channels.stream()
                 .filter(chan -> chan.getName().equals(newProfileChannel.getName()))
-                .map(chan -> Map.entry(chan.getId(), newProfileChannel.getValue()))
+                .map(chan -> Map.entry(chan, newProfileChannel.getValue()))
                 .findFirst();
     }
 }

@@ -5,9 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
+import javax.persistence.*;
 import java.math.BigInteger;
 
 @Entity(name = "profilechannels")
@@ -19,14 +17,16 @@ import java.math.BigInteger;
 public class ProfileChannel {
    @Id
    private BigInteger profileId;
+
+   @ManyToOne
    @Id
-   private BigInteger channelId;
+   private Channel channel;
 
    private String value;
 
-   ProfileChannel(Long profileId, Long channelId, String value) {
+   ProfileChannel(Long profileId, Channel channel, String value) {
       this.profileId = BigInteger.valueOf(profileId);
-      this.channelId = BigInteger.valueOf(channelId);
+      this.channel = channel;
       this.value = value;
    }
 }

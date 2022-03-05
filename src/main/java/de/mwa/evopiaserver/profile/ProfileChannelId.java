@@ -14,11 +14,11 @@ import java.util.Objects;
 public class ProfileChannelId implements Serializable {
 
     private BigInteger profileId;
-    private BigInteger channelId;
+    private Channel channel;
 
-    public ProfileChannelId(BigInteger profileId, BigInteger channelId) {
+    public ProfileChannelId(BigInteger profileId, Channel channel) {
         this.profileId = profileId;
-        this.channelId = channelId;
+        this.channel = channel;
     }
 
     @Override
@@ -26,11 +26,11 @@ public class ProfileChannelId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProfileChannelId that = (ProfileChannelId) o;
-        return Objects.equals(profileId, that.profileId) && Objects.equals(channelId, that.channelId);
+        return Objects.equals(profileId, that.profileId) && Objects.equals(channel, that.channel);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(profileId, channelId);
+        return Objects.hash(profileId, channel);
     }
 }
