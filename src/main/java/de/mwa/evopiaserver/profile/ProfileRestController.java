@@ -63,9 +63,11 @@ public class ProfileRestController {
                 .collect(Collectors.toList());
         profile.setTags(tags);
         profile.setImage(newProfile.getImage());
+        LOGGER.info("Save profile: " + profile);
         Profile saved = profileRepository.save(profile);
         if (saved == null)
             return new GenericResponse("Unfortunately, an error.", "Not saved - it is null!");
+        LOGGER.info("Profile saved, now let's save the channels");
         List<String> profileChannels =
                 profileChannelService.upsert(profile.getId(), newProfile.getProfileChannels())
                         .stream().map(ProfileChannel::toString).collect(Collectors.toList());

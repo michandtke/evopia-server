@@ -27,7 +27,8 @@ public class ProfileChannelService implements IProfileChannelService {
         List<ProfileChannel> profileChannelUpserts = knownChannelsWithValues(profileChannels).stream()
                 .map(chanWithValue -> new ProfileChannel(profileId, chanWithValue.getKey(), chanWithValue.getValue()))
                 .collect(Collectors.toList());
-
+        var profileChannelString = profileChannelUpserts.stream().map(ProfileChannel::toString).collect(Collectors.toSet());
+        LOGGER.info("SaveAll: " + String.join(", ", profileChannelString));
         return profileChannelRepository.saveAll(profileChannelUpserts);
     }
 
