@@ -1,6 +1,6 @@
 package de.mwa.evopiaserver.registration;
 
-import de.mwa.evopiaserver.profile.Profile;
+import de.mwa.evopiaserver.db.profile.Profile;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

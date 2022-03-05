@@ -1,6 +1,7 @@
 package de.mwa.evopiaserver.profile;
 
 
+import de.mwa.evopiaserver.db.tag.Tag;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;

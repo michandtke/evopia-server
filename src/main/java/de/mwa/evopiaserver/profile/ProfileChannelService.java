@@ -1,5 +1,7 @@
 package de.mwa.evopiaserver.profile;
 
+import de.mwa.evopiaserver.db.channel.Channel;
+import de.mwa.evopiaserver.db.channel.ChannelRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

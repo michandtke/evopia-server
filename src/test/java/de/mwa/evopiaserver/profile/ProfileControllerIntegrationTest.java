@@ -1,5 +1,7 @@
 package de.mwa.evopiaserver.profile;
 
+import de.mwa.evopiaserver.db.profile.ProfileRepository;
+import de.mwa.evopiaserver.db.tag.TagRepository;
 import de.mwa.evopiaserver.registration.UserRepository;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;

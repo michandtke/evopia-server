@@ -1,6 +1,8 @@
-package de.mwa.evopiaserver.profile;
+package de.mwa.evopiaserver.db.profile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.mwa.evopiaserver.profile.ProfileChannel;
+import de.mwa.evopiaserver.db.tag.Tag;
 import de.mwa.evopiaserver.registration.User;
 import lombok.Getter;
 import lombok.Setter;

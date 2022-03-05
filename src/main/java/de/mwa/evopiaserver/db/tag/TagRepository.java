@@ -1,4 +1,4 @@
-package de.mwa.evopiaserver.profile;
+package de.mwa.evopiaserver.db.tag;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,5 +1,7 @@
 package de.mwa.evopiaserver.profile;
 
+import de.mwa.evopiaserver.db.channel.Channel;
+import de.mwa.evopiaserver.db.channel.ChannelRepository;
 import de.mwa.evopiaserver.registration.GenericResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,4 +1,4 @@
-package de.mwa.evopiaserver.profile;
+package de.mwa.evopiaserver.db.channel;
 
 import lombok.Getter;
 import lombok.Setter;

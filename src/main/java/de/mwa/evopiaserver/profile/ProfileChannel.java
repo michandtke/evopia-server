@@ -1,6 +1,7 @@
 package de.mwa.evopiaserver.profile;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import de.mwa.evopiaserver.db.channel.Channel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
