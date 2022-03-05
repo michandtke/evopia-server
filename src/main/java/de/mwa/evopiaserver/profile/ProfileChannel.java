@@ -1,5 +1,6 @@
 package de.mwa.evopiaserver.profile;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,6 +21,7 @@ public class ProfileChannel {
 
    @ManyToOne
    @Id
+   @JsonUnwrapped
    private Channel channel;
 
    private String value;
