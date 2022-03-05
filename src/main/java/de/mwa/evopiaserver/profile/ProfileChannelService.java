@@ -23,16 +23,16 @@ public class ProfileChannelService implements IProfileChannelService {
     }
 
     @Override
-    public List<ProfileChannel> upsert(Long profileId, Map<String, String> channelWithValue) {
-        List<ProfileChannel> profileChannelUpserts = knownChannelIdsWithValues(channelWithValue).stream()
+    public List<ProfileChannel> upsert(Long profileId, List<NewProfileChannel> profileChannels) {
+        List<ProfileChannel> profileChannelUpserts = knownChannelIdsWithValues(profileChannels).stream()
                 .map(chanWithValue -> new ProfileChannel(profileId, chanWithValue.getKey(), chanWithValue.getValue()))
                 .collect(Collectors.toList());
 
         return profileChannelRepository.saveAll(profileChannelUpserts);
     }
 
-    List<Map.Entry<Long, String>> knownChannelIdsWithValues(Map<String, String> channelWithValue) {
-        Set<String> neededChannelNames = channelWithValue.keySet();
+    List<Map.Entry<Long, String>> knownChannelIdsWithValues(List<NewProfileChannel> profileChannels) {
+        Set<String> neededChannelNames = profileChannels.stream().map(NewProfileChannel::getName).collect(Collectors.toSet());
         List<Channel> channels = channelRepository.findAll();
         List<String> channelNames = channels.stream().map(Channel::getName).collect(Collectors.toList());
 
@@ -40,17 +40,17 @@ public class ProfileChannelService implements IProfileChannelService {
                 .filter(name -> !channelNames.contains(name)).collect(Collectors.toList());
         LOGGER.warn("unknown channels: " + String.join(",", unknownChannels));
 
-        return channelWithValue.entrySet().stream()
+        return profileChannels.stream()
                 .map(chanWithValue -> getChannelIdIfExists(channels, chanWithValue))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    private Optional<Map.Entry<Long, String>> getChannelIdIfExists(List<Channel> channels, Map.Entry<String, String> chanWithValue) {
+    private Optional<Map.Entry<Long, String>> getChannelIdIfExists(List<Channel> channels, NewProfileChannel newProfileChannel) {
         return channels.stream()
-                .filter(chan -> chan.getName().equals(chanWithValue.getKey()))
-                .map(chan -> Map.entry(chan.getId(), chanWithValue.getValue()))
+                .filter(chan -> chan.getName().equals(newProfileChannel.getName()))
+                .map(chan -> Map.entry(chan.getId(), newProfileChannel.getValue()))
                 .findFirst();
     }
 }

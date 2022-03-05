@@ -67,7 +67,7 @@ public class ProfileRestController {
         if (saved == null)
             return new GenericResponse("Unfortunately, an error.", "Not saved - it is null!");
         List<String> profileChannels =
-                profileChannelService.upsert(profile.getId(), newProfile.getChannelWithValue())
+                profileChannelService.upsert(profile.getId(), newProfile.getProfileChannels())
                         .stream().map(ProfileChannel::toString).collect(Collectors.toList());
         return new GenericResponse("success: " + saved + " | profileChannels: " + String.join(",", profileChannels));
     }
