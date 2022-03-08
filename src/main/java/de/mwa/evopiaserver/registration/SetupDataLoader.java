@@ -1,7 +1,8 @@
 package de.mwa.evopiaserver.registration;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import de.mwa.evopiaserver.db.profile.Profile;
+import de.mwa.evopiaserver.db.profile.ProfileRepository;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,20 +12,24 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     private boolean alreadySetup = false;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public SetupDataLoader(UserRepository userRepository, ProfileRepository profileRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.profileRepository = profileRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     // API
 
@@ -69,7 +74,17 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         }
         user.setRoles(roles);
         user = userRepository.save(user);
+        var profile = createProfileForUser(user);
         return user;
+    }
+
+    Profile createProfileForUser(User forUser) {
+        var profile = new Profile();
+        profile.setUser(forUser);
+        profile.setImage("");
+        profile.setTags(List.of());
+        profile.setProfileChannels(List.of());
+        return profileRepository.save(profile);
     }
 
 }

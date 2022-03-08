@@ -1,5 +1,6 @@
 package de.mwa.evopiaserver.api.controller;
 
+import de.mwa.evopiaserver.api.NoRemoteUserFoundException;
 import de.mwa.evopiaserver.api.dto.UserProfile;
 import de.mwa.evopiaserver.service.UserProfileService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +19,8 @@ public class UserProfileController {
 
     @GetMapping("/v2/profile")
     public UserProfile getProfile(final HttpServletRequest request) {
-        if (request.getRemoteUser() != null)
-            return userProfileService.findUserProfile(request.getRemoteUser());
-        return null;
+        if (request.getRemoteUser() == null)
+            throw new NoRemoteUserFoundException("Too bad, no remote user found!");
+        return userProfileService.findUserProfile(request.getRemoteUser());
     }
 }
