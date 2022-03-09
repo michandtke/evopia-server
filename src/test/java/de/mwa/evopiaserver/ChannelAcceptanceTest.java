@@ -1,7 +1,6 @@
-package de.mwa.evopiaserver.profile;
+package de.mwa.evopiaserver;
 
-import com.jayway.jsonpath.JsonPath;
-import de.mwa.evopiaserver.HttpEntityFactory;
+import de.mwa.evopiaserver.api.dto.ChannelDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJson;
@@ -12,13 +11,13 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,9 +26,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 @AutoConfigureJson
 @AutoConfigureJsonTesters
-@ContextConfiguration(initializers = {LoadProfileIntegrationTest.Initializer.class})
-public class LoadProfileIntegrationTest {
-
+@ContextConfiguration(initializers = {ChannelAcceptanceTest.Initializer.class})
+public class ChannelAcceptanceTest {
     @LocalServerPort
     private int port;
 
@@ -43,22 +41,15 @@ public class LoadProfileIntegrationTest {
             .withPassword("sa");
 
     @Test
-    @Transactional
-    public void shouldGetEmptyProfileFromTestUser() {
-        var url = "http://localhost:" + port + "/v2/profile";
+    public void should_get_channels() {
+        var url = "http://localhost:" + port + "/v2/channels";
+        var requestType = new ParameterizedTypeReference<List<ChannelDto>>() {};
         var response = restTemplate.exchange
-                (url, HttpMethod.GET, HttpEntityFactory.forTestUser(), String.class);
+                (url, HttpMethod.GET, HttpEntityFactory.forTestUser(), requestType);
 
-        assertThat(response.getBody()).isNotBlank();
-        System.out.println(response.getBody());
+        List<ChannelDto> channels = response.getBody();
 
-        var parsedJson = JsonPath.parse(response.getBody());
-        String imagePath = parsedJson.read("@.imagePath");
-        assertThat(imagePath).isBlank();
-        List channels = parsedJson.read("@.profileChannels");
         assertThat(channels).isEmpty();
-        List tags = parsedJson.read("@.tags");
-        assertThat(tags).isEmpty();
     }
 
     static class Initializer
