@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <logger name="com.github.dockerjava.zerodep" level="ERROR" />
+    <logger name="liquibase" level="DEBUG" />
+    <logger name="de.mwa" level="DEBUG" />
+    <logger name="org.springframework" level="DEBUG" />
+</configuration>

@@ -13,6 +13,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -41,15 +42,36 @@ public class ChannelAcceptanceTest {
             .withPassword("sa");
 
     @Test
-    public void should_get_channels() {
+    public void initial_channel_has_only_dummychannel() {
         var url = "http://localhost:" + port + "/v2/channels";
         var requestType = new ParameterizedTypeReference<List<ChannelDto>>() {};
         var response = restTemplate.exchange
                 (url, HttpMethod.GET, HttpEntityFactory.forTestUser(), requestType);
 
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
         List<ChannelDto> channels = response.getBody();
 
-        assertThat(channels).isEmpty();
+        assertThat(channels).containsOnly(new ChannelDto("Dummychannel"));
+    }
+
+    @Test
+    public void adding_channel_should_add_channel() {
+        var addingUrl = "http://localhost:" + port + "/v2/channels/add";
+        var body = "{name: 'BatSign'}";
+        var addResponse = restTemplate.exchange
+                (addingUrl, HttpMethod.POST, HttpEntityFactory.forTestUserWith(body), String.class);
+
+        assertThat(addResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        var askingUrl = "http://localhost:" + port + "/v2/channels";
+        var requestType = new ParameterizedTypeReference<List<ChannelDto>>() {};
+        var askResponse = restTemplate.exchange
+                (askingUrl, HttpMethod.GET, HttpEntityFactory.forTestUser(), requestType);
+
+        assertThat(askResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        List<ChannelDto> channels = askResponse.getBody();
+        assertThat(channels).containsOnly(new ChannelDto("Dummychannel"), new ChannelDto("BatSign"));
     }
 
     static class Initializer
