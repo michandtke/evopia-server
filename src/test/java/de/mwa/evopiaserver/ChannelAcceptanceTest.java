@@ -58,7 +58,7 @@ public class ChannelAcceptanceTest {
     @Test
     public void adding_channel_should_add_channel() {
         var addingUrl = "http://localhost:" + port + "/v2/channels/add";
-        var body = "{name: 'BatSign'}";
+        var body = "{\"name\": \"BatSign\"}";
         var addResponse = restTemplate.exchange
                 (addingUrl, HttpMethod.POST, HttpEntityFactory.forTestUserWith(body), String.class);
 

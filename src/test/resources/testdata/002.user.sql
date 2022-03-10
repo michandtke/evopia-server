@@ -6,5 +6,3 @@ VALUES (2, 1);
 
 INSERT INTO userroles (user_id, role_id)
 VALUES (2, 2);
-
-INSERT INTO channel (name) VALUES ('Dummychannel');
