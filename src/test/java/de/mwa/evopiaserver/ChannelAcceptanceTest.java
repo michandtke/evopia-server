@@ -43,20 +43,13 @@ public class ChannelAcceptanceTest {
 
     @Test
     public void initial_channel_has_only_dummychannel() {
-        var url = "http://localhost:" + port + "/v2/channels";
-        var requestType = new ParameterizedTypeReference<List<ChannelDto>>() {};
-        var response = restTemplate.exchange
-                (url, HttpMethod.GET, HttpEntityFactory.forTestUser(), requestType);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        List<ChannelDto> channels = response.getBody();
+        List<ChannelDto> channels = getAllChannels();
 
         assertThat(channels).containsOnly(new ChannelDto("Dummychannel"));
     }
 
     @Test
-    public void adding_channel_should_add_channel() {
+    public void adding_removing_channel_should_work() {
         var addingUrl = "http://localhost:" + port + "/v2/channels/add";
         var body = "{\"name\": \"BatSign\"}";
         var addResponse = restTemplate.exchange
@@ -64,14 +57,27 @@ public class ChannelAcceptanceTest {
 
         assertThat(addResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 
+        var channels = getAllChannels();
+        assertThat(channels).containsOnly(new ChannelDto("Dummychannel"), new ChannelDto("BatSign"));
+
+        var removingUrl = "http://localhost:" + port + "/v2/channels/remove";
+        var removeResponse = restTemplate.exchange
+                (removingUrl, HttpMethod.POST, HttpEntityFactory.forTestUserWith(body), String.class);
+
+        assertThat(removeResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        var channelsAfterDelete = getAllChannels();
+        assertThat(channelsAfterDelete).containsOnly(new ChannelDto("Dummychannel"));
+    }
+
+    private List<ChannelDto> getAllChannels() {
         var askingUrl = "http://localhost:" + port + "/v2/channels";
         var requestType = new ParameterizedTypeReference<List<ChannelDto>>() {};
         var askResponse = restTemplate.exchange
                 (askingUrl, HttpMethod.GET, HttpEntityFactory.forTestUser(), requestType);
 
         assertThat(askResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        List<ChannelDto> channels = askResponse.getBody();
-        assertThat(channels).containsOnly(new ChannelDto("Dummychannel"), new ChannelDto("BatSign"));
+        return askResponse.getBody();
     }
 
     static class Initializer

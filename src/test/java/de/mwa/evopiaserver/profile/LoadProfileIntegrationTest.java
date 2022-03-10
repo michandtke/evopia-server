@@ -13,6 +13,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -44,11 +45,14 @@ public class LoadProfileIntegrationTest {
 
     @Test
     @Transactional
-    public void shouldGetEmptyProfileFromTestUser() {
+    public void shouldGetEmptyProfileFromTestUserWithoutProfile() {
         var url = "http://localhost:" + port + "/v2/profile";
         var response = restTemplate.exchange
-                (url, HttpMethod.GET, HttpEntityFactory.forTestUser(), String.class);
+                (url, HttpMethod.GET, HttpEntityFactory.forTestUserWithoutProfile(), String.class);
 
+        assertThat(response.getStatusCode())
+                .as("Not a successful call: " + response.getBody())
+                .isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotBlank();
         System.out.println(response.getBody());
 

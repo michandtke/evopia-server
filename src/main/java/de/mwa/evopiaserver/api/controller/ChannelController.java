@@ -27,4 +27,9 @@ public class ChannelController {
     String addChannel(@RequestBody ChannelDto channelToAdd) {
         return "Added " + channelService.add(channelToAdd);
     }
+
+    @PostMapping("/v2/channels/remove")
+    String removeChannel(@RequestBody ChannelDto channelToAdd) {
+        return "Removed " + channelService.remove(channelToAdd);
+    }
 }

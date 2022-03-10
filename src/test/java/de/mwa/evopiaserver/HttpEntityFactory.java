@@ -8,19 +8,20 @@ import org.springframework.http.MediaType;
 import java.nio.charset.StandardCharsets;
 
 public class HttpEntityFactory {
-    private static final String TEST_USERNAME = "Batman@waynecorp.com";
+    private static final String TEST_USERNAME_WITH_PROFILE = "Batman@waynecorp.com";
+    private static final String TEST_USERNAME_WITHOUT_PROFILE = "Robin@waynecorp.com";
     private static final String TEST_PASSWORD = "test";
 
-    public static <T> HttpEntity<T> forTestUser2() {
-        return forUser("test@test.com", "test");
+    public static <T> HttpEntity<T> forTestUser() {
+        return forUser(TEST_USERNAME_WITH_PROFILE, TEST_PASSWORD);
     }
 
-    public static <T> HttpEntity<T> forTestUser() {
-        return forUser(TEST_USERNAME, TEST_PASSWORD);
+    public static <T> HttpEntity<T> forTestUserWithoutProfile() {
+        return forUser(TEST_USERNAME_WITHOUT_PROFILE, TEST_PASSWORD);
     }
 
     public static <T> HttpEntity<T> forTestUserWith(T body) {
-        return forUserWith(body, TEST_USERNAME, TEST_PASSWORD);
+        return forUserWith(body, TEST_USERNAME_WITH_PROFILE, TEST_PASSWORD);
     }
 
     public static <T> HttpEntity<T> forUserWith(T body, String username, String password) {

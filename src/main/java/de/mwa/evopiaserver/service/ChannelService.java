@@ -5,6 +5,7 @@ import de.mwa.evopiaserver.db.channel.Channel;
 import de.mwa.evopiaserver.db.channel.ChannelRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -33,6 +34,7 @@ public class ChannelService {
                 .build();
     }
 
+    @Transactional
     public ChannelDto add(ChannelDto channelDto) {
         Channel channel = asDao(channelDto);
         var saved = channelRepository.save(channel);
@@ -43,5 +45,11 @@ public class ChannelService {
         var channel = new Channel();
         channel.setName(channelDto.getName());
         return channel;
+    }
+
+    @Transactional
+    public ChannelDto remove(ChannelDto channelDto) {
+        channelRepository.deleteByName(channelDto.getName());
+        return channelDto;
     }
 }
