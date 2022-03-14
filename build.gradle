@@ -2,6 +2,8 @@ plugins {
     id 'org.springframework.boot' version '2.5.5'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+
 }
 
 group = 'de.mwa'
@@ -13,6 +15,8 @@ repositories {
 }
 
 dependencies {
+    implementation "org.ktorm:ktorm-core:3.4.1"
+
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
     implementation 'org.springframework.boot:spring-boot-starter-web'

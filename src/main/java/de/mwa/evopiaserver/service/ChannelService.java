@@ -3,29 +3,29 @@ package de.mwa.evopiaserver.service;
 import de.mwa.evopiaserver.api.dto.ChannelDto;
 import de.mwa.evopiaserver.db.channel.Channel;
 import de.mwa.evopiaserver.db.channel.ChannelRepository;
+import de.mwa.evopiaserver.db.kotlin.DatabaseWrapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 public class ChannelService {
 
+    private final DatabaseWrapper databaseWrapper;
     private final ChannelRepository channelRepository;
 
-    public ChannelService(ChannelRepository channelRepository) {
+    public ChannelService(DatabaseWrapper databaseWrapper,
+                          ChannelRepository channelRepository) {
+        this.databaseWrapper = databaseWrapper;
         this.channelRepository = channelRepository;
     }
 
     public List<ChannelDto> findAll() {
-        List<Channel> channels = channelRepository.findAll();
-        return mapTo(channels, this::asDto);
-    }
+        var database = databaseWrapper.connect();
 
-    private <T, R> List<R> mapTo(List<T> input, Function<T, R> mapper) {
-        return input.stream().map(mapper).collect(Collectors.toList());
+        var channels = databaseWrapper.findAllChannels(database);
+        return channels;
     }
 
     private ChannelDto asDto(Channel channel) {
