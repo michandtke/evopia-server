@@ -4,7 +4,7 @@ import de.mwa.evopiaserver.api.dto.UserChannel;
 import de.mwa.evopiaserver.api.dto.UserProfile;
 import de.mwa.evopiaserver.api.dto.UserTag;
 import de.mwa.evopiaserver.db.channel.Channel;
-import de.mwa.evopiaserver.db.channel.ChannelRepository;
+import de.mwa.evopiaserver.db.kotlin.DatabaseWrapper;
 import de.mwa.evopiaserver.db.profile.Profile;
 import de.mwa.evopiaserver.db.profile.ProfileRepository;
 import de.mwa.evopiaserver.db.tag.Tag;
@@ -28,15 +28,19 @@ public class UserProfileService {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
     private final TagRepository tagRepository;
-    private final ChannelRepository channelRepository;
     private final ProfileChannelRepository profileChannelRepository;
+    private final DatabaseWrapper databaseWrapper;
 
-    public UserProfileService(UserRepository userRepository, ProfileRepository profileRepository, TagRepository tagRepository, ChannelRepository channelRepository, ProfileChannelRepository profileChannelRepository) {
+    public UserProfileService(UserRepository userRepository,
+                              ProfileRepository profileRepository,
+                              TagRepository tagRepository,
+                              ProfileChannelRepository profileChannelRepository,
+                              DatabaseWrapper databaseWrapper) {
         this.userRepository = userRepository;
         this.profileRepository = profileRepository;
         this.tagRepository = tagRepository;
-        this.channelRepository = channelRepository;
         this.profileChannelRepository = profileChannelRepository;
+        this.databaseWrapper = databaseWrapper;
     }
 
     public UserProfile findUserProfile(String username) {
@@ -112,7 +116,8 @@ public class UserProfileService {
         var userChannels = profileToSave.getProfileChannels();
         if (userChannels != null) {
             var channelNames = userChannels.stream().map(UserChannel::getName).collect(Collectors.toList());
-            var channels = channelRepository.findByNameIn(channelNames);
+            var channels = databaseWrapper.findChannelsByNameIn(channelNames);
+
             List<ProfileChannel> channelDaos = userChannels.stream()
                     .map(chan -> buildProfileChannel(profile.getId(), chan.getValue(), findChannel(channels, chan.getName())))
                     .collect(Collectors.toList());

@@ -1,14 +1,10 @@
 package de.mwa.evopiaserver.db.channel;
 
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Objects;
 
-@Getter
-@Setter
 @ToString
 @Entity
 public class Channel {
@@ -18,6 +14,12 @@ public class Channel {
     private String name;
 
     public String getName() { return name; }
+
+    public Long getId() { return id; }
+
+    public void setName(String name) { this.name = name; }
+
+    public void setId(Long id) { this.id = id; }
 
     @Override
     public boolean equals(Object o) {

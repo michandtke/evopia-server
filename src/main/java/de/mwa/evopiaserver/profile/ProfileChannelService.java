@@ -1,7 +1,7 @@
 package de.mwa.evopiaserver.profile;
 
 import de.mwa.evopiaserver.db.channel.Channel;
-import de.mwa.evopiaserver.db.channel.ChannelRepository;
+import de.mwa.evopiaserver.db.kotlin.DatabaseWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,11 +17,12 @@ public class ProfileChannelService implements IProfileChannelService {
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     private final ProfileChannelRepository profileChannelRepository;
-    private final ChannelRepository channelRepository;
+    private final DatabaseWrapper databaseWrapper;
 
-    public ProfileChannelService(ProfileChannelRepository profileChannelRepository, ChannelRepository channelRepository) {
+    public ProfileChannelService(ProfileChannelRepository profileChannelRepository,
+                                 DatabaseWrapper databaseWrapper) {
         this.profileChannelRepository = profileChannelRepository;
-        this.channelRepository = channelRepository;
+        this.databaseWrapper = databaseWrapper;
     }
 
     @Override
@@ -36,7 +37,7 @@ public class ProfileChannelService implements IProfileChannelService {
 
     List<Map.Entry<Channel, String>> knownChannelsWithValues(List<NewProfileChannel> profileChannels) {
         Set<String> neededChannelNames = profileChannels.stream().map(NewProfileChannel::getName).collect(Collectors.toSet());
-        List<Channel> channels = channelRepository.findAll();
+        var channels = databaseWrapper.findAllChannels();
         List<String> channelNames = channels.stream().map(Channel::getName).collect(Collectors.toList());
 
         List<String> unknownChannels = neededChannelNames.stream()
