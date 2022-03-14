@@ -25,11 +25,11 @@ public class ChannelController {
 
     @PostMapping("/v2/channels/add")
     String addChannel(@RequestBody ChannelDto channelToAdd) {
-        return "Added " + channelService.add(channelToAdd);
+        return "Added " + channelService.add(channelToAdd) + " entries.";
     }
 
     @PostMapping("/v2/channels/remove")
     String removeChannel(@RequestBody ChannelDto channelToAdd) {
-        return "Removed " + channelService.remove(channelToAdd);
+        return "Removed " + channelService.remove(channelToAdd) + " entries.";
     }
 }

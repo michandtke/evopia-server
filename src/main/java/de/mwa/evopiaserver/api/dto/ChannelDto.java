@@ -12,4 +12,6 @@ public class ChannelDto {
     public ChannelDto(String name) {
         this.name = name;
     }
+
+    public String getName() { return name; }
 }

@@ -35,21 +35,14 @@ public class ChannelService {
     }
 
     @Transactional
-    public ChannelDto add(ChannelDto channelDto) {
-        Channel channel = asDao(channelDto);
-        var saved = channelRepository.save(channel);
-        return asDto(saved);
-    }
-
-    private Channel asDao(ChannelDto channelDto) {
-        var channel = new Channel();
-        channel.setName(channelDto.getName());
-        return channel;
+    public int add(ChannelDto channelDto) {
+        var database = databaseWrapper.connect();
+        return databaseWrapper.saveChannel(database, channelDto);
     }
 
     @Transactional
-    public ChannelDto remove(ChannelDto channelDto) {
-        channelRepository.deleteByName(channelDto.getName());
-        return channelDto;
+    public int remove(ChannelDto channelDto) {
+        var database = databaseWrapper.connect();
+        return databaseWrapper.deleteChannelByName(database, channelDto.getName());
     }
 }
