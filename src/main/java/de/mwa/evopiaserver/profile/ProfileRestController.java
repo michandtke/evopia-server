@@ -1,11 +1,11 @@
 package de.mwa.evopiaserver.profile;
 
 import de.mwa.evopiaserver.db.kotlin.TagRepository;
+import de.mwa.evopiaserver.db.kotlin.UserRepositoryNew;
 import de.mwa.evopiaserver.db.profile.Profile;
 import de.mwa.evopiaserver.db.profile.ProfileRepository;
 import de.mwa.evopiaserver.db.tag.Tag;
 import de.mwa.evopiaserver.registration.GenericResponse;
-import de.mwa.evopiaserver.registration.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -26,13 +26,13 @@ public class ProfileRestController {
 
     private final ProfileRepository profileRepository;
 
-    private final UserRepository userRepository;
+    private final UserRepositoryNew userRepository;
 
     private final TagRepository tagRepository;
     private final IProfileChannelService profileChannelService;
 
     public ProfileRestController(ProfileRepository profileRepository,
-                                 UserRepository userRepository,
+                                 UserRepositoryNew userRepository,
                                  TagRepository tagRepository,
                                  IProfileChannelService profileChannelService) {
         this.profileRepository = profileRepository;

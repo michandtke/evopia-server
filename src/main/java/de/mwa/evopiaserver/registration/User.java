@@ -36,6 +36,15 @@ public class User {
     @OneToOne(mappedBy = "user")
     private Profile profile;
 
+    public User(Long id, String firstName, String lastName, String dateOfRegistration, String email, String password) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfRegistration = dateOfRegistration;
+        this.email = email;
+        this.password = password;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

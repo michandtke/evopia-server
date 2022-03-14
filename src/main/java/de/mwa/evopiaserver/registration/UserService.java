@@ -1,5 +1,6 @@
 package de.mwa.evopiaserver.registration;
 
+import de.mwa.evopiaserver.db.kotlin.UserRepositoryNew;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import java.util.Arrays;
 @Transactional
 public class UserService implements IUserService {
     @Autowired
-    private UserRepository userRepository;
+    private UserRepositoryNew userRepository;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -21,7 +22,7 @@ public class UserService implements IUserService {
 
     @Override
     public User registerNewUserAccount(UserDto userDto) throws UserAlreadyExistsException {
-        if (emailExists(userDto.getEmail())) {
+        if (userRepository.emailAlreadyExists(userDto.getEmail())) {
             throw new UserAlreadyExistsException("There is an account with that email address: "
             + userDto.getEmail());
         }
@@ -36,10 +37,8 @@ public class UserService implements IUserService {
         user.setEmail(userDto.getEmail());
         user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
 
-        return userRepository.save(user);
-    }
+        userRepository.save(user);
 
-    private boolean emailExists(String email) {
-        return userRepository.findByEmail(email) != null;
+        return user;
     }
 }
