@@ -4,11 +4,11 @@ import de.mwa.evopiaserver.api.dto.UserChannel;
 import de.mwa.evopiaserver.api.dto.UserProfile;
 import de.mwa.evopiaserver.api.dto.UserTag;
 import de.mwa.evopiaserver.db.channel.Channel;
-import de.mwa.evopiaserver.db.kotlin.DatabaseWrapper;
+import de.mwa.evopiaserver.db.kotlin.ChannelRepository;
+import de.mwa.evopiaserver.db.kotlin.TagRepository;
 import de.mwa.evopiaserver.db.profile.Profile;
 import de.mwa.evopiaserver.db.profile.ProfileRepository;
 import de.mwa.evopiaserver.db.tag.Tag;
-import de.mwa.evopiaserver.db.tag.TagRepository;
 import de.mwa.evopiaserver.profile.ProfileChannel;
 import de.mwa.evopiaserver.profile.ProfileChannelRepository;
 import de.mwa.evopiaserver.registration.User;
@@ -20,7 +20,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,18 +28,18 @@ public class UserProfileService {
     private final ProfileRepository profileRepository;
     private final TagRepository tagRepository;
     private final ProfileChannelRepository profileChannelRepository;
-    private final DatabaseWrapper databaseWrapper;
+    private final ChannelRepository databaseWrapper;
 
     public UserProfileService(UserRepository userRepository,
                               ProfileRepository profileRepository,
                               TagRepository tagRepository,
                               ProfileChannelRepository profileChannelRepository,
-                              DatabaseWrapper databaseWrapper) {
+                              ChannelRepository channelRepository) {
         this.userRepository = userRepository;
         this.profileRepository = profileRepository;
         this.tagRepository = tagRepository;
         this.profileChannelRepository = profileChannelRepository;
-        this.databaseWrapper = databaseWrapper;
+        this.databaseWrapper = channelRepository;
     }
 
     public UserProfile findUserProfile(String username) {
@@ -108,7 +107,7 @@ public class UserProfileService {
 
         var userTags = profileToSave.getTags();
         if (userTags != null) {
-            Set<String> tagNames = userTags.stream().map(UserTag::getName).collect(Collectors.toSet());
+            List<String> tagNames = userTags.stream().map(UserTag::getName).collect(Collectors.toList());
             var tags = tagRepository.findByNameIn(tagNames);
             profile.setTags(new ArrayList<>(tags));
         }

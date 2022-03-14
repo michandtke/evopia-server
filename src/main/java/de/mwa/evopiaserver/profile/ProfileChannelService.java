@@ -1,7 +1,7 @@
 package de.mwa.evopiaserver.profile;
 
 import de.mwa.evopiaserver.db.channel.Channel;
-import de.mwa.evopiaserver.db.kotlin.DatabaseWrapper;
+import de.mwa.evopiaserver.db.kotlin.ChannelRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,12 +17,12 @@ public class ProfileChannelService implements IProfileChannelService {
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     private final ProfileChannelRepository profileChannelRepository;
-    private final DatabaseWrapper databaseWrapper;
+    private final ChannelRepository databaseWrapper;
 
     public ProfileChannelService(ProfileChannelRepository profileChannelRepository,
-                                 DatabaseWrapper databaseWrapper) {
+                                 ChannelRepository channelRepository) {
         this.profileChannelRepository = profileChannelRepository;
-        this.databaseWrapper = databaseWrapper;
+        this.databaseWrapper = channelRepository;
     }
 
     @Override

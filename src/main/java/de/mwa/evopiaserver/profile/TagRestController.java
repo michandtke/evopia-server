@@ -1,7 +1,7 @@
 package de.mwa.evopiaserver.profile;
 
+import de.mwa.evopiaserver.db.kotlin.TagRepository;
 import de.mwa.evopiaserver.db.tag.Tag;
-import de.mwa.evopiaserver.db.tag.TagRepository;
 import de.mwa.evopiaserver.registration.GenericResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,9 +18,9 @@ public class TagRestController {
     private TagRepository tagRepository;
 
     @PostMapping("/tag/register")
-    public GenericResponse registerChannel(@Valid @RequestBody Tag tag,
+    public GenericResponse registerTag(@Valid @RequestBody Tag tag,
                                            final HttpServletRequest request) {
-        Tag saved = tagRepository.save(tag);
-        return new GenericResponse("Saved tag " + saved);
+        int saved = tagRepository.save(tag);
+        return new GenericResponse("Saved tag " + saved + " entries.");
     }
 }

@@ -1,9 +1,9 @@
 package de.mwa.evopiaserver.profile;
 
+import de.mwa.evopiaserver.db.kotlin.TagRepository;
 import de.mwa.evopiaserver.db.profile.Profile;
 import de.mwa.evopiaserver.db.profile.ProfileRepository;
 import de.mwa.evopiaserver.db.tag.Tag;
-import de.mwa.evopiaserver.db.tag.TagRepository;
 import de.mwa.evopiaserver.registration.GenericResponse;
 import de.mwa.evopiaserver.registration.UserRepository;
 import org.slf4j.Logger;

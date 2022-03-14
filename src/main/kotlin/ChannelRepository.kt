@@ -2,44 +2,33 @@ package de.mwa.evopiaserver.db.kotlin
 
 import de.mwa.evopiaserver.api.dto.ChannelDto
 import de.mwa.evopiaserver.db.channel.Channel
-import org.ktorm.database.Database
 import org.ktorm.dsl.*
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class DatabaseWrapper {
-
-    @Autowired
-    lateinit var appProperties: AppProperties
-
-    private val database: Database by lazy {
-        Database.connect(appProperties.databaseUrl,
-                user = appProperties.databaseUser,
-                password = appProperties.databasePassword)
-    }
+class ChannelRepository(val databaseUtil: DatabaseUtil) {
 
     fun findAllChannels(): List<Channel> {
-        val entries = database.from(ChannelTable).select()
+        val entries = databaseUtil.database.from(ChannelTable).select()
         return entries.map {
             rowToChannel(it)
         }
     }
 
     fun saveChannel(channel: ChannelDto): Int {
-        return database.insert(ChannelTable) {
+        return databaseUtil.database.insert(ChannelTable) {
             set(it.name, channel.name)
         }
     }
 
     fun deleteChannelByName(channelNameToDelete: String): Int {
-        return database.delete(ChannelTable) {
+        return databaseUtil.database.delete(ChannelTable) {
             it.name eq channelNameToDelete
         }
     }
 
     fun findChannelsByNameIn(channelNames: MutableList<String>): List<Channel> {
-        return database
+        return databaseUtil.database
                 .from(ChannelTable)
                 .select()
                 .where { (ChannelTable.name inList channelNames) }

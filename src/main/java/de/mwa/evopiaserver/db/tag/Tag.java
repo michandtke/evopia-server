@@ -24,6 +24,24 @@ public class Tag {
     @JsonIgnore
     private Collection<Profile> profiles;
 
+    public Tag() {}
+    public Tag(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() { return id; }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() { return name; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

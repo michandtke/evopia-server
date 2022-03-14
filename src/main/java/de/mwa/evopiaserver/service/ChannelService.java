@@ -1,7 +1,7 @@
 package de.mwa.evopiaserver.service;
 
 import de.mwa.evopiaserver.api.dto.ChannelDto;
-import de.mwa.evopiaserver.db.kotlin.DatabaseWrapper;
+import de.mwa.evopiaserver.db.kotlin.ChannelRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 @Service
 public class ChannelService {
 
-    private final DatabaseWrapper databaseWrapper;
+    private final ChannelRepository databaseWrapper;
 
-    public ChannelService(DatabaseWrapper databaseWrapper) {
+    public ChannelService(ChannelRepository databaseWrapper) {
         this.databaseWrapper = databaseWrapper;
     }
 
