@@ -1,9 +1,7 @@
 package de.mwa.evopiaserver.profile;
 
 import de.mwa.evopiaserver.db.channel.Channel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -12,6 +10,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class ProfileChannelId implements Serializable {
 
     private BigInteger profileId;
