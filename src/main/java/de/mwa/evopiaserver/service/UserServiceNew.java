@@ -1,26 +1,27 @@
-package de.mwa.evopiaserver.registration;
+package de.mwa.evopiaserver.service;
 
 import de.mwa.evopiaserver.db.kotlin.UserRepositoryNew;
-import org.springframework.beans.factory.annotation.Autowired;
+import de.mwa.evopiaserver.registration.User;
+import de.mwa.evopiaserver.registration.UserAlreadyExistsException;
+import de.mwa.evopiaserver.registration.UserDto;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-
 @Service
-@Transactional
-public class UserService implements IUserService {
-    @Autowired
-    private UserRepositoryNew userRepository;
+public class UserServiceNew {
+    private final UserRepositoryNew userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    @Override
+    public UserServiceNew(UserRepositoryNew userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
     public User registerNewUserAccount(UserDto userDto) throws UserAlreadyExistsException {
         if (userRepository.emailAlreadyExists(userDto.getEmail())) {
             throw new UserAlreadyExistsException("There is an account with that email address: "
-            + userDto.getEmail());
+                    + userDto.getEmail());
         }
 
         User user = new User();
@@ -32,5 +33,9 @@ public class UserService implements IUserService {
         userRepository.save(user);
 
         return user;
+    }
+
+    public User find(String mail) {
+        return userRepository.findByEmail(mail);
     }
 }

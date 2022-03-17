@@ -1,5 +1,6 @@
 package de.mwa.evopiaserver.registration;
 
+import de.mwa.evopiaserver.service.UserServiceNew;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class RegistrationRestController {
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private IUserService userService;
+    private UserServiceNew userService;
 
     @PostMapping("/user/registration")
     public GenericResponse registerUserAccount(@RequestBody @Valid UserDto accountDto, final HttpServletRequest request) {
