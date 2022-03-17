@@ -11,4 +11,5 @@ object UserTable : Table<Nothing>("useraccount") {
     val dateOfRegistration = varchar("dateOfRegistration")
     val email = varchar("email")
     val password = varchar("password")
+    val imagePath = varchar("imagePath")
 }

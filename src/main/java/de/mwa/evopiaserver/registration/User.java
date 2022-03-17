@@ -1,39 +1,31 @@
 package de.mwa.evopiaserver.registration;
 
-import de.mwa.evopiaserver.db.profile.Profile;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
 import java.util.Objects;
 
-@Entity
 @Setter
 @NoArgsConstructor
 @ToString
-@Table(name = "useraccount")
 public class User {
-    @Id
-    @Column(unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
     private String lastName;
     private String dateOfRegistration;
     private String email;
     private String password;
+    private String imagePath;
 
-    @OneToOne(mappedBy = "user")
-    private Profile profile;
-
-    public User(Long id, String firstName, String lastName, String dateOfRegistration, String email, String password) {
+    public User(Long id, String firstName, String lastName, String dateOfRegistration, String email, String password, String imagePath) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfRegistration = dateOfRegistration;
         this.email = email;
         this.password = password;
+        this.imagePath = imagePath;
     }
 
     public Long getId() {
@@ -60,8 +52,8 @@ public class User {
         return password;
     }
 
-    public Profile getProfile() {
-        return profile;
+    public String getImagePath() {
+        return imagePath;
     }
 
     @Override
@@ -75,11 +67,11 @@ public class User {
                 && Objects.equals(dateOfRegistration, user.dateOfRegistration)
                 && Objects.equals(email, user.email)
                 && Objects.equals(password, user.password)
-                && Objects.equals(profile, user.profile);
+                && Objects.equals(imagePath, user.imagePath);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, dateOfRegistration, email, password, profile);
+        return Objects.hash(id, firstName, lastName, dateOfRegistration, email, password, imagePath);
     }
 }

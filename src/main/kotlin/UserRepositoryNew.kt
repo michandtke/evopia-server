@@ -8,28 +8,30 @@ import org.springframework.stereotype.Component
 class UserRepositoryNew(val databaseUtil: DatabaseUtil) {
     fun findByEmail(mail: String): User {
         return databaseUtil.database
-                .from(UserTable)
-                .select()
-                .where { (UserTable.email eq mail) }
-                .map { rowToUser(it) }
-                .first()
+            .from(UserTable)
+            .select()
+            .where { (UserTable.email eq mail) }
+            .map { rowToUser(it) }
+            .first()
     }
 
     fun emailAlreadyExists(mail: String): Boolean {
         return databaseUtil.database
-                .from(UserTable)
-                .select()
-                .where { (UserTable.email eq mail) }
-                .totalRecords > 0
+            .from(UserTable)
+            .select()
+            .where { (UserTable.email eq mail) }
+            .totalRecords > 0
     }
 
     private fun rowToUser(it: QueryRowSet): User {
-        return User(it[UserTable.id]?.toLong(),
-                it[UserTable.firstName],
-                it[UserTable.lastName],
-                it[UserTable.dateOfRegistration],
-                it[UserTable.email],
-                it[UserTable.password]
+        return User(
+            it[UserTable.id]?.toLong(),
+            it[UserTable.firstName],
+            it[UserTable.lastName],
+            it[UserTable.dateOfRegistration],
+            it[UserTable.email],
+            it[UserTable.password],
+            it[UserTable.imagePath]
         )
     }
 
@@ -39,5 +41,6 @@ class UserRepositoryNew(val databaseUtil: DatabaseUtil) {
             set(it.lastName, user.lastName)
             set(it.password, user.password)
             set(it.email, user.email)
+            set(it.imagePath, user.imagePath)
         }
 }

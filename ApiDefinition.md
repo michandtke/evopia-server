@@ -1,6 +1,6 @@
 ### Authorize user
 
-### Get user profile
+### Get user
 The first request, will be used to also check the credentials.
 
 #### Request
@@ -38,7 +38,11 @@ The first request, will be used to also check the credentials.
       }
     ```
 
-### Set user profile
+### Set user
+
+### Upsert user tags
+
+### Upsert user channels
 
 ### Get events
 

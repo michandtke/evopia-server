@@ -1,28 +1,23 @@
 package de.mwa.evopiaserver.registration;
 
 
-import de.mwa.evopiaserver.db.profile.Profile;
-import de.mwa.evopiaserver.db.profile.ProfileRepository;
+import de.mwa.evopiaserver.db.kotlin.UserRepositoryNew;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     private boolean alreadySetup = false;
 
-    private final UserRepository userRepository;
-    private final ProfileRepository profileRepository;
+    private final UserRepositoryNew userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public SetupDataLoader(UserRepository userRepository, ProfileRepository profileRepository, PasswordEncoder passwordEncoder) {
+    public SetupDataLoader(UserRepositoryNew userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.profileRepository = profileRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -51,20 +46,10 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             String encode = passwordEncoder.encode(password);
             user.setPassword(encode);
             user.setEmail(email);
-//            user.setEnabled(true);
+            user.setImagePath("");
         }
-        user = userRepository.save(user);
-        var profile = createProfileForUser(user);
+        userRepository.save(user);
         return user;
-    }
-
-    Profile createProfileForUser(User forUser) {
-        var profile = new Profile();
-        profile.setUser(forUser);
-        profile.setImage("");
-        profile.setTags(List.of());
-        profile.setProfileChannels(List.of());
-        return profileRepository.save(profile);
     }
 
 }

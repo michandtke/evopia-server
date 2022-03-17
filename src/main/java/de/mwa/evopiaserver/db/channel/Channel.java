@@ -6,7 +6,6 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @ToString
-@Entity
 public class Channel {
     private @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

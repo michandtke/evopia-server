@@ -2,6 +2,7 @@ package de.mwa.evopiaserver.profile;
 
 import de.mwa.evopiaserver.db.channel.Channel;
 import de.mwa.evopiaserver.db.kotlin.ChannelRepository;
+import de.mwa.evopiaserver.db.kotlin.ProfileChannelRepositoryNew;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,19 +17,19 @@ import java.util.stream.Collectors;
 public class ProfileChannelService implements IProfileChannelService {
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-    private final ProfileChannelRepository profileChannelRepository;
+    private final ProfileChannelRepositoryNew profileChannelRepository;
     private final ChannelRepository databaseWrapper;
 
-    public ProfileChannelService(ProfileChannelRepository profileChannelRepository,
+    public ProfileChannelService(ProfileChannelRepositoryNew profileChannelRepository,
                                  ChannelRepository channelRepository) {
         this.profileChannelRepository = profileChannelRepository;
         this.databaseWrapper = channelRepository;
     }
 
     @Override
-    public List<ProfileChannel> upsert(Long profileId, List<NewProfileChannel> profileChannels) {
+    public int upsert(Long profileId, List<NewProfileChannel> profileChannels) {
         List<ProfileChannel> profileChannelUpserts = knownChannelsWithValues(profileChannels).stream()
-                .map(chanWithValue -> new ProfileChannel(profileId, chanWithValue.getKey(), chanWithValue.getValue()))
+                .map(chanWithValue -> new ProfileChannel(profileId.intValue(), chanWithValue.getKey().getId().intValue(), chanWithValue.getValue()))
                 .collect(Collectors.toList());
         var profileChannelString = profileChannelUpserts.stream().map(ProfileChannel::toString).collect(Collectors.toSet());
         LOGGER.info("SaveAll: " + String.join(", ", profileChannelString));

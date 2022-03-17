@@ -1,35 +1,33 @@
 package de.mwa.evopiaserver.profile;
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import de.mwa.evopiaserver.db.channel.Channel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
-import java.math.BigInteger;
-
-@Entity(name = "profilechannels")
-@Getter
 @Setter
-@IdClass(ProfileChannelId.class)
 @ToString
 @NoArgsConstructor
 public class ProfileChannel {
-   @Id
-   private BigInteger profileId;
 
-   @ManyToOne
-   @Id
-   @JsonUnwrapped
-   private Channel channel;
-
+   private int userId;
+   private int channelId;
    private String value;
 
-   ProfileChannel(Long profileId, Channel channel, String value) {
-      this.profileId = BigInteger.valueOf(profileId);
-      this.channel = channel;
+   ProfileChannel(int userId, int channelId, String value) {
+      this.userId = userId;
+      this.channelId = channelId;
       this.value = value;
+   }
+
+   public int getChannelId() {
+      return channelId;
+   }
+
+   public int getUserId() {
+      return userId;
+   }
+
+   public String getValue() {
+      return value;
    }
 }
