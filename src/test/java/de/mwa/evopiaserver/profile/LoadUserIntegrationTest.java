@@ -2,8 +2,7 @@ package de.mwa.evopiaserver.profile;
 
 import com.jayway.jsonpath.JsonPath;
 import de.mwa.evopiaserver.HttpEntityFactory;
-import de.mwa.evopiaserver.api.dto.UserChannel;
-import de.mwa.evopiaserver.api.dto.UserTag;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJson;
@@ -14,14 +13,16 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.List;
+import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,23 +46,55 @@ public class LoadUserIntegrationTest {
             .withPassword("sa");
 
     @Test
-    public void shouldGetUserForTestUser() {
-        var url = "http://localhost:" + port + "/v2/user";
-        var response = restTemplate.exchange
-                (url, HttpMethod.GET, HttpEntityFactory.forTestUser(), String.class);
-
-        assertThat(response.getStatusCode())
-                .as("Not a successful call: " + response.getBody())
-                .isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isNotBlank();
-        System.out.println(response.getBody());
+    public void should_get_user_for_test_user() {
+        ResponseEntity<String> response = getUserWith(HttpEntityFactory.forTestUser());
 
         var parsedJson = JsonPath.parse(response.getBody());
         String imagePath = parsedJson.read("@.imagePath");
         assertThat(imagePath).isBlank();
     }
 
-    // GET USER
+    @NotNull
+    private ResponseEntity<String> getUserWith(HttpEntity<String> entity) {
+        var url = "http://localhost:" + port + "/v2/user";
+        var response = restTemplate.exchange
+                (url, HttpMethod.GET, entity, String.class);
+
+        assertThat(response.getStatusCode())
+                .as("Not a successful call: " + response.getBody())
+                .isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotBlank();
+        System.out.println(response.getBody());
+        return response;
+    }
+
+    @Test
+    public void should_be_able_to_add_and_use_new_user() {
+        var url = "http://localhost:" + port + "/v2/user";
+        var dateOfRegistration = new Date().toString();
+        var email = "Kanzler@wichtig.de";
+        var body = "{" +
+                "\"firstName\": \"Olaf\"," +
+                "\"lastName\": \"Scholz\"," +
+                "\"dateOfRegistration\": \"" + dateOfRegistration + "\"," +
+                "\"email\": \"" + email + "\"," +
+                "\"password\": \"123pw\"," +
+                "\"imagePath\": \"Olaf.jpg\"" +
+                "}";
+
+        var response = restTemplate.exchange
+                (url, HttpMethod.PUT, HttpEntityFactory.forTestUserWith(body), String.class);
+        assertThat(response.getStatusCode())
+                .as("Not a successful call: " + response.getBody())
+                .isEqualTo(HttpStatus.OK);
+
+        ResponseEntity<String> newUser = getUserWith(HttpEntityFactory.forUser(email, "123pw"));
+
+        var parsedJson = JsonPath.parse(newUser.getBody());
+        String readDate = parsedJson.read("@.dateOfRegistration");
+        assertThat(readDate).isEqualTo(dateOfRegistration);
+    }
+
     // ADD USER
     // DELETE USER
     // UPSERT USER

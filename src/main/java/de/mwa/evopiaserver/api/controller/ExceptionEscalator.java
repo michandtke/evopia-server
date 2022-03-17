@@ -1,6 +1,7 @@
 package de.mwa.evopiaserver.api.controller;
 
 import de.mwa.evopiaserver.api.NoRemoteUserFoundException;
+import org.postgresql.util.PSQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,6 +21,14 @@ public class ExceptionEscalator {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity handleRuntimeException(RuntimeException e) {
+        // log exception
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(e.getMessage());
+    }
+
+    @ExceptionHandler(PSQLException.class)
+    public ResponseEntity handleRuntimeException(PSQLException e) {
         // log exception
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)

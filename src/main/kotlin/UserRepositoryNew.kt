@@ -35,12 +35,13 @@ class UserRepositoryNew(val databaseUtil: DatabaseUtil) {
         )
     }
 
-    fun save(user: User): Int =
-        databaseUtil.database.insert(UserTable) {
+    fun save(user: User): Any =
+        databaseUtil.database.insertAndGenerateKey(UserTable) {
             set(it.firstName, user.firstName)
             set(it.lastName, user.lastName)
             set(it.password, user.password)
             set(it.email, user.email)
             set(it.imagePath, user.imagePath)
+            set(it.dateOfRegistration, user.dateOfRegistration)
         }
 }
