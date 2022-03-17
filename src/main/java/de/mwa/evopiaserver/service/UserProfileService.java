@@ -9,7 +9,6 @@ import de.mwa.evopiaserver.db.kotlin.TagRepository;
 import de.mwa.evopiaserver.db.kotlin.UserRepositoryNew;
 import de.mwa.evopiaserver.db.tag.Tag;
 import de.mwa.evopiaserver.profile.ProfileChannel;
-import de.mwa.evopiaserver.profile.ProfileChannelRepository;
 import de.mwa.evopiaserver.registration.User;
 import org.springframework.stereotype.Service;
 

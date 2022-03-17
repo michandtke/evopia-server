@@ -6,13 +6,13 @@ import org.springframework.stereotype.Component
 
 @Component
 class UserRepositoryNew(val databaseUtil: DatabaseUtil) {
-    fun findByEmail(mail: String): User {
+    fun findByEmail(mail: String): User? {
         return databaseUtil.database
             .from(UserTable)
             .select()
             .where { (UserTable.email eq mail) }
             .map { rowToUser(it) }
-            .first()
+            .firstOrNull()
     }
 
     fun emailAlreadyExists(mail: String): Boolean {

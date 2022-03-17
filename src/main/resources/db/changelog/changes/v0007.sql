@@ -1,0 +1,1 @@
+alter table useraccount ADD image_path varchar(255);
