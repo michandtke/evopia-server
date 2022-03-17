@@ -6,13 +6,13 @@ import de.mwa.evopiaserver.api.dto.UserTag;
 import de.mwa.evopiaserver.db.channel.Channel;
 import de.mwa.evopiaserver.db.kotlin.ChannelRepository;
 import de.mwa.evopiaserver.db.kotlin.TagRepository;
+import de.mwa.evopiaserver.db.kotlin.UserRepositoryNew;
 import de.mwa.evopiaserver.db.profile.Profile;
 import de.mwa.evopiaserver.db.profile.ProfileRepository;
 import de.mwa.evopiaserver.db.tag.Tag;
 import de.mwa.evopiaserver.profile.ProfileChannel;
 import de.mwa.evopiaserver.profile.ProfileChannelRepository;
 import de.mwa.evopiaserver.registration.User;
-import de.mwa.evopiaserver.registration.UserRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -24,13 +24,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserProfileService {
-    private final UserRepository userRepository;
+    private final UserRepositoryNew userRepository;
     private final ProfileRepository profileRepository;
     private final TagRepository tagRepository;
     private final ProfileChannelRepository profileChannelRepository;
     private final ChannelRepository databaseWrapper;
 
-    public UserProfileService(UserRepository userRepository,
+    public UserProfileService(UserRepositoryNew userRepository,
                               ProfileRepository profileRepository,
                               TagRepository tagRepository,
                               ProfileChannelRepository profileChannelRepository,

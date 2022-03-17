@@ -1,6 +1,5 @@
 package de.mwa.evopiaserver.db.kotlin
 
-import de.mwa.evopiaserver.db.tag.Tag
 import de.mwa.evopiaserver.registration.User
 import org.ktorm.dsl.*
 import org.springframework.stereotype.Component
@@ -41,6 +40,4 @@ class UserRepositoryNew(val databaseUtil: DatabaseUtil) {
             set(it.password, user.password)
             set(it.email, user.email)
         }
-    // TODO - insert roles in their own repository!
-    //     user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
 }

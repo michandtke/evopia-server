@@ -1,17 +1,14 @@
 package de.mwa.evopiaserver.registration;
 
 import de.mwa.evopiaserver.db.profile.Profile;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-@Getter
 @Setter
 @NoArgsConstructor
 @ToString
@@ -27,12 +24,6 @@ public class User {
     private String email;
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "userroles",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Collection<Role> roles;
-
     @OneToOne(mappedBy = "user")
     private Profile profile;
 
@@ -43,6 +34,34 @@ public class User {
         this.dateOfRegistration = dateOfRegistration;
         this.email = email;
         this.password = password;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getDateOfRegistration() {
+        return dateOfRegistration;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Profile getProfile() {
+        return profile;
     }
 
     @Override

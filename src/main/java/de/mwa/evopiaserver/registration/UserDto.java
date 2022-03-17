@@ -32,16 +32,6 @@ public class UserDto {
         this.email = email;
     }
 
-    private Integer role;
-
-    public Integer getRole() {
-        return role;
-    }
-
-    public void setRole(final Integer role) {
-        this.role = role;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -82,8 +72,7 @@ public class UserDto {
                 .append(lastName)
                 .append(", email=")
                 .append(email)
-                .append(", role=")
-                .append(role).append("]");
+                .append("]");
         return builder.toString();
     }
 
