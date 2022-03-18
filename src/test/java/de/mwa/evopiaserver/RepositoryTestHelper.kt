@@ -2,6 +2,7 @@ package de.mwa.evopiaserver
 
 import de.mwa.evopiaserver.db.kotlin.ChannelTable
 import de.mwa.evopiaserver.db.kotlin.DatabaseUtil
+import de.mwa.evopiaserver.db.kotlin.UserChannelTable
 import de.mwa.evopiaserver.db.kotlin.UserTable
 import org.ktorm.dsl.deleteAll
 import org.ktorm.dsl.insert
@@ -24,5 +25,9 @@ class RepositoryTestHelper(val databaseUtil: DatabaseUtil) {
         databaseUtil.database.insert(ChannelTable) {
             set(it.name, "Dummychannel")
         }
+    }
+
+    fun resetUserChannelTable() {
+        databaseUtil.database.deleteAll(UserChannelTable)
     }
 }
