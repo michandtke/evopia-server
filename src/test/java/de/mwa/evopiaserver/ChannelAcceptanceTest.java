@@ -1,6 +1,7 @@
 package de.mwa.evopiaserver;
 
 import de.mwa.evopiaserver.api.dto.ChannelDto;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJson;
@@ -35,11 +36,19 @@ public class ChannelAcceptanceTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Autowired
+    private ChannelRepositoryTestHelper channelRepositoryTestHelper;
+
     @Container
     private static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres")
             .withDatabaseName("integration-tests-db")
             .withUsername("sa")
             .withPassword("sa");
+
+    @AfterEach
+    public void cleanup() {
+        channelRepositoryTestHelper.resetForTests();
+    }
 
     @Test
     public void initial_channel_has_only_dummychannel() {
@@ -59,15 +68,19 @@ public class ChannelAcceptanceTest {
 
         var channels = getAllChannels();
         assertThat(channels).containsOnly(new ChannelDto("Dummychannel"), new ChannelDto("BatSign"));
+    }
 
+    @Test
+    public void removing_channel_should_work() {
         var removingUrl = "http://localhost:" + port + "/v2/channels/remove";
+        var body = "{\"name\": \"Dummychannel\"}";
         var removeResponse = restTemplate.exchange
                 (removingUrl, HttpMethod.POST, HttpEntityFactory.forTestUserWith(body), String.class);
 
         assertThat(removeResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         var channelsAfterDelete = getAllChannels();
-        assertThat(channelsAfterDelete).containsOnly(new ChannelDto("Dummychannel"));
+        assertThat(channelsAfterDelete).isEmpty();
     }
 
     private List<ChannelDto> getAllChannels() {
