@@ -2,7 +2,7 @@ package de.mwa.evopiaserver.profile;
 
 import com.jayway.jsonpath.JsonPath;
 import de.mwa.evopiaserver.HttpEntityFactory;
-import de.mwa.evopiaserver.UserRepositoryTestHelper;
+import de.mwa.evopiaserver.RepositoryTestHelper;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +42,7 @@ public class UserIntegrationTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private UserRepositoryTestHelper userRepositoryTestHelper;
+    private RepositoryTestHelper repositoryTestHelper;
 
     @Container
     private static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres")
@@ -52,7 +52,7 @@ public class UserIntegrationTest {
 
     @AfterEach
     public void cleanup() {
-        userRepositoryTestHelper.resetForTests();
+        repositoryTestHelper.resetUserTable();
     }
 
     @Test

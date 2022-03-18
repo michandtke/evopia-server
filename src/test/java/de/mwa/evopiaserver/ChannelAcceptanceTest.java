@@ -37,7 +37,7 @@ public class ChannelAcceptanceTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private ChannelRepositoryTestHelper channelRepositoryTestHelper;
+    private RepositoryTestHelper repositoryTestHelper;
 
     @Container
     private static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres")
@@ -47,7 +47,7 @@ public class ChannelAcceptanceTest {
 
     @AfterEach
     public void cleanup() {
-        channelRepositoryTestHelper.resetForTests();
+        repositoryTestHelper.resetChannelTable();
     }
 
     @Test
