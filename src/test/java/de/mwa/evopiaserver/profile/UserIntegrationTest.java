@@ -30,8 +30,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 @AutoConfigureJson
 @AutoConfigureJsonTesters
-@ContextConfiguration(initializers = {LoadUserIntegrationTest.Initializer.class})
-public class LoadUserIntegrationTest {
+@ContextConfiguration(initializers = {UserIntegrationTest.Initializer.class})
+public class UserIntegrationTest {
 
     @LocalServerPort
     private int port;
@@ -95,9 +95,26 @@ public class LoadUserIntegrationTest {
         assertThat(readDate).isEqualTo(dateOfRegistration);
     }
 
-    // ADD USER
-    // DELETE USER
-    // UPSERT USER
+    @Test
+    public void should_be_able_to_upsert_user_image_path() {
+        var url = "http://localhost:" + port + "/v2/user";
+        var newImagePath = "NewImageOlaf.jpg";
+        var body = "{" +
+                "\"imagePath\": \"" + newImagePath + "\"" +
+                "}";
+
+        var response = restTemplate.exchange
+                (url, HttpMethod.POST, HttpEntityFactory.forTestUserWith(body), String.class);
+        assertThat(response.getStatusCode())
+                .as("Not a successful call: " + response.getBody())
+                .isEqualTo(HttpStatus.OK);
+
+        ResponseEntity<String> adjustedUser = getUserWith(HttpEntityFactory.forTestUser());
+
+        var parsedJson = JsonPath.parse(adjustedUser.getBody());
+        String imagePath = parsedJson.read("@.imagePath");
+        assertThat(imagePath).isEqualTo(newImagePath);
+    }
 
 //    @Test
 //    public void should_save_image_path_tags_and_channels_in_profile() {

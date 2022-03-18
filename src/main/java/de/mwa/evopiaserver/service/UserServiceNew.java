@@ -1,5 +1,6 @@
 package de.mwa.evopiaserver.service;
 
+import de.mwa.evopiaserver.api.dto.UpsertUserDto;
 import de.mwa.evopiaserver.db.kotlin.UserRepositoryNew;
 import de.mwa.evopiaserver.registration.User;
 import de.mwa.evopiaserver.registration.UserAlreadyExistsException;
@@ -31,5 +32,9 @@ public class UserServiceNew {
 
     public User find(String mail) {
         return userRepository.findByEmail(mail);
+    }
+
+    public int update(UpsertUserDto upsertUser, String mail) {
+        return userRepository.update(mail, upsertUser);
     }
 }

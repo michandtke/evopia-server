@@ -1,5 +1,6 @@
 package de.mwa.evopiaserver.db.kotlin
 
+import de.mwa.evopiaserver.api.dto.UpsertUserDto
 import de.mwa.evopiaserver.registration.User
 import org.ktorm.dsl.*
 import org.springframework.stereotype.Component
@@ -44,4 +45,11 @@ class UserRepositoryNew(val databaseUtil: DatabaseUtil) {
             set(it.imagePath, user.imagePath)
             set(it.dateOfRegistration, user.dateOfRegistration)
         }
+
+    fun update(mail: String, upsertUser: UpsertUserDto): Int {
+        return databaseUtil.database.update(UserTable) {
+            set(it.imagePath, upsertUser.imagePath)
+            where { it.email eq mail }
+        }
+    }
 }

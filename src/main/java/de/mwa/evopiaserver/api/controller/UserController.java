@@ -1,12 +1,10 @@
 package de.mwa.evopiaserver.api.controller;
 
 import de.mwa.evopiaserver.api.NoRemoteUserFoundException;
+import de.mwa.evopiaserver.api.dto.UpsertUserDto;
 import de.mwa.evopiaserver.registration.User;
 import de.mwa.evopiaserver.service.UserServiceNew;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,6 +28,14 @@ public class UserController {
     public User addNewUser(@RequestBody User newUser) {
         return userService.registerNewUserAccount(newUser);
 
+    }
+
+    @PostMapping("/v2/user")
+    public String upsertUser(@RequestBody UpsertUserDto upsertUser, HttpServletRequest request) {
+        if (request.getRemoteUser() == null)
+            throw new NoRemoteUserFoundException("Too bad, no remote user found!");
+        var updatedCount = userService.update(upsertUser, request.getRemoteUser());
+        return "Updated " + updatedCount + " user.";
     }
 
 
