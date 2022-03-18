@@ -17,4 +17,12 @@ public class UserChannelService {
     public List<UserChannel> getChannels(String email) {
         return userChannelRepository.findForUser(email);
     }
+
+    public int replaceWith(String mail, List<UserChannel> userChannel) {
+        return userChannelRepository.replaceAllForWith(mail, userChannel);
+    }
+
+    public int add(String remoteUser, List<UserChannel> channels) {
+        return userChannelRepository.add(remoteUser, channels);
+    }
 }

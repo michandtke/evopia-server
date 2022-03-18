@@ -61,6 +61,21 @@ public class UserChannelAcceptanceTest {
 
     @Test
     public void should_add_user_channel() {
+        var addingUrl = "http://localhost:" + port + "/v2/user/channel";
+        var body = "[{\"name\": \"Dummychannel\", \"value\":\"0160\"}]";
+        var addResponse = restTemplate.exchange
+                (addingUrl, HttpMethod.POST, HttpEntityFactory.forTestUserWith(body), String.class);
+
+        assertThat(addResponse.getStatusCode())
+                .as("Not a successful call: " + addResponse.getBody())
+                .isEqualTo(HttpStatus.OK);
+
+        var userChannels = getAllUserChannels();
+        assertThat(userChannels).containsOnly(new UserChannel("Dummychannel", "0160"));
+    }
+
+    @Test
+    public void should_return_error_message_when_channel_not_existing() {
 
     }
 
