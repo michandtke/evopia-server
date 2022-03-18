@@ -1,6 +1,7 @@
 package de.mwa.evopiaserver.api.controller;
 
 import de.mwa.evopiaserver.api.NoRemoteUserFoundException;
+import de.mwa.evopiaserver.api.UnknownChannelException;
 import org.postgresql.util.PSQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,6 @@ public class ExceptionEscalator {
 
     @ExceptionHandler(NoRemoteUserFoundException.class)
     public ResponseEntity handleException(NoRemoteUserFoundException e) {
-        // log exception
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
                 .body(e.getMessage());
@@ -21,7 +21,6 @@ public class ExceptionEscalator {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity handleRuntimeException(RuntimeException e) {
-        // log exception
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(e.getMessage());
@@ -29,9 +28,15 @@ public class ExceptionEscalator {
 
     @ExceptionHandler(PSQLException.class)
     public ResponseEntity handleRuntimeException(PSQLException e) {
-        // log exception
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(e.getMessage());
+    }
+
+    @ExceptionHandler(UnknownChannelException.class)
+    public ResponseEntity handleUnknownChannelException(UnknownChannelException e) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(e.getMessage());
     }
 }

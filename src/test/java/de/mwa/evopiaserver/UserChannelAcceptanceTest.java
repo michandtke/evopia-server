@@ -76,7 +76,19 @@ public class UserChannelAcceptanceTest {
 
     @Test
     public void should_return_error_message_when_channel_not_existing() {
+        var addingUrl = "http://localhost:" + port + "/v2/user/channel";
+        var body = "[{\"name\": \"NotExistingChannel\", \"value\":\"0160\"}]";
+        var addResponse = restTemplate.exchange
+                (addingUrl, HttpMethod.POST, HttpEntityFactory.forTestUserWith(body), String.class);
 
+        assertThat(addResponse.getStatusCode())
+                .as("Should be a bad request: " + addResponse.getBody())
+                .isEqualTo(HttpStatus.BAD_REQUEST);
+
+        assertThat(addResponse.getBody()).contains("Unknown channel: NotExistingChannel");
+
+        var userChannels = getAllUserChannels();
+        assertThat(userChannels).isEmpty();
     }
 
     @Test
