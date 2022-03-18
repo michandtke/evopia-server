@@ -2,8 +2,9 @@ package de.mwa.evopiaserver.profile;
 
 import com.jayway.jsonpath.JsonPath;
 import de.mwa.evopiaserver.HttpEntityFactory;
+import de.mwa.evopiaserver.UserRepositoryTestHelper;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJson;
@@ -40,11 +41,19 @@ public class UserIntegrationTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Autowired
+    private UserRepositoryTestHelper userRepositoryTestHelper;
+
     @Container
     private static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres")
             .withDatabaseName("integration-tests-db")
             .withUsername("sa")
             .withPassword("sa");
+
+    @AfterEach
+    public void cleanup() {
+        userRepositoryTestHelper.resetForTests();
+    }
 
     @Test
     public void should_get_user_for_test_user() {
@@ -116,46 +125,6 @@ public class UserIntegrationTest {
         String imagePath = parsedJson.read("@.imagePath");
         assertThat(imagePath).isEqualTo(newImagePath);
     }
-
-//    @Test
-//    public void should_save_image_path_tags_and_channels_in_profile() {
-//        var saveUrl = "http://localhost:" + port + "/v2/profile/save";
-//        var saveBody = "{\"imagePath\":\"myImagePath\"," +
-//                "\"profileChannels\": [ {\"name\":\"Dummychannel\", \"value\":\"1234\"} ]," +
-//                "\"tags\": [ {\"name\":\"Dummytag\"}]" +
-//                "}";
-//        var saveResponse = restTemplate.exchange
-//                (saveUrl, HttpMethod.POST, HttpEntityFactory.forTestUserWith(saveBody), String.class);
-//
-//        assertThat(saveResponse.getStatusCode())
-//                .as("Not a successful call: " + saveResponse.getBody())
-//                .isEqualTo(HttpStatus.OK);
-//
-//        var url = "http://localhost:" + port + "/v2/profile";
-//        var response = restTemplate.exchange
-//                (url, HttpMethod.GET, HttpEntityFactory.forTestUser(), String.class);
-//
-//        assertThat(response.getStatusCode())
-//                .as("Not a successful call: " + response.getBody())
-//                .isEqualTo(HttpStatus.OK);
-//        assertThat(response.getBody()).isNotBlank();
-//        System.out.println(response.getBody());
-//
-//        var parsedJson = JsonPath.parse(response.getBody());
-//        String imagePath = parsedJson.read("@.imagePath");
-//        assertThat(imagePath).isEqualTo("myImagePath");
-//
-//        List channels = parsedJson.read("@.profileChannels");
-//        UserChannel expectedChannel = UserChannel.builder()
-//                .name("Dummychannel")
-//                .value("12345")
-//                .build();
-//        assertThat(channels).containsOnly(expectedChannel);
-//
-//        List tags = parsedJson.read("@.tags");
-//        UserTag expectedTag = UserTag.builder().name("Dummytag").build();
-//        assertThat(tags).containsOnly(expectedTag);
-//    }
 
     static class Initializer
             implements ApplicationContextInitializer<ConfigurableApplicationContext> {
