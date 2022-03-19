@@ -61,17 +61,21 @@ public class UserChannelAcceptanceTest {
 
     @Test
     public void should_add_user_channel() {
-        var addingUrl = "http://localhost:" + port + "/v2/user/channel";
         var body = "[{\"name\": \"Dummychannel\", \"value\":\"0160\"}]";
+        addUserChannel(body);
+
+        var userChannels = getAllUserChannels();
+        assertThat(userChannels).containsOnly(new UserChannel("Dummychannel", "0160"));
+    }
+
+    private void addUserChannel(String body) {
+        var addingUrl = "http://localhost:" + port + "/v2/user/channel";
         var addResponse = restTemplate.exchange
                 (addingUrl, HttpMethod.POST, HttpEntityFactory.forTestUserWith(body), String.class);
 
         assertThat(addResponse.getStatusCode())
                 .as("Not a successful call: " + addResponse.getBody())
                 .isEqualTo(HttpStatus.OK);
-
-        var userChannels = getAllUserChannels();
-        assertThat(userChannels).containsOnly(new UserChannel("Dummychannel", "0160"));
     }
 
     @Test
@@ -93,7 +97,20 @@ public class UserChannelAcceptanceTest {
 
     @Test
     public void should_remove_user_channel() {
+        var body = "[{\"name\": \"Dummychannel\", \"value\":\"0160\"}]";
+        addUserChannel(body);
 
+        var emptyBody = "[]";
+        var removingUrl = "http://localhost:" + port + "/v2/user/channel";
+        var removeResponse = restTemplate.exchange
+                (removingUrl, HttpMethod.POST, HttpEntityFactory.forTestUserWith(emptyBody), String.class);
+
+        assertThat(removeResponse.getStatusCode())
+                .as("Not a successful call: " + removeResponse.getBody())
+                .isEqualTo(HttpStatus.OK);
+
+        var userChannels = getAllUserChannels();
+        assertThat(userChannels).isEmpty();
     }
 
     @Test

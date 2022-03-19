@@ -56,17 +56,23 @@ class UserChannelRepositoryNew(val databaseUtil: DatabaseUtil) {
         TODO("Not yet implemented")
     }
 
-    fun add(mail: String, channels: List<UserChannel>): Int {
+    fun add(mail: String, channels: List<UserChannel>): Pair<Int, Int> {
+
         val userId = databaseUtil.database.from(UserTable)
             .select(UserTable.id)
             .where(UserTable.email eq mail)
             .map { it[UserTable.id] }
             .first()
 
-        val channelIdValue: List<Pair<Int?, String>> = databaseUtil.database.from(ChannelTable)
+        val channelIdValue: List<Pair<Int?, String?>> = databaseUtil.database.from(ChannelTable)
             .select()
-            .where(ChannelTable.name inList channels.map { it.name })
-            .map { Pair(it[ChannelTable.id], channels.first { chan -> chan.name == it[ChannelTable.name] }.value) }
+//            .where(ChannelTable.name inList channels.map { it.name })
+            .map {
+                Pair(
+                    it[ChannelTable.id],
+                    channels.firstOrNull { chan -> chan.name == it[ChannelTable.name] }?.value
+                )
+            }
 
 //        var x = databaseUtil.database
 //            .from(UserChannelTable)
@@ -77,14 +83,27 @@ class UserChannelRepositoryNew(val databaseUtil: DatabaseUtil) {
 //            .where { (ChannelTable.name inList channels.map { it.name }) }
 //            .map { Pair(it[UserChannelTable.channelId], it[UserChannelTable.userId]) }
 
-        return databaseUtil.database.batchInsert(UserChannelTable) {
-            channelIdValue.map { idValuePair ->
+        val grouped = channelIdValue.groupBy { it.second != null }
+        val toInsert = grouped[true]
+        val toDelete = grouped[false]?.mapNotNull { it.first }
+
+        val inserted: IntArray = databaseUtil.database.batchInsert(UserChannelTable) {
+            toInsert?.map { idValuePair ->
                 item {
                     set(it.channelId, idValuePair.first)
                     set(it.userId, userId)
                     set(it.value, idValuePair.second)
                 }
             }
-        }.reduce { a: Int, b: Int -> a + b }
+        }
+
+        val insertedCount = inserted.fold(0) { a, b -> a + b }
+        var deletedCount = -1
+        if (toDelete != null && userId != null)
+            deletedCount = databaseUtil.database.delete(UserChannelTable) {
+                (it.channelId inList toDelete) and (it.userId eq userId)
+            }
+
+        return Pair(insertedCount, deletedCount)
     }
 }

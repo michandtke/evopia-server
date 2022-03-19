@@ -2,6 +2,7 @@ package de.mwa.evopiaserver.service;
 
 import de.mwa.evopiaserver.api.dto.UserChannel;
 import de.mwa.evopiaserver.db.kotlin.UserChannelRepositoryNew;
+import kotlin.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class UserChannelService {
         return userChannelRepository.replaceAllForWith(mail, userChannel);
     }
 
-    public int add(String remoteUser, List<UserChannel> channels) {
+    public Pair<Integer, Integer> add(String remoteUser, List<UserChannel> channels) {
         return userChannelRepository.add(remoteUser, channels);
     }
 }

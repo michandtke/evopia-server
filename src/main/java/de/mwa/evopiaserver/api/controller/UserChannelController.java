@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 public class UserChannelController {
@@ -32,7 +31,7 @@ public class UserChannelController {
     }
 
     @PostMapping("/v2/user/channel")
-    public int replaceUserChannels(HttpServletRequest request, @RequestBody List<UserChannel> channels) {
+    public String replaceUserChannels(HttpServletRequest request, @RequestBody List<UserChannel> channels) {
 //        return userChannelService.replaceWith(request.getRemoteUser(), channels);
         var allChannels = channelService.findAll().stream().map(ChannelDto::getName).collect(Collectors.toList());
         var unknownChannels = channels.stream().filter(chan -> !allChannels.contains(chan.getName())).collect(Collectors.toList());
@@ -41,6 +40,8 @@ public class UserChannelController {
             var message = "Unknown channel: " + String.join(",", names);
             throw new UnknownChannelException(message);
         }
-        return userChannelService.add(request.getRemoteUser(), channels);
+        var added = userChannelService.add(request.getRemoteUser(), channels);
+
+        return "Successfully replaced channels. Added : " + added.getFirst() + " | Deleted: " + added.getSecond();
     }
 }
