@@ -1,9 +1,6 @@
 package de.mwa.evopiaserver
 
-import de.mwa.evopiaserver.db.kotlin.ChannelTable
-import de.mwa.evopiaserver.db.kotlin.DatabaseUtil
-import de.mwa.evopiaserver.db.kotlin.UserChannelTable
-import de.mwa.evopiaserver.db.kotlin.UserTable
+import de.mwa.evopiaserver.db.kotlin.*
 import org.ktorm.dsl.deleteAll
 import org.ktorm.dsl.insert
 import org.springframework.stereotype.Component
@@ -29,5 +26,9 @@ class RepositoryTestHelper(val databaseUtil: DatabaseUtil) {
 
     fun resetUserChannelTable() {
         databaseUtil.database.deleteAll(UserChannelTable)
+    }
+
+    fun resetUserTagTable() {
+        databaseUtil.database.deleteAll(UserTagTable)
     }
 }
