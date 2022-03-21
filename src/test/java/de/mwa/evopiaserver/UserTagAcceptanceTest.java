@@ -81,11 +81,13 @@ public class UserTagAcceptanceTest {
 
     private void addTag(String name) {
         var addingUrl = "http://localhost:" + port + "/v2/tags/add";
-        var body = "{\"name\": \""+name+"\"}";
+        var body = "[{\"name\": \""+name+"\"}]";
         var addResponse = restTemplate.exchange
                 (addingUrl, HttpMethod.POST, HttpEntityFactory.forTestUserWith(body), String.class);
 
-        assertThat(addResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(addResponse.getStatusCode())
+                .as("Not a successful call: " + addResponse.getBody())
+                .isEqualTo(HttpStatus.OK);
     }
 
     @AfterEach

@@ -1,7 +1,9 @@
 package de.mwa.evopiaserver.db.kotlin
 
+import de.mwa.evopiaserver.api.dto.TagDto
 import de.mwa.evopiaserver.db.tag.Tag
 import org.ktorm.dsl.*
+import org.ktorm.support.postgresql.bulkInsert
 import org.springframework.stereotype.Component
 
 @Component
@@ -27,6 +29,16 @@ class TagRepository(val databaseUtil: DatabaseUtil) {
     fun save(tag: Tag): Int {
         return databaseUtil.database.insert(TagTable) {
             set(it.name, tag.name)
+        }
+    }
+
+    fun saveAll(tags: List<TagDto>): Int {
+        return databaseUtil.database.bulkInsert(TagTable) {
+            tags.map {
+                item {
+                    set(TagTable.name, it.name)
+                }
+            }
         }
     }
 }

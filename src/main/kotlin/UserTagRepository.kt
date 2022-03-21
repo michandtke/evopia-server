@@ -49,6 +49,9 @@ class UserTagRepository(
         return databaseUtil.database.insertOrUpdate(UserTagTable) {
             set(it.tagId, tagId)
             set(it.userId, userId)
+            onConflict {
+                doNothing()
+            }
         }
     }
 }
