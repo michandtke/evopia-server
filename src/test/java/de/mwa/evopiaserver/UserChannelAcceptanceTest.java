@@ -113,23 +113,23 @@ public class UserChannelAcceptanceTest {
     }
 
     @Test
-    public void should_remove_one_of_two_user_channels() {
+    public void should_remove_one_upsert_one_user_channels() {
         addChannel("NewChannel");
         var body = "[{\"name\": \"Dummychannel\", \"value\":\"0160\"}," +
                 "{\"name\": \"NewChannel\", \"value\":\"123456\"}]";
         addUserChannel(body);
 
-        var emptyBody = "[{\"name\": \"NewChannel\", \"value\":\"123456\"}]";
-        var removingUrl = "http://localhost:" + port + "/v2/user/channel";
-        var removeResponse = restTemplate.exchange
-                (removingUrl, HttpMethod.POST, HttpEntityFactory.forTestUserWith(emptyBody), String.class);
+        var upsertingBody = "[{\"name\": \"NewChannel\", \"value\":\"12346\"}]";
+        var upsertingUrl = "http://localhost:" + port + "/v2/user/channel";
+        var upsertingResponse = restTemplate.exchange
+                (upsertingUrl, HttpMethod.POST, HttpEntityFactory.forTestUserWith(upsertingBody), String.class);
 
-        assertThat(removeResponse.getStatusCode())
-                .as("Not a successful call: " + removeResponse.getBody())
+        assertThat(upsertingResponse.getStatusCode())
+                .as("Not a successful call: " + upsertingResponse.getBody())
                 .isEqualTo(HttpStatus.OK);
 
         var userChannels = getAllUserChannels();
-        assertThat(userChannels).containsOnly(new UserChannel("Dummychannel", "0160"));
+        assertThat(userChannels).containsOnly(new UserChannel("NewChannel", "12346"));
     }
 
     @Test
