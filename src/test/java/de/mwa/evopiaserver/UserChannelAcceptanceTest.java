@@ -1,6 +1,5 @@
 package de.mwa.evopiaserver;
 
-import de.mwa.evopiaserver.api.dto.ChannelDto;
 import de.mwa.evopiaserver.api.dto.UserChannel;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -96,7 +95,7 @@ public class UserChannelAcceptanceTest {
     }
 
     @Test
-    public void should_remove_user_channel() {
+    public void should_remove_single_user_channel() {
         var body = "[{\"name\": \"Dummychannel\", \"value\":\"0160\"}]";
         addUserChannel(body);
 
@@ -114,8 +113,45 @@ public class UserChannelAcceptanceTest {
     }
 
     @Test
-    public void should_update_user_channel_value() {
+    public void should_remove_one_of_two_user_channels() {
+        addChannel("NewChannel");
+        var body = "[{\"name\": \"Dummychannel\", \"value\":\"0160\"}," +
+                "{\"name\": \"NewChannel\", \"value\":\"123456\"}]";
+        addUserChannel(body);
 
+        var emptyBody = "[{\"name\": \"NewChannel\", \"value\":\"123456\"}]";
+        var removingUrl = "http://localhost:" + port + "/v2/user/channel";
+        var removeResponse = restTemplate.exchange
+                (removingUrl, HttpMethod.POST, HttpEntityFactory.forTestUserWith(emptyBody), String.class);
+
+        assertThat(removeResponse.getStatusCode())
+                .as("Not a successful call: " + removeResponse.getBody())
+                .isEqualTo(HttpStatus.OK);
+
+        var userChannels = getAllUserChannels();
+        assertThat(userChannels).containsOnly(new UserChannel("Dummychannel", "0160"));
+    }
+
+    @Test
+    public void should_update_user_channel_value() {
+        var body = "[{\"name\": \"Dummychannel\", \"value\":\"0160\"}]";
+        addUserChannel(body);
+
+        var bodyReplaced = "[{\"name\": \"Dummychannel\", \"value\":\"0161\"}]";
+        addUserChannel(bodyReplaced);
+
+
+        var userChannels = getAllUserChannels();
+        assertThat(userChannels).containsOnly(new UserChannel("Dummychannel", "0161"));
+    }
+
+    private void addChannel(String name) {
+        var addingUrl = "http://localhost:" + port + "/v2/channels/add";
+        var body = "{\"name\": \""+name+"\"}";
+        var addResponse = restTemplate.exchange
+                (addingUrl, HttpMethod.POST, HttpEntityFactory.forTestUserWith(body), String.class);
+
+        assertThat(addResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     private List<UserChannel> getAllUserChannels() {
