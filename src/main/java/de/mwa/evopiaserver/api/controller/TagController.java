@@ -2,6 +2,7 @@ package de.mwa.evopiaserver.api.controller;
 
 import de.mwa.evopiaserver.api.dto.TagDto;
 import de.mwa.evopiaserver.db.kotlin.TagRepository;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,11 @@ public class TagController {
 
     public TagController(TagRepository tagRepository) {
         this.tagRepository = tagRepository;
+    }
+
+    @GetMapping("/v2/tags")
+    public List<TagDto> getTags() {
+        return tagRepository.findAll();
     }
 
     @PostMapping("/v2/tags/add")

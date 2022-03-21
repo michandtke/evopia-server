@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component
 
 @Component
 class TagRepository(val databaseUtil: DatabaseUtil) {
-    fun findAll(): List<Tag> {
+    fun findAll(): List<TagDto> {
         val entries = databaseUtil.database.from(TagTable).select()
         return entries.map {
-            rowToTag(it)
+            TagDto(it[TagTable.name])
         }
     }
 

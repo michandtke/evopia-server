@@ -49,6 +49,7 @@ public class UserChannelAcceptanceTest {
     @AfterEach
     public void cleanup() {
         repositoryTestHelper.resetUserChannelTable();
+        repositoryTestHelper.resetChannelTable();
     }
 
     @Test
