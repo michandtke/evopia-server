@@ -1,5 +1,6 @@
 package de.mwa.evopiaserver.db.kotlin
 
+import de.mwa.evopiaserver.api.NoRemoteUserFoundException
 import de.mwa.evopiaserver.api.dto.UpsertUserDto
 import de.mwa.evopiaserver.registration.User
 import org.ktorm.dsl.*
@@ -14,6 +15,10 @@ class UserRepositoryNew(val databaseUtil: DatabaseUtil) {
             .where { (UserTable.email eq mail) }
             .map { rowToUser(it) }
             .firstOrNull()
+    }
+
+    fun findIdByMail(mail: String) : Int {
+        return findByEmail(mail)?.id?.toInt() ?: throw NoRemoteUserFoundException("UserID not found.")
     }
 
     fun emailAlreadyExists(mail: String): Boolean {

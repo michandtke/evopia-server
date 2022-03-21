@@ -40,6 +40,19 @@ public class UserTagAcceptanceTest {
         assertThat(response.getBody()).isEmpty();
     }
 
+    @Test
+    public void should_add_and_get_user_tag() {
+        addTag("Beachvolleyball");
+        var body = "[{\"name\": \"Beachvolleyball\"}]";
+        var response = addUserChannel(body);
+
+        assertThat(response).isEqualTo("Upserted user tags: 1 | Deleted user tags: 0");
+
+
+        ResponseEntity<List<UserTag>> tags = getUserTagsForTestUser();
+        assertThat(tags.getBody()).containsOnly(new UserTag("Beachvolleyball"));
+    }
+
     @NotNull
     private ResponseEntity<List<UserTag>> getUserTagsForTestUser() {
         var url = "http://localhost:" + port + "/v2/user/tags";
@@ -52,6 +65,27 @@ public class UserTagAcceptanceTest {
                 .as("Not a successful call: " + response.getBody())
                 .isEqualTo(HttpStatus.OK);
         return response;
+    }
+
+    private String addUserChannel(String body) {
+        var addingUrl = "http://localhost:" + port + "/v2/user/tags";
+        var addResponse = restTemplate.exchange
+                (addingUrl, HttpMethod.POST, HttpEntityFactory.forTestUserWith(body), String.class);
+
+        assertThat(addResponse.getStatusCode())
+                .as("Not a successful call: " + addResponse.getBody())
+                .isEqualTo(HttpStatus.OK);
+
+        return addResponse.getBody();
+    }
+
+    private void addTag(String name) {
+        var addingUrl = "http://localhost:" + port + "/v2/tags/add";
+        var body = "{\"name\": \""+name+"\"}";
+        var addResponse = restTemplate.exchange
+                (addingUrl, HttpMethod.POST, HttpEntityFactory.forTestUserWith(body), String.class);
+
+        assertThat(addResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @AfterEach

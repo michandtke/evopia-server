@@ -13,7 +13,7 @@ class TagRepository(val databaseUtil: DatabaseUtil) {
         }
     }
 
-    fun findByNameIn(tagNames: MutableList<String>): List<Tag> {
+    fun findByNameIn(tagNames: List<String>): List<Tag> {
         return databaseUtil.database
                 .from(TagTable)
                 .select()

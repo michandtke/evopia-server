@@ -8,7 +8,7 @@ import org.ktorm.support.postgresql.insertOrUpdate
 import org.springframework.stereotype.Component
 
 @Component
-class UserChannelRepositoryNew(val databaseUtil: DatabaseUtil) {
+class UserChannelRepositoryNew(val databaseUtil: DatabaseUtil, val userRepository: UserRepositoryNew) {
     fun saveAll(profileChannelUpserts: MutableList<ProfileChannel>): Int {
         return databaseUtil.database.batchInsert(UserChannelTable) {
             profileChannelUpserts.map { chan ->
@@ -40,8 +40,7 @@ class UserChannelRepositoryNew(val databaseUtil: DatabaseUtil) {
     }
 
     fun add(mail: String, channels: List<UserChannel>): Pair<Int, Int> {
-
-        val userId = getUserIdFor(mail) ?: throw NoRemoteUserFoundException("UserID not found.")
+        val userId = userRepository.findIdByMail(mail)
 
         val channelIdValue: List<Pair<Int?, String?>> = getExistingUserChannels(userId, channels)
 
@@ -72,14 +71,6 @@ class UserChannelRepositoryNew(val databaseUtil: DatabaseUtil) {
                     channels.firstOrNull { chan -> chan.name == it[ChannelTable.name] }?.value
                 )
             }
-    }
-
-    private fun getUserIdFor(mail: String): Int? {
-        return databaseUtil.database.from(UserTable)
-            .select(UserTable.id)
-            .where(UserTable.email eq mail)
-            .map { it[UserTable.id] }
-            .first()
     }
 
     private fun delete(toDelete: List<Int>?, userId: Int): Int {
