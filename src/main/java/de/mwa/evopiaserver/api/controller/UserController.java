@@ -50,6 +50,7 @@ public class UserController {
         if (request.getRemoteUser() == null)
             throw new NoRemoteUserFoundException("Too bad, no remote user found!");
         var user = userService.find(request.getRemoteUser());
+        var path = user.getImagePath() == null ? "" : user.getImagePath();
         var channels = userChannelService.getChannels(request.getRemoteUser());
         var tags = userTagRepository.selectFor(request.getRemoteUser());
         return new UserProfile(user.getImagePath(), tags, channels);
