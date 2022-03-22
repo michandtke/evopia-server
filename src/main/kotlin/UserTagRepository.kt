@@ -1,6 +1,7 @@
 package de.mwa.evopiaserver.db.kotlin
 
 import de.mwa.evopiaserver.api.dto.UserTag
+import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
 import org.ktorm.dsl.*
 import org.ktorm.support.postgresql.insertOrUpdate
 import org.springframework.stereotype.Component
@@ -23,7 +24,7 @@ class UserTagRepository(
 
     private fun rowToUserTag(it: QueryRowSet): UserTag {
         return UserTag(
-            it[TagTable.name]
+            it.orThrow(TagTable.name)
         )
     }
 

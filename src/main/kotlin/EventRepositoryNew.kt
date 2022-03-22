@@ -1,9 +1,10 @@
 package de.mwa.evopiaserver.db.kotlin
 
 import de.mwa.evopiaserver.api.dto.EventDto
+import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
 import org.ktorm.dsl.*
-import org.ktorm.schema.Column
 import org.springframework.stereotype.Component
+
 
 @Component
 class EventRepositoryNew(val databaseUtil: DatabaseUtil) {
@@ -23,8 +24,6 @@ class EventRepositoryNew(val databaseUtil: DatabaseUtil) {
         place = it.orThrow(EventTable.place),
         imagePath = it.orThrow(EventTable.image),
     )
-
-    private fun <C : Any> QueryRowSet.orThrow(column: Column<C>): C = get(column) ?: throw RuntimeException()
 
     fun upsert(event: EventDto) {
         if (event.id != null) {

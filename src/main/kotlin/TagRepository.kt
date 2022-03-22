@@ -1,6 +1,7 @@
 package de.mwa.evopiaserver.db.kotlin
 
 import de.mwa.evopiaserver.api.dto.TagDto
+import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
 import de.mwa.evopiaserver.db.tag.Tag
 import org.ktorm.dsl.*
 import org.ktorm.support.postgresql.bulkInsert
@@ -11,7 +12,7 @@ class TagRepository(val databaseUtil: DatabaseUtil) {
     fun findAll(): List<TagDto> {
         val entries = databaseUtil.database.from(TagTable).select()
         return entries.map {
-            TagDto(it[TagTable.name])
+            TagDto(it.orThrow(TagTable.name))
         }
     }
 

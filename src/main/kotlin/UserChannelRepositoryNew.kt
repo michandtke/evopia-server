@@ -1,6 +1,7 @@
 package de.mwa.evopiaserver.db.kotlin
 
 import de.mwa.evopiaserver.api.dto.UserChannel
+import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
 import de.mwa.evopiaserver.profile.ProfileChannel
 import org.ktorm.dsl.*
 import org.ktorm.support.postgresql.insertOrUpdate
@@ -33,8 +34,8 @@ class UserChannelRepositoryNew(val databaseUtil: DatabaseUtil, val userRepositor
 
     private fun rowToUserChannel(it: QueryRowSet): UserChannel {
         return UserChannel(
-            it[ChannelTable.name],
-            it[UserChannelTable.value]
+            it.orThrow(ChannelTable.name),
+            it.orThrow(UserChannelTable.value)
         )
     }
 
