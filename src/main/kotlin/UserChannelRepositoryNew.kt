@@ -1,6 +1,5 @@
 package de.mwa.evopiaserver.db.kotlin
 
-import de.mwa.evopiaserver.api.NoRemoteUserFoundException
 import de.mwa.evopiaserver.api.dto.UserChannel
 import de.mwa.evopiaserver.profile.ProfileChannel
 import org.ktorm.dsl.*
