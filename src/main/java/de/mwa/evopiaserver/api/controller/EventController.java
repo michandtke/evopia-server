@@ -2,10 +2,7 @@ package de.mwa.evopiaserver.api.controller;
 
 import de.mwa.evopiaserver.api.dto.EventDto;
 import de.mwa.evopiaserver.db.kotlin.EventRepositoryNew;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,6 +22,12 @@ public class EventController {
     @PostMapping("/v2/events/upsert")
     public String upsertEvent(@RequestBody EventDto eventDto) {
         eventRepository.upsert(eventDto);
-        return "Upserted Event: " + eventDto;
+        return "Upserted event: " + eventDto;
+    }
+
+    @DeleteMapping("/v2/events/{id}")
+    public String deleteEvent(@PathVariable int id) {
+        var result = eventRepository.delete(id);
+        return "Deleted " + result + "events with id " + id;
     }
 }

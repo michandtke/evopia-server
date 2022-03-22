@@ -1,9 +1,7 @@
 package de.mwa.evopiaserver;
 
 
-import de.mwa.evopiaserver.api.dto.ChannelDto;
 import de.mwa.evopiaserver.api.dto.EventDto;
-import de.mwa.evopiaserver.profile.UserIntegrationTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,13 +72,32 @@ public class EventsAcceptanceTest {
         addEvent(body);
 
         List<EventDto> events = getAllEvents();
-        assertThat(events).containsOnly(
-                new EventDto(1, "nameIt", "desc", "2020", "18:00", "Berlin", "img/path.jpg")
-        );
+        assertThat(events).hasSize(1);
+        var event = events.get(0);
+        assertThat(event.getDate()).isEqualTo("2020");
+        assertThat(event.getName()).isEqualTo("nameIt");
+        assertThat(event.getDescription()).isEqualTo("desc");
+        assertThat(event.getTime()).isEqualTo("18:00");
+        assertThat(event.getPlace()).isEqualTo("Berlin");
+        assertThat(event.getImagePath()).isEqualTo("img/path.jpg");
     }
 
     @Test
     public void should_delete_event() {
+        var body = "{" +
+                "\"name\": \"nameIt\"," +
+                "\"description\": \"desc\"," +
+                "\"date\": \"2020\"," +
+                "\"time\": \"18:00\"," +
+                "\"place\": \"Berlin\"," +
+                "\"imagePath\": \"img/path.jpg\"" +
+                "}";
+        addEvent(body);
+
+        deleteEvent("1");
+
+        List<EventDto> events = getAllEvents();
+        assertThat(events).isEmpty();
 
     }
 
@@ -115,6 +132,16 @@ public class EventsAcceptanceTest {
 
         assertThat(addResponse.getStatusCode())
                 .as("Not a successful call: " + addResponse.getBody())
+                .isEqualTo(HttpStatus.OK);
+    }
+
+    private void deleteEvent(String id) {
+        var addingUrl = "http://localhost:" + port + "/v2/events/" + id;
+        var removeResponse = restTemplate.exchange
+                (addingUrl, HttpMethod.DELETE, HttpEntityFactory.forTestUser(), String.class);
+
+        assertThat(removeResponse.getStatusCode())
+                .as("Not a successful call: " + removeResponse.getBody())
                 .isEqualTo(HttpStatus.OK);
     }
 

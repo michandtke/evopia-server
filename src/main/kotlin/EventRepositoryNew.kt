@@ -55,4 +55,7 @@ class EventRepositoryNew(val databaseUtil: DatabaseUtil) {
         set(EventTable.image, event.imagePath)
     }
 
+    fun delete(id: Int) = databaseUtil.database.delete(EventTable) {
+        it.id eq id
+    }
 }
