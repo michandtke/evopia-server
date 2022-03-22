@@ -1,14 +1,14 @@
 package de.mwa.evopiaserver.db.kotlin
 
-import de.mwa.evopiaserver.api.dto.ChannelDto
-import de.mwa.evopiaserver.db.channel.Channel
+    import de.mwa.evopiaserver.api.dto.ChannelDto
+import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
 import org.ktorm.dsl.*
 import org.springframework.stereotype.Component
 
 @Component
 class ChannelRepository(val databaseUtil: DatabaseUtil) {
 
-    fun findAllChannels(): List<Channel> {
+    fun findAllChannels(): List<ChannelDto> {
         val entries = databaseUtil.database.from(ChannelTable).select()
         return entries.map {
             rowToChannel(it)
@@ -27,18 +27,5 @@ class ChannelRepository(val databaseUtil: DatabaseUtil) {
         }
     }
 
-    fun findChannelsByNameIn(channelNames: MutableList<String>): List<Channel> {
-        return databaseUtil.database
-                .from(ChannelTable)
-                .select()
-                .where { (ChannelTable.name inList channelNames) }
-                .map { rowToChannel(it) }
-    }
-
-    private fun rowToChannel(it: QueryRowSet): Channel {
-        val channel = Channel()
-        channel.id = it[ChannelTable.id]?.toLong()
-        channel.name = it[ChannelTable.name]
-        return channel
-    }
+    private fun rowToChannel(it: QueryRowSet): ChannelDto = ChannelDto(it.orThrow(ChannelTable.name))
 }

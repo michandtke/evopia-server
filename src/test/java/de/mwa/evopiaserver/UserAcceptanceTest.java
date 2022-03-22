@@ -1,8 +1,6 @@
-package de.mwa.evopiaserver.profile;
+package de.mwa.evopiaserver;
 
 import com.jayway.jsonpath.JsonPath;
-import de.mwa.evopiaserver.HttpEntityFactory;
-import de.mwa.evopiaserver.RepositoryTestHelper;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -32,8 +30,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 @AutoConfigureJson
 @AutoConfigureJsonTesters
-@ContextConfiguration(initializers = {UserIntegrationTest.Initializer.class})
-public class UserIntegrationTest {
+@ContextConfiguration(initializers = {UserAcceptanceTest.Initializer.class})
+public class UserAcceptanceTest {
 
     @LocalServerPort
     private int port;

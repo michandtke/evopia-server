@@ -1,6 +1,5 @@
-package de.mwa.evopiaserver.profile;
+package de.mwa.evopiaserver;
 
-import de.mwa.evopiaserver.HttpEntityFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJson;
@@ -11,7 +10,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -24,8 +22,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 @AutoConfigureJson
 @AutoConfigureJsonTesters
-@ContextConfiguration(initializers = {HealthCheckIntegrationTest.Initializer.class})
-public class HealthCheckIntegrationTest {
+@ContextConfiguration(initializers = {HealthCheckAcceptanceTest.Initializer.class})
+public class HealthCheckAcceptanceTest {
     @LocalServerPort
     private int port;
 
