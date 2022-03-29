@@ -65,7 +65,32 @@ public class EventsAcceptanceTest {
     }
 
     @Test
-    public void should_add_event_and_get_it() throws JsonProcessingException {
+    public void should_add_event_without_tag_and_get_it() throws JsonProcessingException {
+        var body = "{" +
+                "\"name\": \"nameIt\"," +
+                "\"description\": \"desc\"," +
+                "\"date\": \"2020\"," +
+                "\"time\": \"18:00\"," +
+                "\"place\": \"Berlin\"," +
+                "\"imagePath\": \"img/path.jpg\"," +
+                "\"tags\":[]" +
+                "}";
+        addEvent(body);
+
+        List<EventDto> events = getAllEvents();
+        assertThat(events).hasSize(1);
+        var event = events.get(0);
+        assertThat(event.getDate()).isEqualTo("2020");
+        assertThat(event.getName()).isEqualTo("nameIt");
+        assertThat(event.getDescription()).isEqualTo("desc");
+        assertThat(event.getTime()).isEqualTo("18:00");
+        assertThat(event.getPlace()).isEqualTo("Berlin");
+        assertThat(event.getImagePath()).isEqualTo("img/path.jpg");
+        assertThat(event.getTags()).isEmpty();
+    }
+
+    @Test
+    public void should_add_event_with_tag_and_get_it() throws JsonProcessingException {
         var body = "{" +
                 "\"name\": \"nameIt\"," +
                 "\"description\": \"desc\"," +
