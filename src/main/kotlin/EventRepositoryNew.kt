@@ -4,8 +4,7 @@ import de.mwa.evopiaserver.api.dto.EventDto
 import de.mwa.evopiaserver.api.dto.TagDto
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
-import org.ktorm.entity.groupBy
-import org.ktorm.entity.sequenceOf
+import org.ktorm.entity.*
 import org.springframework.stereotype.Component
 
 
@@ -16,12 +15,25 @@ val Database.tags get() = this.sequenceOf(TagTable)
 @Component
 class EventRepositoryNew(val databaseUtil: DatabaseUtil, val tagRepository: TagRepository, val eventTagRepository: EventTagRepository) {
     fun events(): List<EventDto> {
+        val withTags = eventsWithTags()
+        return withTags + eventsWithoutTags(withTags.mapNotNull { it.id })
+    }
 
+    private fun eventsWithTags(): List<EventDto> {
         val tagsByEvents = databaseUtil.database.eventTags
             .groupBy { it.event }
             .mapValues { it.value.map { it.tag } }
 
         return tagsByEvents.map { toEventDto(it.key, it.value) }
+    }
+
+    private fun eventsWithoutTags(knownEventIds: List<Int>): List<EventDto> {
+        if (knownEventIds.isEmpty())
+            return databaseUtil.database.events
+                .map { toEventDto(it, emptyList()) }
+        return databaseUtil.database.events
+            .filter { it.id notInList knownEventIds }
+            .map { toEventDto(it, emptyList()) }
     }
 
     private fun toEventDto(eventDao: EventDao, tags: List<TagDao>): EventDto {

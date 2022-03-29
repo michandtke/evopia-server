@@ -128,7 +128,11 @@ public class EventsAcceptanceTest {
                 "}";
         addEvent(body);
 
-        deleteEvent("1");
+        List<EventDto> eventBefore = getAllEvents();
+        assertThat(eventBefore).hasSize(1);
+        var id = eventBefore.get(0).component1();
+
+        deleteEvent(id);
 
         List<EventDto> events = getAllEvents();
         assertThat(events).isEmpty();
@@ -170,7 +174,7 @@ public class EventsAcceptanceTest {
                 .isEqualTo(HttpStatus.OK);
     }
 
-    private void deleteEvent(String id) {
+    private void deleteEvent(Integer id) {
         var addingUrl = "http://localhost:" + port + "/v2/events/" + id;
         var removeResponse = restTemplate.exchange
                 (addingUrl, HttpMethod.DELETE, HttpEntityFactory.forTestUser(), String.class);
