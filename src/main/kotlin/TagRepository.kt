@@ -4,7 +4,6 @@ import de.mwa.evopiaserver.api.dto.TagDto
 import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
 import de.mwa.evopiaserver.db.tag.Tag
 import org.ktorm.dsl.*
-import org.ktorm.support.postgresql.bulkInsert
 import org.springframework.stereotype.Component
 
 @Component
@@ -16,16 +15,13 @@ class TagRepository(val databaseUtil: DatabaseUtil) {
         }
     }
 
-    fun findByNameIn(tagNames: List<String>): List<Tag> {
+    fun findByNameIn(tagNames: List<String>): List<TagDao> {
         return databaseUtil.database
                 .from(TagTable)
                 .select()
                 .where { (TagTable.name inList tagNames) }
-                .map { rowToTag(it) }
+                .map { TagTable.createEntity(it) }
     }
-
-    private fun rowToTag(it: QueryRowSet): Tag =
-            Tag(it[TagTable.id]?.toLong(), it[TagTable.name])
 
     fun save(tag: Tag): Int {
         return databaseUtil.database.insert(TagTable) {
@@ -33,13 +29,12 @@ class TagRepository(val databaseUtil: DatabaseUtil) {
         }
     }
 
-    fun saveAll(tags: List<TagDto>): Int {
-        return databaseUtil.database.bulkInsert(TagTable) {
-            tags.map {
-                item {
-                    set(TagTable.name, it.name)
-                }
+    fun saveAll(tags: List<TagDto>): List<Int> {
+        return tags.map { tag ->
+            databaseUtil.database.insertAndGenerateKey(TagTable) {
+                set(TagTable.name, tag.name)
             }
-        }
+        }.mapNotNull { it as? Int }
+
     }
 }

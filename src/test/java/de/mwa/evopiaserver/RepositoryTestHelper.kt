@@ -35,4 +35,8 @@ class RepositoryTestHelper(val databaseUtil: DatabaseUtil) {
     fun resetEventTable() {
         databaseUtil.database.deleteAll(EventTable)
     }
+
+    fun resetEventTagsTable() {
+        databaseUtil.database.deleteAll(EventTagTable)
+    }
 }

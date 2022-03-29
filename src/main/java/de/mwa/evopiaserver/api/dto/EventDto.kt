@@ -7,5 +7,6 @@ data class EventDto(
     val date: String,
     val time: String,
     val place: String,
-    val imagePath: String
+    val imagePath: String,
+    val tags: List<TagDto>
 )

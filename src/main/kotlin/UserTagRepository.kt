@@ -30,7 +30,7 @@ class UserTagRepository(
 
     fun upsert(mail: String, newUserTags: List<UserTag>): Pair<Int, Int> {
         val userId = userRepository.findIdByMail(mail)
-        val tagIds = tagRepository.findByNameIn(newUserTags.map { it.name }).map { it.id.toInt() }
+        val tagIds = tagRepository.findByNameIn(newUserTags.map { it.name }).map { it.id }
 
         val deleted = deleteUserTags(tagIds, userId)
 

@@ -1,7 +1,11 @@
 package de.mwa.evopiaserver;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.mwa.evopiaserver.api.dto.EventDto;
+import de.mwa.evopiaserver.api.dto.TagDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +17,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
@@ -23,6 +26,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 
+import static com.fasterxml.jackson.module.kotlin.ExtensionsKt.jacksonObjectMapper;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -49,6 +53,7 @@ public class EventsAcceptanceTest {
 
     @AfterEach
     public void cleanup() {
+        repositoryTestHelper.resetEventTagsTable();
         repositoryTestHelper.resetEventTable();
     }
 
@@ -60,14 +65,16 @@ public class EventsAcceptanceTest {
     }
 
     @Test
-    public void should_add_event_and_get_it() {
+    public void should_add_event_and_get_it() throws JsonProcessingException {
         var body = "{" +
                 "\"name\": \"nameIt\"," +
                 "\"description\": \"desc\"," +
                 "\"date\": \"2020\"," +
                 "\"time\": \"18:00\"," +
                 "\"place\": \"Berlin\"," +
-                "\"imagePath\": \"img/path.jpg\"" +
+                "\"imagePath\": \"img/path.jpg\"," +
+                "\"tags\":[ {\"name\":\"myTag\"}," +
+                "{\"name\":\"mySecondTag\"}]" +
                 "}";
         addEvent(body);
 
@@ -80,17 +87,19 @@ public class EventsAcceptanceTest {
         assertThat(event.getTime()).isEqualTo("18:00");
         assertThat(event.getPlace()).isEqualTo("Berlin");
         assertThat(event.getImagePath()).isEqualTo("img/path.jpg");
+        assertThat(event.getTags()).containsOnly(new TagDto("myTag"), new TagDto("mySecondTag"));
     }
 
     @Test
-    public void should_delete_event() {
+    public void should_delete_event() throws JsonProcessingException {
         var body = "{" +
                 "\"name\": \"nameIt\"," +
                 "\"description\": \"desc\"," +
                 "\"date\": \"2020\"," +
                 "\"time\": \"18:00\"," +
                 "\"place\": \"Berlin\"," +
-                "\"imagePath\": \"img/path.jpg\"" +
+                "\"imagePath\": \"img/path.jpg\"," +
+                "\"tags\":[]" +
                 "}";
         addEvent(body);
 
@@ -112,17 +121,18 @@ public class EventsAcceptanceTest {
         return askResponse.getBody();
     }
 
-    private List<EventDto> getAllEvents() {
+    private List<EventDto> getAllEvents() throws JsonProcessingException {
         var askingUrl = "http://localhost:" + port + "/v2/events";
-        var requestType = new ParameterizedTypeReference<List<EventDto>>() {
-        };
         var askResponse = restTemplate.exchange
-                (askingUrl, HttpMethod.GET, HttpEntityFactory.forTestUser(), requestType);
+                (askingUrl, HttpMethod.GET, HttpEntityFactory.forTestUser(), String.class);
 
         assertThat(askResponse.getStatusCode())
                 .as("Not a successful call: " + askResponse.getBody())
                 .isEqualTo(HttpStatus.OK);
-        return askResponse.getBody();
+
+        ObjectMapper mapper = jacksonObjectMapper();
+        var jsonInput = askResponse.getBody();
+        return mapper.readValue(jsonInput, new TypeReference<List<EventDto>>(){});
     }
 
     private void addEvent(String body) {

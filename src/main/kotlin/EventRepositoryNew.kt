@@ -1,29 +1,43 @@
 package de.mwa.evopiaserver.db.kotlin
 
 import de.mwa.evopiaserver.api.dto.EventDto
-import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
+import de.mwa.evopiaserver.api.dto.TagDto
+import org.ktorm.database.Database
 import org.ktorm.dsl.*
+import org.ktorm.entity.groupBy
+import org.ktorm.entity.sequenceOf
 import org.springframework.stereotype.Component
 
 
+val Database.events get() = this.sequenceOf(EventTable)
+val Database.eventTags get() = this.sequenceOf(EventTagTable)
+val Database.tags get() = this.sequenceOf(TagTable)
+
 @Component
-class EventRepositoryNew(val databaseUtil: DatabaseUtil) {
+class EventRepositoryNew(val databaseUtil: DatabaseUtil, val tagRepository: TagRepository, val eventTagRepository: EventTagRepository) {
     fun events(): List<EventDto> {
-        return databaseUtil.database
-            .from(EventTable)
-            .select()
-            .map { toEventDto(it) }
+
+        val tagsByEvents = databaseUtil.database.eventTags
+            .groupBy { it.event }
+            .mapValues { it.value.map { it.tag } }
+
+        return tagsByEvents.map { toEventDto(it.key, it.value) }
     }
 
-    private fun toEventDto(it: QueryRowSet): EventDto = EventDto(
-        id = it.orThrow(EventTable.id),
-        name = it.orThrow(EventTable.name),
-        description = it.orThrow(EventTable.description),
-        date = it.orThrow(EventTable.date),
-        time = it.orThrow(EventTable.time),
-        place = it.orThrow(EventTable.place),
-        imagePath = it.orThrow(EventTable.image),
-    )
+    private fun toEventDto(eventDao: EventDao, tags: List<TagDao>): EventDto {
+        val eventId = eventDao.id
+        return EventDto(
+            id = eventId,
+            name = eventDao.name,
+            description = eventDao.description,
+            date = eventDao.date,
+            time = eventDao.time,
+            place = eventDao.place,
+            imagePath = eventDao.image,
+            tags = tags.map { TagDto(it.name) }
+        )
+    }
+
 
     fun upsert(event: EventDto) {
         if (event.id != null) {
@@ -32,10 +46,13 @@ class EventRepositoryNew(val databaseUtil: DatabaseUtil) {
         return insert(event)
     }
 
-    private fun insert(event: EventDto) {
-        databaseUtil.database.insertAndGenerateKey(EventTable) {
-            addColumnsExceptId(event)
+    private fun insert(eventDto: EventDto) {
+        val eventKey: Any = databaseUtil.database.insertAndGenerateKey(EventTable) {
+            addColumnsExceptId(eventDto)
         }
+
+        val saveAll = tagRepository.saveAll(eventDto.tags)
+        eventTagRepository.insert(eventKey.toString().toInt(), saveAll)
     }
 
     private fun update(event: EventDto) {
