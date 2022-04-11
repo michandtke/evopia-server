@@ -13,14 +13,14 @@ val Database.eventTags get() = this.sequenceOf(EventTagTable)
 val Database.tags get() = this.sequenceOf(TagTable)
 
 @Component
-class EventRepositoryNew(val databaseUtil: DatabaseUtil, val tagRepository: TagRepository, val eventTagRepository: EventTagRepository) {
+class EventRepositoryNew(val database: Database, val tagRepository: TagRepository, val eventTagRepository: EventTagRepository) {
     fun events(): List<EventDto> {
         val withTags = eventsWithTags()
         return withTags + eventsWithoutTags(withTags.mapNotNull { it.id })
     }
 
     private fun eventsWithTags(): List<EventDto> {
-        val tagsByEvents = databaseUtil.database.eventTags
+        val tagsByEvents = database.eventTags
             .groupBy { it.event }
             .mapValues { it.value.map { it.tag } }
 
@@ -29,9 +29,9 @@ class EventRepositoryNew(val databaseUtil: DatabaseUtil, val tagRepository: TagR
 
     private fun eventsWithoutTags(knownEventIds: List<Int>): List<EventDto> {
         if (knownEventIds.isEmpty())
-            return databaseUtil.database.events
+            return database.events
                 .map { toEventDto(it, emptyList()) }
-        return databaseUtil.database.events
+        return database.events
             .filter { it.id notInList knownEventIds }
             .map { toEventDto(it, emptyList()) }
     }
@@ -59,7 +59,7 @@ class EventRepositoryNew(val databaseUtil: DatabaseUtil, val tagRepository: TagR
     }
 
     private fun insert(eventDto: EventDto) {
-        val eventKey: Any = databaseUtil.database.insertAndGenerateKey(EventTable) {
+        val eventKey: Any = database.insertAndGenerateKey(EventTable) {
             addColumnsExceptId(eventDto)
         }
 
@@ -68,7 +68,7 @@ class EventRepositoryNew(val databaseUtil: DatabaseUtil, val tagRepository: TagR
     }
 
     private fun update(event: EventDto) {
-        databaseUtil.database.update(EventTable) {
+        database.update(EventTable) {
             addColumnsExceptId(event)
             set(it.id, event.id)
         }
@@ -83,7 +83,7 @@ class EventRepositoryNew(val databaseUtil: DatabaseUtil, val tagRepository: TagR
         set(EventTable.image, event.imagePath)
     }
 
-    fun delete(id: Int) = databaseUtil.database.delete(EventTable) {
+    fun delete(id: Int) = database.delete(EventTable) {
         it.id eq id
     }
 }
