@@ -1,0 +1,4 @@
+database:
+  url: "${spring.datasource.url}"
+  username: "${spring.datasource.username}"
+  password: "${spring.datasource.password}"
