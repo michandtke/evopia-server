@@ -1,5 +1,6 @@
 package de.mwa.evopiaserver;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJson;
@@ -36,6 +37,13 @@ public class HealthCheckAcceptanceTest {
             .withUsername("sa")
             .withPassword("sa");
 
+    @AfterAll
+    static void endCleanup() {
+        System.setProperty("spring.datasource.url", "");
+        System.setProperty("spring.datasource.username", "");
+        System.setProperty("spring.datasource.password", "");
+    }
+
     @Test
     public void shouldBeAlive() {
         var url = "http://localhost:" + port + "/health";
@@ -49,11 +57,9 @@ public class HealthCheckAcceptanceTest {
     static class Initializer
             implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            TestPropertyValues.of(
-                    "spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
-                    "spring.datasource.username=" + postgreSQLContainer.getUsername(),
-                    "spring.datasource.password=" + postgreSQLContainer.getPassword()
-            ).applyTo(configurableApplicationContext.getEnvironment());
+            System.setProperty("spring.datasource.url", postgreSQLContainer.getJdbcUrl());
+            System.setProperty("spring.datasource.username", postgreSQLContainer.getUsername());
+            System.setProperty("spring.datasource.password", postgreSQLContainer.getPassword());
         }
     }
 }

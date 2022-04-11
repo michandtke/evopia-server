@@ -2,6 +2,7 @@ package de.mwa.evopiaserver;
 
 import com.jayway.jsonpath.JsonPath;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,13 @@ public class UserAcceptanceTest {
     @AfterEach
     public void cleanup() {
         repositoryTestHelper.resetUserTable();
+    }
+
+    @AfterAll
+    static void endCleanup() {
+        System.setProperty("spring.datasource.url", "");
+        System.setProperty("spring.datasource.username", "");
+        System.setProperty("spring.datasource.password", "");
     }
 
     @Test
@@ -127,11 +135,9 @@ public class UserAcceptanceTest {
     static class Initializer
             implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            TestPropertyValues.of(
-                    "spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
-                    "spring.datasource.username=" + postgreSQLContainer.getUsername(),
-                    "spring.datasource.password=" + postgreSQLContainer.getPassword()
-            ).applyTo(configurableApplicationContext.getEnvironment());
+            System.setProperty("spring.datasource.url", postgreSQLContainer.getJdbcUrl());
+            System.setProperty("spring.datasource.username", postgreSQLContainer.getUsername());
+            System.setProperty("spring.datasource.password", postgreSQLContainer.getPassword());
         }
     }
 }

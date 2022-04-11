@@ -2,6 +2,7 @@ package de.mwa.evopiaserver;
 
 import de.mwa.evopiaserver.api.dto.UserChannel;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,13 @@ public class UserChannelAcceptanceTest {
     public void cleanup() {
         repositoryTestHelper.resetUserChannelTable();
         repositoryTestHelper.resetChannelTable();
+    }
+
+    @AfterAll
+    static void endCleanup() {
+        System.setProperty("spring.datasource.url", "");
+        System.setProperty("spring.datasource.username", "");
+        System.setProperty("spring.datasource.password", "");
     }
 
     @Test
@@ -169,11 +177,9 @@ public class UserChannelAcceptanceTest {
     static class Initializer
             implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            TestPropertyValues.of(
-                    "spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
-                    "spring.datasource.username=" + postgreSQLContainer.getUsername(),
-                    "spring.datasource.password=" + postgreSQLContainer.getPassword()
-            ).applyTo(configurableApplicationContext.getEnvironment());
+            System.setProperty("spring.datasource.url", postgreSQLContainer.getJdbcUrl());
+            System.setProperty("spring.datasource.username", postgreSQLContainer.getUsername());
+            System.setProperty("spring.datasource.password", postgreSQLContainer.getPassword());
         }
     }
 }
