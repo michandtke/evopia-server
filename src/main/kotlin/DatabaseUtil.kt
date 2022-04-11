@@ -5,6 +5,7 @@ import org.ktorm.logging.ConsoleLogger
 import org.ktorm.logging.LogLevel
 import org.ktorm.support.postgresql.PostgreSqlDialect
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
 
 @Component
@@ -21,5 +22,10 @@ class DatabaseUtil {
             logger = ConsoleLogger(threshold = LogLevel.TRACE),
             dialect = PostgreSqlDialect()
         )
+    }
+
+    @Bean
+    fun db(): Database {
+        return database
     }
 }
