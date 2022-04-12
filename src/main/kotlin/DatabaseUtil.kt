@@ -14,8 +14,6 @@ class DatabaseUtil(val config: Config) {
     val database by lazy {
         Database.connect(
             config.database.url,
-            user = config.database.username,
-            password = config.database.password,
             logger = ConsoleLogger(threshold = LogLevel.TRACE),
             dialect = PostgreSqlDialect()
         )
