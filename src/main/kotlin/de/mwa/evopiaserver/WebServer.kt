@@ -8,7 +8,7 @@ import io.ktor.server.netty.*
 import de.mwa.evopiaserver.routes.*
 
 object WebServer {
-    val server = embeddedServer(Netty, port = 8090, host = "0.0.0.0") {
+    val server = embeddedServer(Netty, port = System.getenv("PORT").toInt()) {
         val config = ConfigProvider().config()
         val database = DatabaseUtil(config).db()
         val tagRepo = TagRepository(database)
