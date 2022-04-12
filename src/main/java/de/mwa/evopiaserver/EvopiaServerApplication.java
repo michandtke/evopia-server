@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class EvopiaServerApplication {
     public static void main(String[] args) {
-        SpringApplication.run(EvopiaServerApplication.class, args);
+//        SpringApplication.run(EvopiaServerApplication.class, args);
         WebServer.INSTANCE.start();
     }
 }
