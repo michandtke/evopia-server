@@ -1,20 +1,20 @@
-spring:
-  jpa:
-    show-sql: false
-    hibernate:
-      ddl-auto: update
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    properties:
-      hibernate:
-        format_sql: true
-  datasource:
-    url: "${spring.datasource.url}"
-    username: "${spring.datasource.username}"
-    password: "${spring.datasource.password}"
-  liquibase:
-    change-log: db/changelog/db.changelog-master.yaml
-logging:
-  level:
-    org:
-      springframework:
-        security: INFO
+#spring:
+#  jpa:
+#    show-sql: false
+#    hibernate:
+#      ddl-auto: update
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    properties:
+#      hibernate:
+#        format_sql: true
+#  datasource:
+#    url: "${spring.datasource.url}"
+#    username: "${spring.datasource.username}"
+#    password: "${spring.datasource.password}"
+#  liquibase:
+#    change-log: db/changelog/db.changelog-master.yaml
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        security: INFO

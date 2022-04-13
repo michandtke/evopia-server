@@ -21,7 +21,7 @@ fun Application.configureRouting(eventRepo: EventRepositoryNew) {
         }
     }
     routing {
-        get("/") {
+        get("/health") {
             call.respondText("Hello World!")
         }
         get("/v3/events") {
