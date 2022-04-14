@@ -24,6 +24,8 @@ object WebServer {
 
         val channelRepository = ChannelRepository(database)
         val channelService = ChannelService(channelRepository)
-        return app.configureRouting(eventRepo, channelService)
+
+        val tagRepository = TagRepository(database)
+        return app.configureRouting(eventRepo, channelService, tagRepository)
     }
 }

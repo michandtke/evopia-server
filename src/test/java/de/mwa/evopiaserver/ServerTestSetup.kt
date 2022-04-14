@@ -4,6 +4,8 @@ import de.mwa.evopiaserver.db.kotlin.DatabaseUtil
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.Config
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.DatabaseConfig
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.WebServer
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import liquibase.Contexts
@@ -22,6 +24,8 @@ import java.sql.DriverManager
 @Testcontainers
 open class ServerTestSetup {
     lateinit var server: NettyApplicationEngine
+    lateinit var client: HttpClient
+
     var initialized = false;
 
     @Container
@@ -51,6 +55,7 @@ open class ServerTestSetup {
 
     @BeforeEach
     fun setUp() {
+        client = HttpClient(CIO)
         if (initialized) { return }
         val changeLogFile = "db.changelog-test.yaml"
         val liquibase: Liquibase = createLiquibase(changeLogFile)
@@ -85,6 +90,7 @@ open class ServerTestSetup {
 
     @AfterEach
     fun teardown() {
+        client.close()
         // clean up after this class, leave nothing dirty behind
         server.stop(1000, 10000)
     }

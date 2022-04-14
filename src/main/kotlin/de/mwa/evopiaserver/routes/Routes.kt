@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import de.mwa.evopiaserver.api.dto.ChannelDto
 import de.mwa.evopiaserver.api.dto.EventDto
 import de.mwa.evopiaserver.db.kotlin.EventRepositoryNew
+import de.mwa.evopiaserver.db.kotlin.TagRepository
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.routes.channelRoutes
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.routes.eventRoutes
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.routes.tagRoutes
 import de.mwa.evopiaserver.service.ChannelService
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
@@ -17,7 +19,7 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 
-fun Application.configureRouting(eventRepo: EventRepositoryNew, channelService: ChannelService) {
+fun Application.configureRouting(eventRepo: EventRepositoryNew, channelService: ChannelService, tagRepository: TagRepository) {
     install(ContentNegotiation) {
         jackson {
             this.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
@@ -30,5 +32,6 @@ fun Application.configureRouting(eventRepo: EventRepositoryNew, channelService: 
         }
         eventRoutes(eventRepo)
         channelRoutes(channelService)
+        tagRoutes(tagRepository)
     }
 }

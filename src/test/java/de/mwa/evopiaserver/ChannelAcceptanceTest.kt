@@ -9,6 +9,8 @@ import io.ktor.http.*
 import io.ktor.http.HttpMethod.Companion.Delete
 import io.ktor.http.HttpMethod.Companion.Post
 import io.ktor.server.testing.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions
@@ -33,6 +35,7 @@ import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ChannelAcceptanceTest : ServerTestSetup() {
 
     @AfterEach
@@ -42,44 +45,39 @@ class ChannelAcceptanceTest : ServerTestSetup() {
 
 
     @Test
-    fun initial_channel_has_only_dummychannel() = testApplication {
+    fun initial_channel_has_only_dummychannel() = runTest {
         val channels = getAllChannels()
 
         assertThat(channels).containsOnly(ChannelDto("Dummychannel"))
     }
 
     @Test
-    fun adding_channel_should_work() = testApplication {
+    fun adding_channel_should_work() = runTest {
         val url = "http://localhost:8080/v3/channels/add"
         val body = "{\"name\": \"BatSign\"}"
 
-        val client = HttpClient(CIO)
         val addResponse = client.request(url) {
             method = Post
             setBody(body)
         }
 
         assertThat(addResponse.status).isEqualTo(HttpStatusCode.OK)
-
-        client.close()
 
         val channels = getAllChannels()
         assertThat(channels).containsOnly(ChannelDto("Dummychannel"), ChannelDto("BatSign"))
     }
 
     @Test
-    fun removing_channel_should_work() = testApplication {
+    fun removing_channel_should_work() = runTest {
         val url = "http://localhost:8080/v3/channels/remove"
         val body = "{\"name\": \"Dummychannel\"}"
-        val client = HttpClient(CIO)
+
         val addResponse = client.request(url) {
             method = Post
             setBody(body)
         }
 
         assertThat(addResponse.status).isEqualTo(HttpStatusCode.OK)
-
-        client.close()
 
         val channelsAfterDelete = getAllChannels()
         assertThat(channelsAfterDelete).isEmpty()
@@ -88,13 +86,10 @@ class ChannelAcceptanceTest : ServerTestSetup() {
     private suspend fun getAllChannels(): List<ChannelDto> {
         val url = "http://localhost:8080/v3/channels"
 
-        val client = HttpClient(CIO)
         val askResponse = client.request(url)
 
         assertThat(askResponse.status)
             .isEqualTo(HttpStatusCode.OK)
-
-        client.close()
 
         return Json.decodeFromString(askResponse.bodyAsText())
     }
