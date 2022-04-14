@@ -2,8 +2,10 @@ package de.mwa.evopiaserver.routes
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
+import de.mwa.evopiaserver.api.dto.ChannelDto
 import de.mwa.evopiaserver.api.dto.EventDto
 import de.mwa.evopiaserver.db.kotlin.EventRepositoryNew
+import de.mwa.evopiaserver.service.ChannelService
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
@@ -13,7 +15,7 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 
-fun Application.configureRouting(eventRepo: EventRepositoryNew) {
+fun Application.configureRouting(eventRepo: EventRepositoryNew, channelService: ChannelService) {
     install(ContentNegotiation) {
         jackson {
             this.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
@@ -43,6 +45,21 @@ fun Application.configureRouting(eventRepo: EventRepositoryNew) {
                 call.respond("Deleted " + result + "events with id " + id)
             }
             call.respond("We need an id to delete something")
+        }
+        get("/v3/channels") {
+            call.respond(channelService.findAll())
+        }
+        post("/v3/channels/add") {
+            val asString = call.receive<String>()
+            val channelToAdd = Json.decodeFromString<ChannelDto>(asString)
+            val count = channelService.add(channelToAdd)
+            call.respond("Added $count entries.")
+        }
+        post("/v3/channels/remove") {
+            val asString = call.receive<String>()
+            val channelToDelete = Json.decodeFromString<ChannelDto>(asString)
+            val count = channelService.remove(channelToDelete)
+            call.respond("Deleted $count entries.")
         }
     }
 }
