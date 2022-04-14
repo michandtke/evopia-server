@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import de.mwa.evopiaserver.api.dto.ChannelDto
 import de.mwa.evopiaserver.api.dto.EventDto
 import de.mwa.evopiaserver.db.kotlin.EventRepositoryNew
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.routes.channelRoutes
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.routes.eventRoutes
 import de.mwa.evopiaserver.service.ChannelService
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
@@ -26,40 +28,7 @@ fun Application.configureRouting(eventRepo: EventRepositoryNew, channelService: 
         get("/health") {
             call.respondText("Hello World!")
         }
-        get("/v3/events") {
-            val events = eventRepo.events()
-            call.respond(events)
-        }
-        post("/v3/events/upsert") {
-            val eventString = call.receive<String>()
-            val event = Json.decodeFromString<EventDto>(eventString)
-
-            println(eventString)
-            eventRepo.upsert(event)
-            call.respond("Upserted")
-        }
-        delete("/v3/events/{id}") {
-            val id = call.parameters["id"]
-            if (id != null) {
-                val result: Int = eventRepo.delete(id.toInt())
-                call.respond("Deleted " + result + "events with id " + id)
-            }
-            call.respond("We need an id to delete something")
-        }
-        get("/v3/channels") {
-            call.respond(channelService.findAll())
-        }
-        post("/v3/channels/add") {
-            val asString = call.receive<String>()
-            val channelToAdd = Json.decodeFromString<ChannelDto>(asString)
-            val count = channelService.add(channelToAdd)
-            call.respond("Added $count entries.")
-        }
-        post("/v3/channels/remove") {
-            val asString = call.receive<String>()
-            val channelToDelete = Json.decodeFromString<ChannelDto>(asString)
-            val count = channelService.remove(channelToDelete)
-            call.respond("Deleted $count entries.")
-        }
+        eventRoutes(eventRepo)
+        channelRoutes(channelService)
     }
 }
