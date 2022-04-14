@@ -40,13 +40,16 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     User createUserIfNotFound(final String email, final String firstName, final String lastName, final String password) {
         User user = userRepository.findByEmail(email);
         if (user == null) {
-            user = new User();
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-            String encode = passwordEncoder.encode(password);
-            user.setPassword(encode);
-            user.setEmail(email);
-            user.setImagePath("");
+            String encodedPassword = passwordEncoder.encode(password);
+            user = new User(
+                    -1,
+                    firstName,
+                    lastName,
+                    "",
+                    email,
+                    encodedPassword,
+                    ""
+            );
         }
         userRepository.save(user);
         return user;

@@ -1,14 +1,13 @@
 package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver
-import de.mwa.evopiaserver.db.kotlin.ChannelRepository
-import de.mwa.evopiaserver.db.kotlin.EventRepositoryNew
-import de.mwa.evopiaserver.db.kotlin.EventTagRepository
-import de.mwa.evopiaserver.db.kotlin.TagRepository
+import de.mwa.evopiaserver.db.kotlin.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import de.mwa.evopiaserver.routes.*
 import de.mwa.evopiaserver.service.ChannelService
+import de.mwa.evopiaserver.service.UserServiceNew
 import io.ktor.server.application.*
 import org.ktorm.database.Database
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 object WebServer {
     fun start(database: Database): NettyApplicationEngine {
@@ -26,6 +25,9 @@ object WebServer {
         val channelService = ChannelService(channelRepository)
 
         val tagRepository = TagRepository(database)
-        return app.configureRouting(eventRepo, channelService, tagRepository)
+
+        val userRepository = UserRepositoryNew(database)
+        val userServiceNew = UserServiceNew(userRepository, BCryptPasswordEncoder())
+        return app.configureRouting(eventRepo, channelService, tagRepository, userServiceNew)
     }
 }

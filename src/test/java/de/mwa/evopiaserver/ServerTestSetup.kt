@@ -6,6 +6,8 @@ import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.DatabaseConfig
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.WebServer
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.auth.*
+import io.ktor.client.plugins.auth.providers.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import liquibase.Contexts
@@ -25,6 +27,7 @@ import java.sql.DriverManager
 open class ServerTestSetup {
     lateinit var server: NettyApplicationEngine
     lateinit var client: HttpClient
+    lateinit var clientTestUser: HttpClient
 
     var initialized = false;
 
@@ -56,6 +59,15 @@ open class ServerTestSetup {
     @BeforeEach
     fun setUp() {
         client = HttpClient(CIO)
+        clientTestUser =  HttpClient(CIO) {
+            install(Auth) {
+                basic {
+                    credentials {
+                        BasicAuthCredentials(username = "Batman@waynecorp.com", password = "\$2a\$11\$FwSqOARBYch53gfIev15ie9Sk0zC9i/gPJd/D1mLdwaeg13ui0NsG")
+                    }
+                }
+            }
+        }
         if (initialized) { return }
         val changeLogFile = "db.changelog-test.yaml"
         val liquibase: Liquibase = createLiquibase(changeLogFile)
@@ -91,6 +103,7 @@ open class ServerTestSetup {
     @AfterEach
     fun teardown() {
         client.close()
+        clientTestUser.close()
         // clean up after this class, leave nothing dirty behind
         server.stop(1000, 10000)
     }

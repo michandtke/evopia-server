@@ -2,14 +2,16 @@ package de.mwa.evopiaserver.db.kotlin
 
 import de.mwa.evopiaserver.api.NoRemoteUserFoundException
 import de.mwa.evopiaserver.api.dto.UpsertUserDto
+import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
 import de.mwa.evopiaserver.registration.User
+import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.springframework.stereotype.Component
 
 @Component
-class UserRepositoryNew(val databaseUtil: DatabaseUtil) {
+class UserRepositoryNew(val database: Database) {
     fun findByEmail(mail: String): User? {
-        return databaseUtil.database
+        return database
             .from(UserTable)
             .select()
             .where { (UserTable.email eq mail) }
@@ -22,7 +24,7 @@ class UserRepositoryNew(val databaseUtil: DatabaseUtil) {
     }
 
     fun emailAlreadyExists(mail: String): Boolean {
-        return databaseUtil.database
+        return database
             .from(UserTable)
             .select()
             .where { (UserTable.email eq mail) }
@@ -31,18 +33,18 @@ class UserRepositoryNew(val databaseUtil: DatabaseUtil) {
 
     private fun rowToUser(it: QueryRowSet): User {
         return User(
-            it[UserTable.id]?.toLong(),
-            it[UserTable.firstName],
-            it[UserTable.lastName],
-            it[UserTable.dateOfRegistration],
-            it[UserTable.email],
-            it[UserTable.password],
-            it[UserTable.imagePath]
+            id = it.orThrow(UserTable.id).toLong(),
+            firstName = it.orThrow(UserTable.firstName),
+            lastName = it.orThrow(UserTable.lastName),
+            dateOfRegistration = it[UserTable.dateOfRegistration].orEmpty(),
+            email = it.orThrow(UserTable.email),
+            password = it.orThrow(UserTable.password),
+            imagePath = it[UserTable.imagePath].orEmpty()
         )
     }
 
     fun save(user: User): Any =
-        databaseUtil.database.insertAndGenerateKey(UserTable) {
+        database.insertAndGenerateKey(UserTable) {
             set(it.firstName, user.firstName)
             set(it.lastName, user.lastName)
             set(it.password, user.password)
@@ -52,7 +54,7 @@ class UserRepositoryNew(val databaseUtil: DatabaseUtil) {
         }
 
     fun update(mail: String, upsertUser: UpsertUserDto): Int {
-        return databaseUtil.database.update(UserTable) {
+        return database.update(UserTable) {
             set(it.imagePath, upsertUser.imagePath)
             where { it.email eq mail }
         }
