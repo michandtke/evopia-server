@@ -21,19 +21,6 @@ import org.junit.jupiter.api.Test
 class EventsAcceptanceTest : ServerTestSetup() {
 
     @Test
-    fun should_get_hello_world() = testApplication {
-        val client = HttpClient(CIO)
-        val url = Url("http://0.0.0.0:8080/health")
-        val response = client.request(url) {
-            method = HttpMethod.Get
-        }
-
-        assertThat((response.bodyAsText())).isEqualTo("Hello World!")
-
-        client.close()
-    }
-
-    @Test
     fun should_get_events() = runTest {
         val events = getAllEvents()
 
