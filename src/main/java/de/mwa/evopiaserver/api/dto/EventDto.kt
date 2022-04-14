@@ -1,7 +1,10 @@
 package de.mwa.evopiaserver.api.dto
 
+import kotlinx.serialization.*
+
+@Serializable
 data class EventDto(
-    val id: Int?,
+    val id: Int = -1,
     val name: String,
     val description: String,
     val date: String,

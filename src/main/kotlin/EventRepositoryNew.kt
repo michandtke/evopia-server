@@ -52,7 +52,7 @@ class EventRepositoryNew(val database: Database, val tagRepository: TagRepositor
 
 
     fun upsert(event: EventDto) {
-        if (event.id != null) {
+        if (event.id != -1) {
             return update(event)
         }
         return insert(event)

@@ -1,22 +1,24 @@
 package de.mwa.evopiaserver;
 
 
+import de.mwa.evopiaserver.api.dto.EventDto
+import de.mwa.evopiaserver.api.dto.TagDto
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
-import io.ktor.client.engine.jetty.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class NewEventsAcceptanceTest : ServerTestSetup() {
-
 
     @Test
     fun should_get_hello_world() = testApplication {
@@ -27,6 +29,8 @@ class NewEventsAcceptanceTest : ServerTestSetup() {
         }
 
         assertThat((response.bodyAsText())).isEqualTo("Hello World!")
+
+        client.close()
     }
 
     @Test
@@ -36,57 +40,62 @@ class NewEventsAcceptanceTest : ServerTestSetup() {
         assertThat(events).isEqualTo("[]")
     }
 
-//
-//    @Test
-//    public void should_add_event_without_tag_and_get_it() throws JsonProcessingException {
-//        var body = "{" +
-//                "\"name\": \"nameIt\"," +
-//                "\"description\": \"desc\"," +
-//                "\"date\": \"2020\"," +
-//                "\"time\": \"18:00\"," +
-//                "\"place\": \"Berlin\"," +
-//                "\"imagePath\": \"img/path.jpg\"," +
-//                "\"tags\":[]" +
-//                "}";
-//        addEvent(body);
-//
-//        List<EventDto> events = getAllEvents();
-//        assertThat(events).hasSize(1);
-//        var event = events.get(0);
-//        assertThat(event.getDate()).isEqualTo("2020");
-//        assertThat(event.getName()).isEqualTo("nameIt");
-//        assertThat(event.getDescription()).isEqualTo("desc");
-//        assertThat(event.getTime()).isEqualTo("18:00");
-//        assertThat(event.getPlace()).isEqualTo("Berlin");
-//        assertThat(event.getImagePath()).isEqualTo("img/path.jpg");
-//        assertThat(event.getTags()).isEmpty();
-//    }
-//
-//    @Test
-//    public void should_add_event_with_tag_and_get_it() throws JsonProcessingException {
-//        var body = "{" +
-//                "\"name\": \"nameIt\"," +
-//                "\"description\": \"desc\"," +
-//                "\"date\": \"2020\"," +
-//                "\"time\": \"18:00\"," +
-//                "\"place\": \"Berlin\"," +
-//                "\"imagePath\": \"img/path.jpg\"," +
-//                "\"tags\":[ {\"name\":\"myTag\"}," +
-//                "{\"name\":\"mySecondTag\"}]" +
-//                "}";
-//        addEvent(body);
-//
-//        List<EventDto> events = getAllEvents();
-//        assertThat(events).hasSize(1);
-//        var event = events.get(0);
-//        assertThat(event.getDate()).isEqualTo("2020");
-//        assertThat(event.getName()).isEqualTo("nameIt");
-//        assertThat(event.getDescription()).isEqualTo("desc");
-//        assertThat(event.getTime()).isEqualTo("18:00");
-//        assertThat(event.getPlace()).isEqualTo("Berlin");
-//        assertThat(event.getImagePath()).isEqualTo("img/path.jpg");
-//        assertThat(event.getTags()).containsOnly(new TagDto("myTag"), new TagDto("mySecondTag"));
-//    }
+
+    @Test
+    fun should_add_event_without_tag_and_get_it() = testApplication {
+        val body = "{" +
+                "\"name\": \"nameIt\"," +
+                "\"description\": \"desc\"," +
+                "\"date\": \"2020\"," +
+                "\"time\": \"18:00\"," +
+                "\"place\": \"Berlin\"," +
+                "\"imagePath\": \"img/path.jpg\"," +
+                "\"tags\":[]" +
+                "}"
+
+        addEvent(body)
+
+        val allEvents = getAllEventsString()
+        val events = Json.decodeFromString<List<EventDto>>(allEvents)
+
+        assertThat(events).hasSize(1)
+        val event: EventDto = events[0]
+        assertThat(event.date).isEqualTo("2020")
+        assertThat(event.name).isEqualTo("nameIt")
+        assertThat(event.description).isEqualTo("desc")
+        assertThat(event.time).isEqualTo("18:00")
+        assertThat(event.place).isEqualTo("Berlin")
+        assertThat(event.imagePath).isEqualTo("img/path.jpg")
+        assertThat(event.tags).isEmpty()
+    }
+
+    @Test
+    fun should_add_event_with_tag_and_get_it() = testApplication {
+        val body = "{" +
+                "\"name\": \"nameIt\"," +
+                "\"description\": \"desc\"," +
+                "\"date\": \"2020\"," +
+                "\"time\": \"18:00\"," +
+                "\"place\": \"Berlin\"," +
+                "\"imagePath\": \"img/path.jpg\"," +
+                "\"tags\":[ {\"name\":\"myTag\"}," +
+                "{\"name\":\"mySecondTag\"}]" +
+                "}";
+        addEvent(body);
+
+        val allEvents = getAllEventsString()
+        val events = Json.decodeFromString<List<EventDto>>(allEvents)
+
+        assertThat(events).hasSize(1)
+        val event: EventDto = events[0]
+        assertThat(event.date).isEqualTo("2020");
+        assertThat(event.name).isEqualTo("nameIt");
+        assertThat(event.description).isEqualTo("desc");
+        assertThat(event.time).isEqualTo("18:00");
+        assertThat(event.place).isEqualTo("Berlin");
+        assertThat(event.imagePath).isEqualTo("img/path.jpg");
+        assertThat(event.tags).containsOnly(TagDto("myTag"), TagDto("mySecondTag"));
+    }
 //
 //    @Test
 //    public void should_delete_event() throws JsonProcessingException {
@@ -113,23 +122,9 @@ class NewEventsAcceptanceTest : ServerTestSetup() {
 //    }
 
     private suspend fun getAllEventsString(): String {
-        val askingUrl = "http://localhost:8080/v3/events"
-//        val askResponse: HttpResponse = HttpClient(CIO).use { client ->
-//            async { client.request(askingUrl) }
-//        }
-//
-//        val req1 = async { client.call("https://127.0.0.1:8080/a").response.readBytes() }
-////        var askResponse = restTemplate.exchange
-////                (askingUrl, HttpMethod.GET, HttpEntityFactory.forTestUser(), String.class);
-//
-//        assertThat(askResponse.status)
-//                .isEqualTo(HttpStatusCode.OK);
-//        return runBlocking { askResponse.bodyAsText() }
-        return getResponse(askingUrl)
-    }
+        val url = "http://localhost:8080/v3/events"
 
-    private suspend fun getResponse(url: String): String {
-        val client = HttpClient(Jetty)
+        val client = HttpClient(CIO)
         val askResponse = client.request(url)
 
         assertThat(askResponse.status)
@@ -140,7 +135,7 @@ class NewEventsAcceptanceTest : ServerTestSetup() {
         return askResponse.bodyAsText()
     }
 
-//    private List<EventDto> getAllEvents() throws JsonProcessingException {
+    //    private List<EventDto> getAllEvents() throws JsonProcessingException {
 //        var askingUrl = "http://localhost:" + port + "/v3/events";
 //        var askResponse = restTemplate.exchange
 //                (askingUrl, HttpMethod.GET, HttpEntityFactory.forTestUser(), String.class);
@@ -154,16 +149,23 @@ class NewEventsAcceptanceTest : ServerTestSetup() {
 //        return mapper.readValue(jsonInput, new TypeReference<List<EventDto>>(){});
 //    }
 //
-//    private void addEvent(String body) {
-//        var addingUrl = "http://localhost:" + port + "/v3/events/upsert";
-//        var addResponse = restTemplate.exchange
-//                (addingUrl, HttpMethod.POST, HttpEntityFactory.forTestUserWith(body), String.class);
-//
-//        assertThat(addResponse.getStatusCode())
-//                .as("Not a successful call: " + addResponse.getBody())
-//                .isEqualTo(HttpStatus.OK);
-//    }
-//
+    private suspend fun addEvent(_body: String): HttpResponse {
+        val client = HttpClient(CIO)
+        val url = Url("http://localhost:8080/v3/events/upsert")
+        val response = client.request(url) {
+            method = HttpMethod.Post
+            contentType(ContentType("application", "json"))
+            setBody(_body)
+        }
+        val y = response.bodyAsText()
+        assertThat(response.status)
+            .`as`(response.bodyAsText())
+            .isEqualTo(HttpStatusCode.OK)
+
+        assertThat(y).isNotEmpty
+        return response
+    }
+
 //    private void deleteEvent(Integer id) {
 //        var addingUrl = "http://localhost:" + port + "/v3/events/" + id;
 //        var removeResponse = restTemplate.exchange
