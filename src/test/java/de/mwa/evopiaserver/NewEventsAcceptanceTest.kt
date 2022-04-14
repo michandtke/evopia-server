@@ -35,9 +35,9 @@ class NewEventsAcceptanceTest : ServerTestSetup() {
 
     @Test
     fun should_get_events() = runTest {
-        val events: String = getAllEventsString()
+        val events = getAllEvents()
 
-        assertThat(events).isEqualTo("[]")
+        assertThat(events).isEmpty()
     }
 
 
@@ -55,8 +55,7 @@ class NewEventsAcceptanceTest : ServerTestSetup() {
 
         addEvent(body)
 
-        val allEvents = getAllEventsString()
-        val events = Json.decodeFromString<List<EventDto>>(allEvents)
+        val events = getAllEvents()
 
         assertThat(events).hasSize(1)
         val event: EventDto = events[0]
@@ -83,8 +82,7 @@ class NewEventsAcceptanceTest : ServerTestSetup() {
                 "}";
         addEvent(body);
 
-        val allEvents = getAllEventsString()
-        val events = Json.decodeFromString<List<EventDto>>(allEvents)
+        val events = getAllEvents()
 
         assertThat(events).hasSize(1)
         val event: EventDto = events[0]
@@ -96,32 +94,32 @@ class NewEventsAcceptanceTest : ServerTestSetup() {
         assertThat(event.imagePath).isEqualTo("img/path.jpg");
         assertThat(event.tags).containsOnly(TagDto("myTag"), TagDto("mySecondTag"));
     }
-//
-//    @Test
-//    public void should_delete_event() throws JsonProcessingException {
-//        var body = "{" +
-//                "\"name\": \"nameIt\"," +
-//                "\"description\": \"desc\"," +
-//                "\"date\": \"2020\"," +
-//                "\"time\": \"18:00\"," +
-//                "\"place\": \"Berlin\"," +
-//                "\"imagePath\": \"img/path.jpg\"," +
-//                "\"tags\":[]" +
-//                "}";
-//        addEvent(body);
-//
-//        List<EventDto> eventBefore = getAllEvents();
-//        assertThat(eventBefore).hasSize(1);
-//        var id = eventBefore.get(0).component1();
-//
-//        deleteEvent(id);
-//
-//        List<EventDto> events = getAllEvents();
-//        assertThat(events).isEmpty();
-//
-//    }
 
-    private suspend fun getAllEventsString(): String {
+    @Test
+    fun should_delete_event() = testApplication {
+        val body = "{" +
+                "\"name\": \"nameIt\"," +
+                "\"description\": \"desc\"," +
+                "\"date\": \"2020\"," +
+                "\"time\": \"18:00\"," +
+                "\"place\": \"Berlin\"," +
+                "\"imagePath\": \"img/path.jpg\"," +
+                "\"tags\":[]" +
+                "}";
+        addEvent(body);
+
+        val eventBefore = getAllEvents()
+        assertThat(eventBefore).hasSize(1)
+        val id = eventBefore[0].component1()
+
+        deleteEvent(id)
+
+        val eventAfter = getAllEvents()
+        assertThat(eventAfter).isEmpty()
+
+    }
+
+    private suspend fun getAllEvents(): List<EventDto> {
         val url = "http://localhost:8080/v3/events"
 
         val client = HttpClient(CIO)
@@ -132,23 +130,9 @@ class NewEventsAcceptanceTest : ServerTestSetup() {
 
         client.close()
 
-        return askResponse.bodyAsText()
+        return Json.decodeFromString(askResponse.bodyAsText())
     }
 
-    //    private List<EventDto> getAllEvents() throws JsonProcessingException {
-//        var askingUrl = "http://localhost:" + port + "/v3/events";
-//        var askResponse = restTemplate.exchange
-//                (askingUrl, HttpMethod.GET, HttpEntityFactory.forTestUser(), String.class);
-//
-//        assertThat(askResponse.getStatusCode())
-//                .as("Not a successful call: " + askResponse.getBody())
-//                .isEqualTo(HttpStatus.OK);
-//
-//        ObjectMapper mapper = jacksonObjectMapper();
-//        var jsonInput = askResponse.getBody();
-//        return mapper.readValue(jsonInput, new TypeReference<List<EventDto>>(){});
-//    }
-//
     private suspend fun addEvent(_body: String): HttpResponse {
         val client = HttpClient(CIO)
         val url = Url("http://localhost:8080/v3/events/upsert")
@@ -166,13 +150,15 @@ class NewEventsAcceptanceTest : ServerTestSetup() {
         return response
     }
 
-//    private void deleteEvent(Integer id) {
-//        var addingUrl = "http://localhost:" + port + "/v3/events/" + id;
-//        var removeResponse = restTemplate.exchange
-//                (addingUrl, HttpMethod.DELETE, HttpEntityFactory.forTestUser(), String.class);
-//
-//        assertThat(removeResponse.getStatusCode())
-//                .as("Not a successful call: " + removeResponse.getBody())
-//                .isEqualTo(HttpStatus.OK);
-//    }
+    private suspend fun deleteEvent(id: Int): HttpResponse {
+        val client = HttpClient(CIO)
+        val url = "http://localhost:8080/v3/events/$id"
+        val response = client.request(url) {
+            method = HttpMethod.Delete
+        }
+        assertThat(response.status)
+            .isEqualTo(HttpStatusCode.OK)
+
+        return response
+    }
 }
