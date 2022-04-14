@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class NewEventsAcceptanceTest : ServerTestSetup() {
+class EventsAcceptanceTest : ServerTestSetup() {
 
     @Test
     fun should_get_hello_world() = testApplication {
