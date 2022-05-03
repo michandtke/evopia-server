@@ -4,7 +4,10 @@ import de.mwa.evopiaserver.api.dto.EventDto
 import de.mwa.evopiaserver.api.dto.TagDto
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
-import org.ktorm.entity.*
+import org.ktorm.entity.filter
+import org.ktorm.entity.groupBy
+import org.ktorm.entity.map
+import org.ktorm.entity.sequenceOf
 import org.springframework.stereotype.Component
 
 
@@ -13,7 +16,11 @@ val Database.eventTags get() = this.sequenceOf(EventTagTable)
 val Database.tags get() = this.sequenceOf(TagTable)
 
 @Component
-class EventRepositoryNew(val database: Database, val tagRepository: TagRepository, val eventTagRepository: EventTagRepository) {
+class EventRepositoryNew(
+    val database: Database,
+    val tagRepository: TagRepository,
+    val eventTagRepository: EventTagRepository
+) {
     fun events(): List<EventDto> {
         val withTags = eventsWithTags()
         return withTags + eventsWithoutTags(withTags.mapNotNull { it.id })
@@ -53,10 +60,8 @@ class EventRepositoryNew(val database: Database, val tagRepository: TagRepositor
 
     fun upsert(event: EventDto) {
         if (event.id != -1) {
-            println("Update event $event")
             return update(event)
         }
-        println("Insert event $event")
         return insert(event)
     }
 
@@ -72,7 +77,7 @@ class EventRepositoryNew(val database: Database, val tagRepository: TagRepositor
     private fun update(event: EventDto) {
         database.update(EventTable) {
             addColumnsExceptId(event)
-            set(it.id, event.id)
+            where { it.id eq event.id }
         }
     }
 
