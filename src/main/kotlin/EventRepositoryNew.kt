@@ -8,6 +8,7 @@ import org.ktorm.entity.filter
 import org.ktorm.entity.groupBy
 import org.ktorm.entity.map
 import org.ktorm.entity.sequenceOf
+import org.ktorm.support.postgresql.bulkInsertOrUpdate
 import org.springframework.stereotype.Component
 
 
@@ -59,10 +60,24 @@ class EventRepositoryNew(
 
 
     fun upsert(event: EventDto) {
+        upsertTagRelations(event.id, event.tags)
         if (event.id != -1) {
             return update(event)
         }
         return insert(event)
+    }
+
+    private fun upsertTagRelations(eventId: Int, tags: List<TagDto>) {
+        val daos = tagRepository.findByNameIn(tags.map { it.name })
+        database.bulkInsertOrUpdate(EventTagTable) {
+            daos.map {
+                item {
+                    set(EventTagTable.eventId, eventId)
+                    set(EventTagTable.tagId, it.id)
+                }
+            }
+            onConflict {}
+        }
     }
 
     private fun insert(eventDto: EventDto) {
