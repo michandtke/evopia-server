@@ -2,15 +2,16 @@ package de.mwa.evopiaserver.db.kotlin
 
 import de.mwa.evopiaserver.api.dto.UserChannel
 import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
+import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.support.postgresql.insertOrUpdate
 import org.springframework.stereotype.Component
 
 @Component
-class UserChannelRepositoryNew(val databaseUtil: DatabaseUtil, val userRepository: UserRepositoryNew) {
+class UserChannelRepositoryNew(val database: Database, val userRepository: UserRepositoryNew) {
 
     fun findForUser(email: String): List<UserChannel> {
-        return databaseUtil.database
+        return database
             .from(UserChannelTable)
             .innerJoin(UserTable, UserTable.id eq UserChannelTable.userId)
             .innerJoin(ChannelTable, ChannelTable.id eq UserChannelTable.channelId)
@@ -46,7 +47,7 @@ class UserChannelRepositoryNew(val databaseUtil: DatabaseUtil, val userRepositor
     }
 
     private fun getExistingUserChannels(userId: Int, channels: List<UserChannel>): List<Pair<Int?, String?>> {
-        return databaseUtil.database.from(UserChannelTable)
+        return database.from(UserChannelTable)
             .rightJoin(
                 ChannelTable,
                 (ChannelTable.id eq UserChannelTable.channelId) and (UserChannelTable.userId eq userId)
@@ -62,7 +63,7 @@ class UserChannelRepositoryNew(val databaseUtil: DatabaseUtil, val userRepositor
 
     private fun delete(toDelete: List<Int>?, userId: Int): Int {
         if (toDelete != null)
-            return databaseUtil.database.delete(UserChannelTable) {
+            return database.delete(UserChannelTable) {
                 (it.channelId inList toDelete) and (it.userId eq userId)
             }
         return 0
@@ -73,7 +74,7 @@ class UserChannelRepositoryNew(val databaseUtil: DatabaseUtil, val userRepositor
         userId: Int
     ): Int {
         return toInsert.map { idValuePair ->
-            databaseUtil.database.insertOrUpdate(UserChannelTable) {
+            database.insertOrUpdate(UserChannelTable) {
                 set(it.channelId, idValuePair.first)
                 set(it.userId, userId)
                 set(it.value, idValuePair.second)

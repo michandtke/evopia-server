@@ -4,6 +4,7 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import de.mwa.evopiaserver.routes.*
 import de.mwa.evopiaserver.service.ChannelService
+import de.mwa.evopiaserver.service.UserChannelService
 import de.mwa.evopiaserver.service.UserServiceNew
 import io.ktor.server.application.*
 import org.ktorm.database.Database
@@ -28,6 +29,9 @@ object WebServer {
 
         val userRepository = UserRepositoryNew(database)
         val userServiceNew = UserServiceNew(userRepository, BCryptPasswordEncoder())
-        return app.configureRouting(eventRepo, channelService, tagRepository, userServiceNew)
+
+        val userChannelRepo = UserChannelRepositoryNew(database, userRepository)
+        val userChannelService = UserChannelService(userChannelRepo)
+        return app.configureRouting(eventRepo, channelService, tagRepository, userServiceNew, userChannelService)
     }
 }

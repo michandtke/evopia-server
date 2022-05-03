@@ -1,31 +1,27 @@
-package de.mwa.evopiaserver.service;
+package de.mwa.evopiaserver.service
 
-import de.mwa.evopiaserver.api.dto.ChannelDto;
-import de.mwa.evopiaserver.db.kotlin.ChannelRepository;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import de.mwa.evopiaserver.api.dto.ChannelDto
+import de.mwa.evopiaserver.db.kotlin.ChannelRepository
+import org.springframework.stereotype.Service
+import java.util.stream.Collectors
 
 @Service
-public class ChannelService {
-
-    private final ChannelRepository databaseWrapper;
-
-    public ChannelService(ChannelRepository databaseWrapper) {
-        this.databaseWrapper = databaseWrapper;
+class ChannelService(private val databaseWrapper: ChannelRepository) {
+    fun findAll(): List<ChannelDto> {
+        val channels = databaseWrapper.findAllChannels()
+        return channels.stream().map { (name): ChannelDto -> ChannelDto(name) }.collect(Collectors.toList())
     }
 
-    public List<ChannelDto> findAll() {
-        var channels = databaseWrapper.findAllChannels();
-        return channels.stream().map(chan -> new ChannelDto(chan.getName())).collect(Collectors.toList());
+    fun add(channelDto: ChannelDto?): Int {
+        return databaseWrapper.saveChannel(channelDto!!)
     }
 
-    public int add(ChannelDto channelDto) {
-        return databaseWrapper.saveChannel(channelDto);
+    fun remove(channelDto: ChannelDto): Int {
+        return databaseWrapper.deleteChannelByName(channelDto.name)
     }
 
-    public int remove(ChannelDto channelDto) {
-        return databaseWrapper.deleteChannelByName(channelDto.getName());
+    fun unknownChannelNames(channelNames: List<String>): List<String> {
+        val allChannels = findAll().map { c -> c.name }
+        return channelNames.filter { chan -> !allChannels.contains(chan) }
     }
 }

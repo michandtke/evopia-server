@@ -6,6 +6,7 @@ import de.mwa.evopiaserver.db.kotlin.EventRepositoryNew
 import de.mwa.evopiaserver.db.kotlin.TagRepository
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.routes.*
 import de.mwa.evopiaserver.service.ChannelService
+import de.mwa.evopiaserver.service.UserChannelService
 import de.mwa.evopiaserver.service.UserServiceNew
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
@@ -18,7 +19,8 @@ fun Application.configureRouting(
     eventRepo: EventRepositoryNew,
     channelService: ChannelService,
     tagRepository: TagRepository,
-    userService: UserServiceNew
+    userService: UserServiceNew,
+    userChannelService: UserChannelService
 ) {
     install(ContentNegotiation) {
         jackson {
@@ -39,5 +41,6 @@ fun Application.configureRouting(
         channelRoutes(channelService)
         tagRoutes(tagRepository)
         userRoutes(userService)
+        userChannelRoutes(userChannelService, channelService)
     }
 }
