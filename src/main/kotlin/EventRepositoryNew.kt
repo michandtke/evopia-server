@@ -42,8 +42,8 @@ class EventRepositoryNew(val database: Database, val tagRepository: TagRepositor
             id = eventId,
             name = eventDao.name,
             description = eventDao.description,
-            date = eventDao.date,
-            time = eventDao.time,
+            from = eventDao.date,
+            to = eventDao.time,
             place = eventDao.place,
             imagePath = eventDao.image,
             tags = tags.map { TagDto(it.name) }
@@ -76,8 +76,8 @@ class EventRepositoryNew(val database: Database, val tagRepository: TagRepositor
 
     private fun AssignmentsBuilder.addColumnsExceptId(event: EventDto) {
         set(EventTable.name, event.name)
-        set(EventTable.date, event.date)
-        set(EventTable.time, event.time)
+        set(EventTable.date, event.from)
+        set(EventTable.time, event.to)
         set(EventTable.place, event.place)
         set(EventTable.description, event.description)
         set(EventTable.image, event.imagePath)

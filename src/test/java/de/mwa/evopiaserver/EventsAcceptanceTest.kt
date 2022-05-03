@@ -46,10 +46,10 @@ class EventsAcceptanceTest : ServerTestSetup() {
 
         assertThat(events).hasSize(1)
         val event: EventDto = events[0]
-        assertThat(event.date).isEqualTo("2020")
+        assertThat(event.from).isEqualTo("2020")
         assertThat(event.name).isEqualTo("nameIt")
         assertThat(event.description).isEqualTo("desc")
-        assertThat(event.time).isEqualTo("18:00")
+        assertThat(event.to).isEqualTo("18:00")
         assertThat(event.place).isEqualTo("Berlin")
         assertThat(event.imagePath).isEqualTo("img/path.jpg")
         assertThat(event.tags).isEmpty()
@@ -58,27 +58,29 @@ class EventsAcceptanceTest : ServerTestSetup() {
     @Test
     fun should_add_event_with_tag_and_get_it() = testApplication {
         val body = "{" +
-                "\"name\": \"nameIt\"," +
-                "\"description\": \"desc\"," +
-                "\"date\": \"2020\"," +
-                "\"time\": \"18:00\"," +
-                "\"place\": \"Berlin\"," +
-                "\"imagePath\": \"img/path.jpg\"," +
-                "\"tags\":[ {\"name\":\"myTag\"}," +
-                "{\"name\":\"mySecondTag\"}]" +
-                "}";
+                "\"id\":-1," +
+                "\"name\":\"5 - Beachen\"," +
+                "\"description\":\"Beachen\"," +
+                "\"from\":\"2022-02-27T18:00:00.000\"," +
+                "\"to\":\"2022-02-27T19:00:00.000\"," +
+                "\"place\":\"Beachmitte\"," +
+                "\"imagePath\":\"assets/icons/ball-volleyball.svg\"," +
+                "\"tags\":[" +
+                "{\"name\":\"myTag\"}," +
+                "{\"name\":\"mySecondTag\"}" +
+                "]}"
         addEvent(body);
 
         val events = getAllEvents()
 
         assertThat(events).hasSize(1)
         val event: EventDto = events[0]
-        assertThat(event.date).isEqualTo("2020");
-        assertThat(event.name).isEqualTo("nameIt");
-        assertThat(event.description).isEqualTo("desc");
-        assertThat(event.time).isEqualTo("18:00");
-        assertThat(event.place).isEqualTo("Berlin");
-        assertThat(event.imagePath).isEqualTo("img/path.jpg");
+        assertThat(event.from).isEqualTo("2022-02-27T18:00:00.000");
+        assertThat(event.name).isEqualTo("5 - Beachen");
+        assertThat(event.description).isEqualTo("Beachen");
+        assertThat(event.to).isEqualTo("2022-02-27T19:00:00.000");
+        assertThat(event.place).isEqualTo("Beachmitte");
+        assertThat(event.imagePath).isEqualTo("assets/icons/ball-volleyball.svg");
         assertThat(event.tags).containsOnly(TagDto("myTag"), TagDto("mySecondTag"));
     }
 
