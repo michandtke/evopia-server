@@ -53,8 +53,10 @@ class EventRepositoryNew(val database: Database, val tagRepository: TagRepositor
 
     fun upsert(event: EventDto) {
         if (event.id != -1) {
+            println("Update event $event")
             return update(event)
         }
+        println("Insert event $event")
         return insert(event)
     }
 
