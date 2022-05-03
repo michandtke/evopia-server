@@ -1,4 +1,5 @@
 package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver
+
 import de.mwa.evopiaserver.db.kotlin.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -12,7 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 object WebServer {
     fun start(database: Database): NettyApplicationEngine {
-        return embeddedServer(Netty, port = System.getenv("PORT")?.toInt()?:8080) {
+        return embeddedServer(Netty, port = System.getenv("PORT")?.toInt() ?: 8080) {
             application(database, this)
         }
     }
@@ -32,6 +33,15 @@ object WebServer {
 
         val userChannelRepo = UserChannelRepositoryNew(database, userRepository)
         val userChannelService = UserChannelService(userChannelRepo)
-        return app.configureRouting(eventRepo, channelService, tagRepository, userServiceNew, userChannelService)
+
+        val userTagRepository = UserTagRepository(database, userRepository, tagRepository)
+        return app.configureRouting(
+            eventRepo,
+            channelService,
+            tagRepository,
+            userServiceNew,
+            userChannelService,
+            userTagRepository
+        )
     }
 }

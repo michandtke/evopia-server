@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import de.mwa.evopiaserver.db.kotlin.EventRepositoryNew
 import de.mwa.evopiaserver.db.kotlin.TagRepository
+import de.mwa.evopiaserver.db.kotlin.UserTagRepository
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.routes.*
 import de.mwa.evopiaserver.service.ChannelService
 import de.mwa.evopiaserver.service.UserChannelService
@@ -20,7 +21,8 @@ fun Application.configureRouting(
     channelService: ChannelService,
     tagRepository: TagRepository,
     userService: UserServiceNew,
-    userChannelService: UserChannelService
+    userChannelService: UserChannelService,
+    userTagRepository: UserTagRepository
 ) {
     install(ContentNegotiation) {
         jackson {
@@ -42,5 +44,6 @@ fun Application.configureRouting(
         tagRoutes(tagRepository)
         userRoutes(userService)
         userChannelRoutes(userChannelService, channelService)
+        userTagRoutes(userTagRepository)
     }
 }

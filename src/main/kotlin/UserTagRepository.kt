@@ -2,18 +2,19 @@ package de.mwa.evopiaserver.db.kotlin
 
 import de.mwa.evopiaserver.api.dto.UserTag
 import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
+import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.support.postgresql.insertOrUpdate
 import org.springframework.stereotype.Component
 
 @Component
 class UserTagRepository(
-    val databaseUtil: DatabaseUtil,
+    val database: Database,
     val userRepository: UserRepositoryNew,
     val tagRepository: TagRepository
 ) {
     fun selectFor(mail: String): List<UserTag> {
-        return databaseUtil.database
+        return database
             .from(UserTagTable)
             .innerJoin(UserTable, UserTable.id eq UserTagTable.userId)
             .innerJoin(TagTable, TagTable.id eq UserTagTable.tagId)
@@ -40,14 +41,14 @@ class UserTagRepository(
 
     private fun deleteUserTags(tagIds: List<Int>, userId: Int): Int {
         if (tagIds.isEmpty()) return 0;
-        val deleted = databaseUtil.database.delete(UserTagTable) {
+        val deleted = database.delete(UserTagTable) {
             (it.tagId notInList tagIds) and (it.userId eq userId)
         }
         return deleted
     }
 
     private fun insertOrUpdate(userId: Int, tagId: Int): Int {
-        return databaseUtil.database.insertOrUpdate(UserTagTable) {
+        return database.insertOrUpdate(UserTagTable) {
             set(it.tagId, tagId)
             set(it.userId, userId)
             onConflict {

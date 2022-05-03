@@ -1,129 +1,70 @@
-package de.mwa.evopiaserver;
+package de.mwa.evopiaserver
 
-import de.mwa.evopiaserver.api.dto.UserTag;
-import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.json.AutoConfigureJson;
-import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import de.mwa.evopiaserver.api.dto.UserTag
+import io.ktor.client.call.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
+import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import org.assertj.core.api.Assertions
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Test
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Testcontainers
-@AutoConfigureJson
-@AutoConfigureJsonTesters
-@ContextConfiguration(initializers = {UserTagAcceptanceTest.Initializer.class})
-public class UserTagAcceptanceTest {
-
-    @Test
-    public void should_get_user_for_test_user() {
-        ResponseEntity<List<UserTag>> response = getUserTagsForTestUser();
-
-        assertThat(response.getBody()).isEmpty();
-    }
-
-    @Test
-    public void should_add_and_get_user_tag() {
-        addTag("Beachvolleyball");
-        var body = "[{\"name\": \"Beachvolleyball\"}]";
-        var response = addUserChannel(body);
-
-        assertThat(response).isEqualTo("Upserted user tags: 1 | Deleted user tags: 0");
-
-
-        ResponseEntity<List<UserTag>> tags = getUserTagsForTestUser();
-        assertThat(tags.getBody()).containsOnly(new UserTag("Beachvolleyball"));
-    }
-
-    @NotNull
-    private ResponseEntity<List<UserTag>> getUserTagsForTestUser() {
-        var url = "http://localhost:" + port + "/v2/user/tags";
-        var requestType = new ParameterizedTypeReference<List<UserTag>>() {
-        };
-        var response = restTemplate.exchange
-                (url, HttpMethod.GET, HttpEntityFactory.forTestUser(), requestType);
-
-        assertThat(response.getStatusCode())
-                .as("Not a successful call: " + response.getBody())
-                .isEqualTo(HttpStatus.OK);
-        return response;
-    }
-
-    private String addUserChannel(String body) {
-        var addingUrl = "http://localhost:" + port + "/v2/user/tags";
-        var addResponse = restTemplate.exchange
-                (addingUrl, HttpMethod.POST, HttpEntityFactory.forTestUserWith(body), String.class);
-
-        assertThat(addResponse.getStatusCode())
-                .as("Not a successful call: " + addResponse.getBody())
-                .isEqualTo(HttpStatus.OK);
-
-        return addResponse.getBody();
-    }
-
-    private void addTag(String name) {
-        var addingUrl = "http://localhost:" + port + "/v2/tags/add";
-        var body = "[{\"name\": \""+name+"\"}]";
-        var addResponse = restTemplate.exchange
-                (addingUrl, HttpMethod.POST, HttpEntityFactory.forTestUserWith(body), String.class);
-
-        assertThat(addResponse.getStatusCode())
-                .as("Not a successful call: " + addResponse.getBody())
-                .isEqualTo(HttpStatus.OK);
-    }
+class UserTagAcceptanceTest : ServerTestSetup() {
 
     @AfterEach
-    public void cleanup() {
-        repositoryTestHelper.resetUserTagTable();
+    fun localCleanup() {
+        repositoryTestHelper.resetUserTagTable()
+        repositoryTestHelper.resetTagTable()
     }
 
-    @AfterAll
-    static void endCleanup() {
-        System.setProperty("spring.datasource.url", "");
-        System.setProperty("spring.datasource.username", "");
-        System.setProperty("spring.datasource.password", "");
+    @Test
+    fun should_get_user_for_test_user() = runTest {
+        val response = userTagsForTestUser()
+        Assertions.assertThat(response).isEmpty()
     }
 
-    @LocalServerPort
-    private int port;
+    @Test
+    fun should_add_and_get_user_tag() = runTest {
+        addTag("Beachvolleyball")
+        val body = "[{\"name\": \"Beachvolleyball\"}]"
+        val response = addUserChannel(body)
+        Assertions.assertThat(response).isEqualTo("Upserted user tags: 1 | Deleted user tags: 0")
+        val tags = userTagsForTestUser()
+        Assertions.assertThat(tags).containsOnly(UserTag("Beachvolleyball"))
+    }
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private suspend fun userTagsForTestUser(): List<UserTag> {
+        val url = "http://localhost:8080/v3/user/tags"
 
-    @Autowired
-    private RepositoryTestHelper repositoryTestHelper;
+        val askResponse = clientTestUser.request(url)
 
-    @Container
-    private static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres")
-            .withDatabaseName("integration-tests-db")
-            .withUsername("sa")
-            .withPassword("sa");
+        Assertions.assertThat(askResponse.status).isEqualTo(HttpStatusCode.OK)
 
-    static class Initializer
-            implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            System.setProperty("spring.datasource.url", postgreSQLContainer.getJdbcUrl());
-            System.setProperty("spring.datasource.username", postgreSQLContainer.getUsername());
-            System.setProperty("spring.datasource.password", postgreSQLContainer.getPassword());
+        return Json.decodeFromString(askResponse.bodyAsText())
+    }
+
+    private suspend fun addUserChannel(body: String): String {
+        val addingUrl = "http://localhost:8080/v3/user/tags"
+        val response = clientTestUser.request(addingUrl) {
+            method = HttpMethod.Post
+            setBody(body)
         }
+        Assertions.assertThat(response.status)
+            .isEqualTo(HttpStatusCode.OK)
+        return response.body()
+    }
+
+    private suspend fun addTag(name: String) {
+        val addingUrl = "http://localhost:8080/v3/tags/add"
+        val body = "[{\"name\": \"$name\"}]"
+        val response = clientTestUser.request(addingUrl) {
+            method = HttpMethod.Post
+            setBody(body)
+        }
+        Assertions.assertThat(response.status)
+            .isEqualTo(HttpStatusCode.OK)
     }
 }
