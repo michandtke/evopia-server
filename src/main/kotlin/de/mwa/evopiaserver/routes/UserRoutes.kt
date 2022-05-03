@@ -1,24 +1,35 @@
 package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.routes
 
+import de.mwa.evopiaserver.api.NoRemoteUserFoundException
+import de.mwa.evopiaserver.service.UserServiceNew
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.userRoutes() {
-    get("/v3/user") {
-    }
-    put("/v3/user") {
-
-    }
-    post("/v3/user") {
-
-    }
+fun Route.userRoutes(userService: UserServiceNew) {
     authenticate("auth-basic") {
         get("/auth") {
-            call.respondText("Hello, ${call.principal<UserIdPrincipal>()?.name}!")
+            call.respondText("Hello, ${call.userName()}!")
+        }
+        get("/v3/user") {
+            val name = call.userName() ?: throw NoRemoteUserFoundException ("Too bad, no remote user found!")
+            val user = userService.find(name)
+            call.respond(user)
+        }
+        put("/v3/user") {
+
+        }
+        post("/v3/user") {
+
         }
     }
+
+
+}
+
+fun ApplicationCall.userName() : String? {
+    return principal<UserIdPrincipal>()?.name
 }
 
 

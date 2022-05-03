@@ -18,7 +18,7 @@ fun Application.configureRouting(
     eventRepo: EventRepositoryNew,
     channelService: ChannelService,
     tagRepository: TagRepository,
-    userServiceNew: UserServiceNew
+    userService: UserServiceNew
 ) {
     install(ContentNegotiation) {
         jackson {
@@ -28,7 +28,7 @@ fun Application.configureRouting(
     }
     install(Authentication) {
         basic("auth-basic") {
-            validate { userEmailValidation(it, userServiceNew) }
+            validate { userEmailValidation(it, userService) }
         }
     }
     routing {
@@ -38,6 +38,6 @@ fun Application.configureRouting(
         eventRoutes(eventRepo)
         channelRoutes(channelService)
         tagRoutes(tagRepository)
-        userRoutes()
+        userRoutes(userService)
     }
 }
