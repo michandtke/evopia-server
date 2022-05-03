@@ -76,7 +76,9 @@ class EventRepositoryNew(
                     set(EventTagTable.tagId, it.id)
                 }
             }
-            onConflict {}
+            onConflict {
+                doNothing()
+            }
         }
     }
 
