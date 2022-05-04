@@ -1,3 +1,9 @@
+buildscript {
+    dependencies {
+        classpath(fileTree("libs/gradle-plugins/kotlin"))
+    }
+}
+
 plugins {
     id 'application'
 //    id 'java'
