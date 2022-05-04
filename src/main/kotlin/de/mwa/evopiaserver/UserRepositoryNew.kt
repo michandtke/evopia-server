@@ -1,8 +1,8 @@
-package de.mwa.evopiaserver.db.kotlin
+package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver
 
 import de.mwa.evopiaserver.api.NoRemoteUserFoundException
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.UpsertUserDto
-import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.DatabaseHelperMethods.orThrow
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.registration.User
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
@@ -45,18 +45,18 @@ class UserRepositoryNew(val database: Database) {
 
     fun save(user: User): Any =
         database.insertAndGenerateKey(UserTable) {
-            set(it.firstName, user.firstName)
-            set(it.lastName, user.lastName)
-            set(it.password, user.password)
-            set(it.email, user.email)
-            set(it.imagePath, user.imagePath)
-            set(it.dateOfRegistration, user.dateOfRegistration)
+            set(UserTable.firstName, user.firstName)
+            set(UserTable.lastName, user.lastName)
+            set(UserTable.password, user.password)
+            set(UserTable.email, user.email)
+            set(UserTable.imagePath, user.imagePath)
+            set(UserTable.dateOfRegistration, user.dateOfRegistration)
         }
 
     fun update(mail: String, upsertUser: UpsertUserDto): Int {
         return database.update(UserTable) {
-            set(it.imagePath, upsertUser.imagePath)
-            where { it.email eq mail }
+            set(UserTable.imagePath, upsertUser.imagePath)
+            where { UserTable.email eq mail }
         }
     }
 }

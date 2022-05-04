@@ -1,6 +1,6 @@
 package de.mwa.evopiaserver
 
-import de.mwa.evopiaserver.db.kotlin.DatabaseUtil
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.DatabaseUtil
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.Config
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.DatabaseConfig
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.WebServer

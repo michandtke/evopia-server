@@ -1,4 +1,4 @@
-package de.mwa.evopiaserver.db.kotlin
+package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver
 
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.EventDto
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.TagDto
@@ -36,7 +36,7 @@ class EventRepositoryNew(
             return database.events
                 .map { toEventDto(it, emptyList()) }
         return database.events
-            .filter { it.id notInList knownEventIds }
+            .filter { EventTable.id notInList knownEventIds }
             .map { toEventDto(it, emptyList()) }
     }
 
@@ -73,7 +73,7 @@ class EventRepositoryNew(
     private fun update(event: EventDto) {
         database.update(EventTable) {
             addColumnsExceptId(event)
-            where { it.id eq event.id }
+            where { EventTable.id eq event.id }
         }
         upsertEventTags(event.id, event.tags)
     }
@@ -93,6 +93,6 @@ class EventRepositoryNew(
     }
 
     fun delete(id: Int) = database.delete(EventTable) {
-        it.id eq id
+        EventTable.id eq id
     }
 }

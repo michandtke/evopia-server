@@ -1,7 +1,7 @@
-package de.mwa.evopiaserver.db.kotlin
+package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver
 
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.ChannelDto
-import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.DatabaseHelperMethods.orThrow
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 
@@ -16,13 +16,13 @@ class ChannelRepository(val database: Database) {
 
     fun saveChannel(channel: ChannelDto): Int {
         return database.insert(ChannelTable) {
-            set(it.name, channel.name)
+            set(ChannelTable.name, channel.name)
         }
     }
 
     fun deleteChannelByName(channelNameToDelete: String): Int {
         return database.delete(ChannelTable) {
-            it.name eq channelNameToDelete
+            ChannelTable.name eq channelNameToDelete
         }
     }
 

@@ -1,4 +1,4 @@
-package de.mwa.evopiaserver.db.kotlin
+package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver
 
 import org.ktorm.database.Database
 import org.ktorm.dsl.from

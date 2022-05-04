@@ -1,7 +1,7 @@
 package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.service
 
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.UserChannel
-import de.mwa.evopiaserver.db.kotlin.UserChannelRepositoryNew
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.UserChannelRepositoryNew
 
 class UserChannelService(private val userChannelRepository: UserChannelRepositoryNew) {
 

@@ -1,7 +1,7 @@
 package de.mwa.evopiaserver.service
 
 import at.favre.lib.crypto.bcrypt.BCrypt
-import de.mwa.evopiaserver.db.kotlin.UserRepositoryNew
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.UserRepositoryNew
 import kotlin.Throws
 import de.mwa.evopiaserver.registration.UserAlreadyExistsException
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.UpsertUserDto

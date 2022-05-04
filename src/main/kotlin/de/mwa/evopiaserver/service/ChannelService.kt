@@ -1,7 +1,7 @@
 package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.service
 
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.ChannelDto
-import de.mwa.evopiaserver.db.kotlin.ChannelRepository
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.ChannelRepository
 import java.util.stream.Collectors
 
 class ChannelService(private val databaseWrapper: ChannelRepository) {

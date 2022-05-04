@@ -1,6 +1,5 @@
 package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver
 
-import de.mwa.evopiaserver.db.kotlin.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import de.mwa.evopiaserver.routes.*

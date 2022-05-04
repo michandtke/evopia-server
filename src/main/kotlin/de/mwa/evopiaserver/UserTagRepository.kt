@@ -1,7 +1,7 @@
-package de.mwa.evopiaserver.db.kotlin
+package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver
 
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.UserTag
-import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.DatabaseHelperMethods.orThrow
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.support.postgresql.insertOrUpdate
@@ -40,15 +40,15 @@ class UserTagRepository(
     private fun deleteUserTags(tagIds: List<Int>, userId: Int): Int {
         if (tagIds.isEmpty()) return 0;
         val deleted = database.delete(UserTagTable) {
-            (it.tagId notInList tagIds) and (it.userId eq userId)
+            (UserTagTable.tagId notInList tagIds) and (UserTagTable.userId eq userId)
         }
         return deleted
     }
 
     private fun insertOrUpdate(userId: Int, tagId: Int): Int {
         return database.insertOrUpdate(UserTagTable) {
-            set(it.tagId, tagId)
-            set(it.userId, userId)
+            set(UserTagTable.tagId, tagId)
+            set(UserTagTable.userId, userId)
             onConflict {
                 doNothing()
             }

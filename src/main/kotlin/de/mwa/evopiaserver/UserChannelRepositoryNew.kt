@@ -1,7 +1,7 @@
-package de.mwa.evopiaserver.db.kotlin
+package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver
 
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.UserChannel
-import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.DatabaseHelperMethods.orThrow
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.support.postgresql.insertOrUpdate
@@ -62,7 +62,7 @@ class UserChannelRepositoryNew(val database: Database, val userRepository: UserR
     private fun delete(toDelete: List<Int>?, userId: Int): Int {
         if (toDelete != null)
             return database.delete(UserChannelTable) {
-                (it.channelId inList toDelete) and (it.userId eq userId)
+                (UserChannelTable.channelId inList toDelete) and (UserChannelTable.userId eq userId)
             }
         return 0
     }
@@ -73,11 +73,11 @@ class UserChannelRepositoryNew(val database: Database, val userRepository: UserR
     ): Int {
         return toInsert.map { idValuePair ->
             database.insertOrUpdate(UserChannelTable) {
-                set(it.channelId, idValuePair.first)
-                set(it.userId, userId)
-                set(it.value, idValuePair.second)
+                set(UserChannelTable.channelId, idValuePair.first)
+                set(UserChannelTable.userId, userId)
+                set(UserChannelTable.value, idValuePair.second)
                 onConflict {
-                    set(it.value, idValuePair.second)
+                    set(UserChannelTable.value, idValuePair.second)
                 }
             }
         }.fold(0) { acc, value ->
