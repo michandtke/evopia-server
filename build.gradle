@@ -22,18 +22,18 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 application {
     mainClass = 'de.mwa.evopiaserver.EvopiaServerApplication'
 }
-//jar {
-//    manifest {
-//        attributes(
+jar {
+    manifest {
+        attributes(
 //                'Class-Path': configurations.collect { it.getName() }.join(' '),
-//                'Main-Class': 'de.mwa.evopiaserver.EvopiaServerApplication'
-//        )
-//        // This line of code recursively collects and copies all of a project's files
-//        // and adds them to the JAR itself. One can extend this task, to skip certain
-//        // files or particular types at will
-////        from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-//    }
-//}
+                'Main-Class': 'de.mwa.evopiaserver.EvopiaServerApplication'
+        )
+        // This line of code recursively collects and copies all of a project's files
+        // and adds them to the JAR itself. One can extend this task, to skip certain
+        // files or particular types at will
+//        from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+}
 
 repositories {
     mavenCentral()
