@@ -1,6 +1,5 @@
 package de.mwa.evopiaserver
 
-import com.sksamuel.hoplite.ConfigException
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.WebServer.start
 import kotlin.jvm.JvmStatic
 import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.ConfigProvider
@@ -13,7 +12,7 @@ object EvopiaServerApplication {
             val config = ConfigProvider().config()
             val database = DatabaseUtil(config).db()
             start(database).start(true)
-        } catch (e: ConfigException) {
+        } catch (e: Exception) {
             println("Could not load config: " + e.message)
         }
     }
