@@ -1,9 +1,3 @@
-buildscript {
-    dependencies {
-        classpath(fileTree("libs/gradle-plugins/kotlin"))
-    }
-}
-
 plugins {
     id 'application'
     id "org.jetbrains.kotlin.jvm" version "1.6.20"
@@ -15,7 +9,6 @@ var kotlinCoroutinesVersion = '1.6.1'
 
 group = 'de.mwa.evopiaserver'
 version = '0.0.1-SNAPSHOT'
-mainClassName = 'de.mwa.evopiaserver.EvopiaServerKt'
 sourceCompatibility = '11'
 var ktor_version = '2.0.0'
 
