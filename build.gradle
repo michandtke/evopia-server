@@ -1,5 +1,5 @@
 plugins {
-    id 'application'
+//    id 'application'
     id 'java'
     id "org.jetbrains.kotlin.jvm" version "1.6.20"
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.10'
@@ -19,8 +19,15 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     }
 }
 
-application {
-    mainClass = 'de.mwa.evopiaserver.EvopiaServerApplication'
+//application {
+//    mainClass = 'de.mwa.evopiaserver.EvopiaServerApplication'
+//}
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'de.mwa.evopiaserver.EvopiaServerApplication'
+        )
+    }
 }
 
 repositories {
