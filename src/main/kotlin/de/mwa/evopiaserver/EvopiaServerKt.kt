@@ -2,9 +2,8 @@ package de.mwa.evopiaserver
 
 import de.mwa.evopiaserver.WebServer.start
 import kotlin.jvm.JvmStatic
-import de.mwa.evopiaserver.DatabaseUtil
 
-object EvopiaServerApplication {
+object EvopiaServerKt {
     @JvmStatic
     fun main(args: Array<String>) {
         try {

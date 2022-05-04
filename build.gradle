@@ -5,6 +5,7 @@ buildscript {
 }
 
 plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'application'
 //    id 'java'
     id "org.jetbrains.kotlin.jvm" version "1.6.20"
@@ -16,7 +17,7 @@ var kotlinCoroutinesVersion = '1.6.1'
 
 group = 'de.mwa.evopiaserver'
 version = '0.0.1-SNAPSHOT'
-mainClassName = 'de.mwa.evopiaserver.EvopiaServerApplication'
+mainClassName = 'de.mwa.evopiaserver.EvopiaServerKt'
 sourceCompatibility = '11'
 var ktor_version = '2.0.0'
 
