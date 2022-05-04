@@ -9,7 +9,6 @@ import de.mwa.evopiaserver.service.UserChannelService
 import de.mwa.evopiaserver.service.UserServiceNew
 import io.ktor.server.application.*
 import org.ktorm.database.Database
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 object WebServer {
     fun start(database: Database): NettyApplicationEngine {
@@ -29,7 +28,7 @@ object WebServer {
         val tagRepository = TagRepository(database)
 
         val userRepository = UserRepositoryNew(database)
-        val userServiceNew = UserServiceNew(userRepository, BCryptPasswordEncoder())
+        val userServiceNew = UserServiceNew(userRepository)
 
         val userChannelRepo = UserChannelRepositoryNew(database, userRepository)
         val userChannelService = UserChannelService(userChannelRepo)

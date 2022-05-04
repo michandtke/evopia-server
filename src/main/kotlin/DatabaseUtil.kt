@@ -5,10 +5,7 @@ import org.ktorm.database.Database
 import org.ktorm.logging.ConsoleLogger
 import org.ktorm.logging.LogLevel
 import org.ktorm.support.postgresql.PostgreSqlDialect
-import org.springframework.context.annotation.Bean
-import org.springframework.stereotype.Component
 
-@Component
 class DatabaseUtil(val config: Config) {
 
     val database by lazy {
@@ -19,7 +16,6 @@ class DatabaseUtil(val config: Config) {
         )
     }
 
-    @Bean
     fun db(): Database {
         return database
     }

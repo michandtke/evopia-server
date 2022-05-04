@@ -8,14 +8,11 @@ import org.ktorm.entity.filter
 import org.ktorm.entity.groupBy
 import org.ktorm.entity.map
 import org.ktorm.entity.sequenceOf
-import org.springframework.stereotype.Component
-
 
 val Database.events get() = this.sequenceOf(EventTable)
 val Database.eventTags get() = this.sequenceOf(EventTagTable)
 val Database.tags get() = this.sequenceOf(TagTable)
 
-@Component
 class EventRepositoryNew(
     val database: Database,
     val tagRepository: TagRepository,

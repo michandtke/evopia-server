@@ -6,9 +6,7 @@ import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
 import de.mwa.evopiaserver.registration.User
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
-import org.springframework.stereotype.Component
 
-@Component
 class UserRepositoryNew(val database: Database) {
     fun findByEmail(mail: String): User? {
         return database

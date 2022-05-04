@@ -5,9 +5,7 @@ import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.support.postgresql.insertOrUpdate
-import org.springframework.stereotype.Component
 
-@Component
 class UserTagRepository(
     val database: Database,
     val userRepository: UserRepositoryNew,

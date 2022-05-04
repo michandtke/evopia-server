@@ -5,9 +5,7 @@ import org.ktorm.dsl.from
 import org.ktorm.dsl.map
 import org.ktorm.dsl.select
 import org.ktorm.support.postgresql.bulkInsertOrUpdate
-import org.springframework.stereotype.Component
 
-@Component
 class EventTagRepository(val database: Database) {
     fun all(): List<EventTagDao> {
         return database.from(EventTagTable)

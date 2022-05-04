@@ -3,9 +3,7 @@ package de.mwa.evopiaserver
 import de.mwa.evopiaserver.db.kotlin.*
 import org.ktorm.dsl.deleteAll
 import org.ktorm.dsl.insert
-import org.springframework.stereotype.Component
 
-@Component
 class RepositoryTestHelper(val databaseUtil: DatabaseUtil) {
     fun resetUserTable() {
         databaseUtil.database.deleteAll(UserTable)

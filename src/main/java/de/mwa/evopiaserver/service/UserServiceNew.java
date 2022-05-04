@@ -1,21 +1,16 @@
 package de.mwa.evopiaserver.service;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import de.mwa.evopiaserver.api.dto.UpsertUserDto;
 import de.mwa.evopiaserver.db.kotlin.UserRepositoryNew;
 import de.mwa.evopiaserver.registration.User;
 import de.mwa.evopiaserver.registration.UserAlreadyExistsException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
-@Service
 public class UserServiceNew {
     private final UserRepositoryNew userRepository;
-    private final PasswordEncoder passwordEncoder;
 
-
-    public UserServiceNew(UserRepositoryNew userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceNew(UserRepositoryNew userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     public User registerNewUserAccount(User user) throws UserAlreadyExistsException {
@@ -23,7 +18,8 @@ public class UserServiceNew {
             throw new UserAlreadyExistsException("There is an account with that email address: "
                     + user.getEmail());
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        var encrypted = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
+        user.setPassword(encrypted);
 
         userRepository.save(user);
 

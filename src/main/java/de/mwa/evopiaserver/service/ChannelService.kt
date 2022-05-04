@@ -2,10 +2,8 @@ package de.mwa.evopiaserver.service
 
 import de.mwa.evopiaserver.api.dto.ChannelDto
 import de.mwa.evopiaserver.db.kotlin.ChannelRepository
-import org.springframework.stereotype.Service
 import java.util.stream.Collectors
 
-@Service
 class ChannelService(private val databaseWrapper: ChannelRepository) {
     fun findAll(): List<ChannelDto> {
         val channels = databaseWrapper.findAllChannels()

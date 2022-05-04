@@ -4,9 +4,7 @@ import de.mwa.evopiaserver.api.dto.ChannelDto
 import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
-import org.springframework.stereotype.Component
 
-@Component
 class ChannelRepository(val database: Database) {
 
     fun findAllChannels(): List<ChannelDto> {

@@ -4,9 +4,7 @@ import de.mwa.evopiaserver.api.dto.TagDto
 import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
-import org.springframework.stereotype.Component
 
-@Component
 class TagRepository(val database: Database) {
     fun findAll(): List<TagDto> {
         val entries = database.from(TagTable).select()
