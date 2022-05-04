@@ -46,19 +46,6 @@ repositories {
     mavenCentral()
 }
 
-//task uberJar(type: Jar) {
-//    archiveClassifier = 'uber'
-//
-//    from sourceSets.main.output
-//
-//    dependsOn configurations.runtimeClasspath
-//    from {
-//        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
-//    }
-//}
-
-
-
 configurations.all {
     resolutionStrategy {
         force "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
@@ -123,6 +110,48 @@ jar {
     }
 
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+//tasks {
+//    var fatJar = register<Jar>("fatJar") {
+//        dependsOn.addAll(listOf("compileJava", "compileKotlin", "processResources")) // We need this for Gradle optimization to work
+//        archiveClassifier.set("standalone") // Naming the jar
+//        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//        manifest {
+//            attributes(
+//                    'Main-Class': mainClassName
+//            )
+//        } // Provided we set it up in the application plugin configuration
+//        var sourcesMain = sourceSets.main.get()
+//        var contents = configurations.runtimeClasspath.get()
+//                .map { if (it.isDirectory) it else zipTree(it) } +
+//                sourcesMain.output
+//        from(contents)
+//    }
+//    build {
+//        dependsOn(fatJar) // Trigger fat jar creation during build
+//    }
+//}
+
+task uberJar(type: Jar, dependsOn: ["compileJava", "compileKotlin", "processResources"]) {
+    archiveClassifier = 'uber'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from sourceSets.main.output
+
+    manifest {
+        attributes(
+                'Main-Class': mainClassName
+        )
+    }
+
+    dependsOn configurations.runtimeClasspath
+    from {
+//        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+        configurations.runtimeClasspath.get()
+                .map { if (it.isDirectory) it else zipTree(it) } +
+                sourcesMain.output
+    }
 }
 
 test {
