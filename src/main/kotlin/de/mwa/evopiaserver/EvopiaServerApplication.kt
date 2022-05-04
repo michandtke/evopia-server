@@ -1,18 +1,20 @@
-package de.mwa.evopiaserver;
+package de.mwa.evopiaserver
 
-import com.sksamuel.hoplite.ConfigException;
-import de.mwa.evopiaserver.db.kotlin.DatabaseUtil;
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.ConfigProvider;
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.WebServer;
+import com.sksamuel.hoplite.ConfigException
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.WebServer.start
+import kotlin.jvm.JvmStatic
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.ConfigProvider
+import de.mwa.evopiaserver.db.kotlin.DatabaseUtil
 
-public class EvopiaServerApplication {
-    public static void main(String[] args) {
+object EvopiaServerApplication {
+    @JvmStatic
+    fun main(args: Array<String>) {
         try {
-            var config = new ConfigProvider().config();
-            var database = new DatabaseUtil(config).db();
-            WebServer.INSTANCE.start(database).start(true);
-        } catch (ConfigException e) {
-            System.out.println("Could not load config: " + e.getMessage());
+            val config = ConfigProvider().config()
+            val database = DatabaseUtil(config).db()
+            start(database).start(true)
+        } catch (e: ConfigException) {
+            println("Could not load config: " + e.message)
         }
     }
 }

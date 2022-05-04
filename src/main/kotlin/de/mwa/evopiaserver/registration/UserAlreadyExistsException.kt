@@ -1,7 +1,5 @@
-package de.mwa.evopiaserver.registration;
+package de.mwa.evopiaserver.registration
 
-public class UserAlreadyExistsException extends RuntimeException {
-    public UserAlreadyExistsException(String message) {
-        super(message);
-    }
-}
+import java.lang.RuntimeException
+
+class UserAlreadyExistsException(message: String?) : RuntimeException(message)

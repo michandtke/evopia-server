@@ -1,7 +1,5 @@
-package de.mwa.evopiaserver.api;
+package de.mwa.evopiaserver.api
 
-public class UnknownChannelException  extends RuntimeException {
-    public UnknownChannelException(String message) {
-        super(message);
-    }
-}
+import java.lang.RuntimeException
+
+class UnknownChannelException(message: String?) : RuntimeException(message)

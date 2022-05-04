@@ -1,36 +1,32 @@
-package de.mwa.evopiaserver.service;
+package de.mwa.evopiaserver.service
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.UpsertUserDto;
-import de.mwa.evopiaserver.db.kotlin.UserRepositoryNew;
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.registration.User;
-import de.mwa.evopiaserver.registration.UserAlreadyExistsException;
+import at.favre.lib.crypto.bcrypt.BCrypt
+import de.mwa.evopiaserver.db.kotlin.UserRepositoryNew
+import kotlin.Throws
+import de.mwa.evopiaserver.registration.UserAlreadyExistsException
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.UpsertUserDto
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.registration.User
 
-public class UserServiceNew {
-    private final UserRepositoryNew userRepository;
-
-    public UserServiceNew(UserRepositoryNew userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public User registerNewUserAccount(User user) throws UserAlreadyExistsException {
-        if (userRepository.emailAlreadyExists(user.getEmail())) {
-            throw new UserAlreadyExistsException("There is an account with that email address: "
-                    + user.getEmail());
+class UserServiceNew(private val userRepository: UserRepositoryNew) {
+    @Throws(UserAlreadyExistsException::class)
+    fun registerNewUserAccount(user: User): User {
+        if (userRepository.emailAlreadyExists(user.email)) {
+            throw UserAlreadyExistsException(
+                "There is an account with that email address: "
+                        + user.email
+            )
         }
-        var encrypted = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
-        user.setPassword(encrypted);
-
-        userRepository.save(user);
-
-        return user;
+        val encrypted = BCrypt.withDefaults().hashToString(12, user.password.toCharArray())
+        user.password = encrypted
+        userRepository.save(user)
+        return user
     }
 
-    public User find(String mail) {
-        return userRepository.findByEmail(mail);
+    fun find(mail: String?): User? {
+        return userRepository.findByEmail(mail!!)
     }
 
-    public int update(UpsertUserDto upsertUser, String mail) {
-        return userRepository.update(mail, upsertUser);
+    fun update(upsertUser: UpsertUserDto?, mail: String?): Int {
+        return userRepository.update(mail!!, upsertUser!!)
     }
 }

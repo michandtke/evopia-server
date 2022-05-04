@@ -1,7 +1,5 @@
-package de.mwa.evopiaserver.api;
+package de.mwa.evopiaserver.api
 
-public class NoRemoteUserFoundException extends RuntimeException {
-    public NoRemoteUserFoundException(String message) {
-        super(message);
-    }
-}
+import java.lang.RuntimeException
+
+class NoRemoteUserFoundException(message: String?) : RuntimeException(message)

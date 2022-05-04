@@ -24,7 +24,7 @@ fun Route.userRoutes(userService: UserServiceNew) {
         }
         get("/v3/user") {
             val name = call.userName() ?: throw NoRemoteUserFoundException("Too bad, no remote user found!")
-            val user = userService.find(name)
+            val user = userService.find(name) ?: throw NoRemoteUserFoundException("Too bad, no remote user found!")
             call.respond(user)
         }
         post("/v3/user") {
