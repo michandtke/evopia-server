@@ -36,6 +36,17 @@ jar {
     }
 }
 
+task uberJar(type: Jar) {
+    archiveClassifier = 'uber'
+
+    from sourceSets.main.output
+
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+}
+
 repositories {
     mavenCentral()
 }
@@ -99,7 +110,7 @@ test {
     useJUnitPlatform()
 }
 
-task stage(dependsOn: ['build', 'clean'])
+task stage(dependsOn: ['build', 'clean', 'uberJar'])
 build.mustRunAfter clean
 gradle.taskGraph.whenReady { graph ->
     if (graph.hasTask(stage)) {
