@@ -1,7 +1,7 @@
-package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.routes
+package de.mwa.evopiaserver.routes
 
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.TagDto
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.TagRepository
+import de.mwa.evopiaserver.dto.TagDto
+import de.mwa.evopiaserver.TagRepository
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*

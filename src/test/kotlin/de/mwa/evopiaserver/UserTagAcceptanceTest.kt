@@ -1,6 +1,6 @@
 package de.mwa.evopiaserver
 
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.UserTag
+import de.mwa.evopiaserver.dto.UserTag
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*

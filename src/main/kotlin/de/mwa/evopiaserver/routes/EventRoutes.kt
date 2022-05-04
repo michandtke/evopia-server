@@ -1,7 +1,7 @@
-package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.routes
+package de.mwa.evopiaserver.routes
 
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.EventDto
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.EventRepositoryNew
+import de.mwa.evopiaserver.dto.EventDto
+import de.mwa.evopiaserver.EventRepositoryNew
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*

@@ -2,12 +2,12 @@ package de.mwa.evopiaserver.routes
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.EventRepositoryNew
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.TagRepository
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.UserTagRepository
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.routes.*
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.service.ChannelService
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.service.UserChannelService
+import de.mwa.evopiaserver.EventRepositoryNew
+import de.mwa.evopiaserver.TagRepository
+import de.mwa.evopiaserver.UserTagRepository
+import de.mwa.evopiaserver.routes.*
+import de.mwa.evopiaserver.service.ChannelService
+import de.mwa.evopiaserver.service.UserChannelService
 import de.mwa.evopiaserver.service.UserServiceNew
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*

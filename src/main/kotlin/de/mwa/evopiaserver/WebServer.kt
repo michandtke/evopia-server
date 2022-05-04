@@ -1,10 +1,11 @@
-package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver
+package de.mwa.evopiaserver
 
+import de.mwa.evopiaserver.ChannelRepository
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import de.mwa.evopiaserver.routes.*
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.service.ChannelService
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.service.UserChannelService
+import de.mwa.evopiaserver.service.ChannelService
+import de.mwa.evopiaserver.service.UserChannelService
 import de.mwa.evopiaserver.service.UserServiceNew
 import io.ktor.server.application.*
 import org.ktorm.database.Database

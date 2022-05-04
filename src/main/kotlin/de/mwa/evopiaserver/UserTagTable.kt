@@ -1,4 +1,4 @@
-package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver
+package de.mwa.evopiaserver
 
 import org.ktorm.schema.Table
 import org.ktorm.schema.int

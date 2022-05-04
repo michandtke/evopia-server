@@ -1,9 +1,9 @@
-package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.routes
+package de.mwa.evopiaserver.routes
 
 import de.mwa.evopiaserver.api.NoRemoteUserFoundException
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.UserChannel
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.service.ChannelService
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.service.UserChannelService
+import de.mwa.evopiaserver.dto.UserChannel
+import de.mwa.evopiaserver.service.ChannelService
+import de.mwa.evopiaserver.service.UserChannelService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*

@@ -1,7 +1,7 @@
-package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver
+package de.mwa.evopiaserver
 
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.ChannelDto
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.DatabaseHelperMethods.orThrow
+import de.mwa.evopiaserver.dto.ChannelDto
+import de.mwa.evopiaserver.DatabaseHelperMethods.orThrow
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 

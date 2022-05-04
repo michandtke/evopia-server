@@ -1,4 +1,4 @@
-package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.routes
+package de.mwa.evopiaserver.routes
 
 import de.mwa.evopiaserver.service.UserServiceNew
 import io.ktor.server.auth.*

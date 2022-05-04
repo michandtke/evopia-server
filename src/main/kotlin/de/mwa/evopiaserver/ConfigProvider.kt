@@ -1,4 +1,4 @@
-package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver
+package de.mwa.evopiaserver
 
 import com.sksamuel.hoplite.ConfigLoader
 

@@ -1,6 +1,6 @@
-package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver
+package de.mwa.evopiaserver
 
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.Config
+import de.mwa.evopiaserver.Config
 import org.ktorm.database.Database
 import org.ktorm.logging.ConsoleLogger
 import org.ktorm.logging.LogLevel

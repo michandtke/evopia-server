@@ -1,3 +1,3 @@
-package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver
+package de.mwa.evopiaserver
 
 data class DatabaseConfig(val url: String)

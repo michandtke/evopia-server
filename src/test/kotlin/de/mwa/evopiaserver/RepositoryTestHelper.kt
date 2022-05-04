@@ -1,6 +1,6 @@
 package de.mwa.evopiaserver
 
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.*
+import de.mwa.evopiaserver.*
 import org.ktorm.dsl.deleteAll
 import org.ktorm.dsl.insert
 

@@ -1,9 +1,8 @@
 package de.mwa.evopiaserver
 
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.DatabaseUtil
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.Config
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.DatabaseConfig
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.WebServer
+import de.mwa.evopiaserver.DatabaseUtil
+import de.mwa.evopiaserver.DatabaseConfig
+import de.mwa.evopiaserver.WebServer
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.auth.*

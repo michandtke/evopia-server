@@ -1,8 +1,8 @@
-package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.routes
+package de.mwa.evopiaserver.routes
 
 import de.mwa.evopiaserver.api.NoRemoteUserFoundException
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.UserTag
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.UserTagRepository
+import de.mwa.evopiaserver.dto.UserTag
+import de.mwa.evopiaserver.UserTagRepository
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*

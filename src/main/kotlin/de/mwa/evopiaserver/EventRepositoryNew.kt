@@ -1,7 +1,7 @@
-package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver
+package de.mwa.evopiaserver
 
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.EventDto
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.TagDto
+import de.mwa.evopiaserver.dto.EventDto
+import de.mwa.evopiaserver.dto.TagDto
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.entity.filter

@@ -1,7 +1,8 @@
-package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver
+package de.mwa.evopiaserver
 
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.UserChannel
-import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.DatabaseHelperMethods.orThrow
+import de.mwa.evopiaserver.ChannelTable
+import de.mwa.evopiaserver.dto.UserChannel
+import de.mwa.evopiaserver.DatabaseHelperMethods.orThrow
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.support.postgresql.insertOrUpdate
