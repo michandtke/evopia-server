@@ -10,6 +10,7 @@ var kotlinCoroutinesVersion = '1.6.1'
 
 group = 'de.mwa.evopiaserver'
 version = '0.0.1-SNAPSHOT'
+mainClassName = 'de.mwa.evopiaserver.EvopiaServerApplication'
 sourceCompatibility = '11'
 var ktor_version = '2.0.0'
 
@@ -20,13 +21,13 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 }
 
 application {
-    mainClass = 'de.mwa.evopiaserver.EvopiaServerApplication'
+    mainClass = mainClassName
 }
 jar {
     manifest {
         attributes(
 //                'Class-Path': configurations.collect { it.getName() }.join(' '),
-                'Main-Class': 'de.mwa.evopiaserver.EvopiaServerApplication'
+                'Main-Class': mainClassName
         )
         // This line of code recursively collects and copies all of a project's files
         // and adds them to the JAR itself. One can extend this task, to skip certain
