@@ -2,7 +2,6 @@ package de.mwa.evopiaserver.db.kotlin
 
 import de.mwa.evopiaserver.api.dto.TagDto
 import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
-import de.mwa.evopiaserver.db.tag.Tag
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.springframework.stereotype.Component
@@ -22,12 +21,6 @@ class TagRepository(val database: Database) {
                 .select()
                 .where { (TagTable.name inList tagNames) }
                 .map { TagTable.createEntity(it) }
-    }
-
-    fun save(tag: Tag): Int {
-        return database.insert(TagTable) {
-            set(it.name, tag.name)
-        }
     }
 
     fun saveAll(tags: List<TagDto>): List<Int> {
