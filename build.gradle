@@ -30,7 +30,7 @@ jar {
         // This line of code recursively collects and copies all of a project's files
         // and adds them to the JAR itself. One can extend this task, to skip certain
         // files or particular types at will
-        from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+//        from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     }
 }
 
@@ -48,6 +48,10 @@ configurations.all {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.20'
+
+
     implementation "org.ktorm:ktorm-core:3.4.1"
     implementation "org.ktorm:ktorm-support-postgresql:3.4.1"
 
