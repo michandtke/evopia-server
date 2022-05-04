@@ -112,7 +112,7 @@ class EventsAcceptanceTest : ServerTestSetup() {
     }
 
     @Test
-    fun should_update_added_event() = runTest {
+    fun should_only_update_one_event() = runTest {
         val body = "{" +
                 "\"name\": \"nameIt\"," +
                 "\"description\": \"desc\"," +
@@ -124,8 +124,28 @@ class EventsAcceptanceTest : ServerTestSetup() {
                 "}"
 
         addEvent(body)
+        addEvent(body)
 
         val events = getAllEvents()
+
+        val newPlace = "Heeresbaeckerei"
+        val changedPlaceBody = "{" +
+                "\"id\": ${events.first().id}" +
+                "\"name\": \"nameIt\"," +
+                "\"description\": \"desc\"," +
+                "\"from\": \"2022-02-27T18:00:00.000\"," +
+                "\"to\": \"2022-02-27T19:00:00.000\"," +
+                "\"place\": \"$newPlace\"," +
+                "\"imagePath\": \"img/path.jpg\"," +
+                "\"tags\":[]" +
+                "}"
+
+        addEvent(changedPlaceBody)
+
+        val eventsAfterChange = getAllEvents()
+        val places = eventsAfterChange.map { it.place }
+        assertThat(places).containsExactlyInAnyOrder("Berlin", newPlace)
+        assertThat(eventsAfterChange.size).isEqualTo(events.size)
     }
 
     private suspend fun getAllEvents(): List<EventDto> {
