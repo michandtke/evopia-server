@@ -5,12 +5,12 @@ buildscript {
 }
 
 plugins {
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+
     id 'application'
 //    id 'java'
     id "org.jetbrains.kotlin.jvm" version "1.6.20"
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.10'
-
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 var kotlinCoroutinesVersion = '1.6.1'
@@ -28,7 +28,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 }
 
 application {
-    mainClass = mainClassName
+    mainClass = 'de.mwa.evopiaserver.EvopiaServerKt'
 }
 //jar {
 //    manifest {
@@ -102,16 +102,16 @@ dependencies {
 
 }
 
-jar {
-    manifest {
-        attributes(
-                'Class-Path': configurations.runtimeClasspath.collect { it.getName() }.join(' '),
-                'Main-Class': mainClassName
-        )
-    }
-
-    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-}
+//jar {
+//    manifest {
+//        attributes(
+//                'Class-Path': configurations.runtimeClasspath.collect { it.getName() }.join(' '),
+//                'Main-Class': mainClassName
+//        )
+//    }
+//
+//    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+//}
 
 //tasks {
 //    var fatJar = register<Jar>("fatJar") {
@@ -134,32 +134,32 @@ jar {
 //    }
 //}
 
-task uberJar(type: Jar, dependsOn: ["compileJava", "compileKotlin", "processResources"]) {
-    archiveClassifier = 'uber'
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-    from sourceSets.main.output
-
-    manifest {
-        attributes(
-                'Main-Class': mainClassName
-        )
-    }
-
-    dependsOn configurations.runtimeClasspath
-    from {
-//        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
-        configurations.runtimeClasspath.get()
-                .map { if (it.isDirectory) it else zipTree(it) } +
-                sourcesMain.output
-    }
-}
+//task uberJar(type: Jar, dependsOn: ["compileJava", "compileKotlin", "processResources"]) {
+//    archiveClassifier = 'uber'
+//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//
+//    from sourceSets.main.output
+//
+//    manifest {
+//        attributes(
+//                'Main-Class': mainClassName
+//        )
+//    }
+//
+//    dependsOn configurations.runtimeClasspath
+//    from {
+////        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+//        configurations.runtimeClasspath.get()
+//                .map { if (it.isDirectory) it else zipTree(it) } +
+//                sourcesMain.output
+//    }
+//}
 
 test {
     useJUnitPlatform()
 }
 
-task stage(dependsOn: ['build', 'clean'])
+task stage(dependsOn: ['shadowJar', 'clean'])
 build.mustRunAfter clean
 gradle.taskGraph.whenReady { graph ->
     if (graph.hasTask(stage)) {
