@@ -79,3 +79,8 @@ test {
 
 task stage(dependsOn: ['build -x test', 'clean'])
 build.mustRunAfter clean
+gradle.taskGraph.whenReady { graph ->
+    if (graph.hasTask(stage)) {
+        test.enabled = false
+    }
+}
