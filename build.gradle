@@ -25,6 +25,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 jar {
     manifest {
         attributes(
+                'Class-Path': configurations.collect { it.getName() }.join(' '),
                 'Main-Class': 'de.mwa.evopiaserver.EvopiaServerApplication'
         )
         // This line of code recursively collects and copies all of a project's files
