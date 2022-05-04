@@ -5,9 +5,7 @@ buildscript {
 }
 
 plugins {
-
     id 'application'
-//    id 'java'
     id "org.jetbrains.kotlin.jvm" version "1.6.20"
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.10'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
@@ -30,18 +28,6 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 application {
     mainClass = 'de.mwa.evopiaserver.EvopiaServerKt'
 }
-//jar {
-//    manifest {
-//        attributes(
-////                'Class-Path': configurations.collect { it.getName() }.join(' '),
-//                'Main-Class': mainClassName
-//        )
-//        // This line of code recursively collects and copies all of a project's files
-//        // and adds them to the JAR itself. One can extend this task, to skip certain
-//        // files or particular types at will
-////        from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-//    }
-//}
 
 repositories {
     mavenCentral()
@@ -102,65 +88,12 @@ dependencies {
 
 }
 
-//jar {
-//    manifest {
-//        attributes(
-//                'Class-Path': configurations.runtimeClasspath.collect { it.getName() }.join(' '),
-//                'Main-Class': mainClassName
-//        )
-//    }
-//
-//    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-//}
-
-//tasks {
-//    var fatJar = register<Jar>("fatJar") {
-//        dependsOn.addAll(listOf("compileJava", "compileKotlin", "processResources")) // We need this for Gradle optimization to work
-//        archiveClassifier.set("standalone") // Naming the jar
-//        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-//        manifest {
-//            attributes(
-//                    'Main-Class': mainClassName
-//            )
-//        } // Provided we set it up in the application plugin configuration
-//        var sourcesMain = sourceSets.main.get()
-//        var contents = configurations.runtimeClasspath.get()
-//                .map { if (it.isDirectory) it else zipTree(it) } +
-//                sourcesMain.output
-//        from(contents)
-//    }
-//    build {
-//        dependsOn(fatJar) // Trigger fat jar creation during build
-//    }
-//}
-
-//task uberJar(type: Jar, dependsOn: ["compileJava", "compileKotlin", "processResources"]) {
-//    archiveClassifier = 'uber'
-//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-//
-//    from sourceSets.main.output
-//
-//    manifest {
-//        attributes(
-//                'Main-Class': mainClassName
-//        )
-//    }
-//
-//    dependsOn configurations.runtimeClasspath
-//    from {
-////        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
-//        configurations.runtimeClasspath.get()
-//                .map { if (it.isDirectory) it else zipTree(it) } +
-//                sourcesMain.output
-//    }
-//}
-
 test {
     useJUnitPlatform()
 }
 
 task stage(dependsOn: ['shadowJar', 'clean'])
-build.mustRunAfter clean
+shadowJar.mustRunAfter clean
 gradle.taskGraph.whenReady { graph ->
     if (graph.hasTask(stage)) {
         test.enabled = false
