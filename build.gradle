@@ -77,7 +77,7 @@ test {
     useJUnitPlatform()
 }
 
-task stage(dependsOn: ['build -x test', 'clean'])
+task stage(dependsOn: ['build', 'clean'])
 build.mustRunAfter clean
 gradle.taskGraph.whenReady { graph ->
     if (graph.hasTask(stage)) {
