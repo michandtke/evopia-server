@@ -1,6 +1,6 @@
 package de.mwa.evopiaserver
 
-import de.mwa.evopiaserver.api.dto.UserChannel
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.UserChannel
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*

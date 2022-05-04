@@ -1,7 +1,7 @@
 package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.routes
 
-import de.mwa.evopiaserver.api.dto.ChannelDto
-import de.mwa.evopiaserver.service.ChannelService
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.ChannelDto
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.service.ChannelService
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*

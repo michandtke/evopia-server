@@ -1,6 +1,6 @@
 package de.mwa.evopiaserver.db.kotlin
 
-import de.mwa.evopiaserver.api.dto.TagDto
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.TagDto
 import de.mwa.evopiaserver.db.kotlin.DatabaseHelperMethods.orThrow
 import org.ktorm.database.Database
 import org.ktorm.dsl.*

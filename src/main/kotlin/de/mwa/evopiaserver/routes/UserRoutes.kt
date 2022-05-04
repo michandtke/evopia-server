@@ -1,9 +1,8 @@
 package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.routes
 
 import de.mwa.evopiaserver.api.NoRemoteUserFoundException
-import de.mwa.evopiaserver.api.dto.TagDto
-import de.mwa.evopiaserver.api.dto.UpsertUserDto
-import de.mwa.evopiaserver.registration.User
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto.UpsertUserDto
+import de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.registration.User
 import de.mwa.evopiaserver.service.UserServiceNew
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -24,12 +23,12 @@ fun Route.userRoutes(userService: UserServiceNew) {
             call.respondText("Hello, ${call.userName()}!")
         }
         get("/v3/user") {
-            val name = call.userName() ?: throw NoRemoteUserFoundException ("Too bad, no remote user found!")
+            val name = call.userName() ?: throw NoRemoteUserFoundException("Too bad, no remote user found!")
             val user = userService.find(name)
             call.respond(user)
         }
         post("/v3/user") {
-            val name = call.userName() ?: throw NoRemoteUserFoundException ("Too bad, no remote user found!")
+            val name = call.userName() ?: throw NoRemoteUserFoundException("Too bad, no remote user found!")
             val userString = call.receive<String>()
             val userDto = Json.decodeFromString<UpsertUserDto>(userString)
             val updatedCount = userService.update(userDto, name)

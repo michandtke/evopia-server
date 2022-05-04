@@ -1,4 +1,4 @@
-package de.mwa.evopiaserver.api.dto
+package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.dto
 
 import kotlinx.serialization.Serializable
 

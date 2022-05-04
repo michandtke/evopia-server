@@ -1,4 +1,4 @@
-package de.mwa.evopiaserver.registration;
+package de.mwa.evopiaserver.db.kotlin.de.mwa.evopiaserver.registration;
 
 import kotlinx.serialization.Serializable
 
