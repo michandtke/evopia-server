@@ -8,7 +8,6 @@ import org.ktorm.entity.filter
 import org.ktorm.entity.groupBy
 import org.ktorm.entity.map
 import org.ktorm.entity.sequenceOf
-import org.ktorm.support.postgresql.bulkInsertOrUpdate
 import org.springframework.stereotype.Component
 
 
@@ -60,35 +59,18 @@ class EventRepositoryNew(
 
 
     fun upsert(event: EventDto) {
-        upsertTagRelations(event.id, event.tags)
         if (event.id != -1) {
             return update(event)
         }
         return insert(event)
     }
 
-    private fun upsertTagRelations(eventId: Int, tags: List<TagDto>) {
-        val daos = tagRepository.findByNameIn(tags.map { it.name })
-        database.bulkInsertOrUpdate(EventTagTable) {
-            daos.map {
-                item {
-                    set(EventTagTable.eventId, eventId)
-                    set(EventTagTable.tagId, it.id)
-                }
-            }
-            onConflict {
-                doNothing()
-            }
-        }
-    }
-
-    private fun insert(eventDto: EventDto) {
+    private fun insert(event: EventDto) {
         val eventKey: Any = database.insertAndGenerateKey(EventTable) {
-            addColumnsExceptId(eventDto)
+            addColumnsExceptId(event)
         }
 
-        val saveAll = tagRepository.saveAll(eventDto.tags)
-        eventTagRepository.insert(eventKey.toString().toInt(), saveAll)
+        upsertEventTags(eventKey.toString().toInt(), event.tags)
     }
 
     private fun update(event: EventDto) {
@@ -96,6 +78,12 @@ class EventRepositoryNew(
             addColumnsExceptId(event)
             where { it.id eq event.id }
         }
+        upsertEventTags(event.id, event.tags)
+    }
+
+    private fun upsertEventTags(eventId: Int, tags: List<TagDto>) {
+        val saveAll = tagRepository.saveAll(tags)
+        eventTagRepository.insert(eventId, saveAll)
     }
 
     private fun AssignmentsBuilder.addColumnsExceptId(event: EventDto) {

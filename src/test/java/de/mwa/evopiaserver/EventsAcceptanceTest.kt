@@ -1,4 +1,4 @@
-package de.mwa.evopiaserver;
+package de.mwa.evopiaserver
 
 
 import de.mwa.evopiaserver.api.dto.EventDto
@@ -33,8 +33,8 @@ class EventsAcceptanceTest : ServerTestSetup() {
         val body = "{" +
                 "\"name\": \"nameIt\"," +
                 "\"description\": \"desc\"," +
-                "\"date\": \"2020\"," +
-                "\"time\": \"18:00\"," +
+                "\"from\": \"2022-02-27T18:00:00.000\"," +
+                "\"to\": \"2022-02-27T19:00:00.000\"," +
                 "\"place\": \"Berlin\"," +
                 "\"imagePath\": \"img/path.jpg\"," +
                 "\"tags\":[]" +
@@ -46,10 +46,10 @@ class EventsAcceptanceTest : ServerTestSetup() {
 
         assertThat(events).hasSize(1)
         val event: EventDto = events[0]
-        assertThat(event.from).isEqualTo("2020")
+        assertThat(event.from).isEqualTo("2022-02-27T18:00:00.000")
         assertThat(event.name).isEqualTo("nameIt")
         assertThat(event.description).isEqualTo("desc")
-        assertThat(event.to).isEqualTo("18:00")
+        assertThat(event.to).isEqualTo("2022-02-27T19:00:00.000")
         assertThat(event.place).isEqualTo("Berlin")
         assertThat(event.imagePath).isEqualTo("img/path.jpg")
         assertThat(event.tags).isEmpty()
@@ -57,6 +57,9 @@ class EventsAcceptanceTest : ServerTestSetup() {
 
     @Test
     fun should_add_event_with_tag_and_get_it() = testApplication {
+        repositoryTestHelper.addTag("ExistingTag1")
+        repositoryTestHelper.addTag("ExistingTag2")
+
         val body = "{" +
                 "\"id\":-1," +
                 "\"name\":\"5 - Beachen\"," +
@@ -66,22 +69,22 @@ class EventsAcceptanceTest : ServerTestSetup() {
                 "\"place\":\"Beachmitte\"," +
                 "\"imagePath\":\"assets/icons/ball-volleyball.svg\"," +
                 "\"tags\":[" +
-                "{\"name\":\"myTag\"}," +
-                "{\"name\":\"mySecondTag\"}" +
+                "{\"name\":\"ExistingTag1\"}," +
+                "{\"name\":\"ExistingTag2\"}" +
                 "]}"
-        addEvent(body);
+        addEvent(body)
 
         val events = getAllEvents()
 
         assertThat(events).hasSize(1)
         val event: EventDto = events[0]
-        assertThat(event.from).isEqualTo("2022-02-27T18:00:00.000");
-        assertThat(event.name).isEqualTo("5 - Beachen");
-        assertThat(event.description).isEqualTo("Beachen");
-        assertThat(event.to).isEqualTo("2022-02-27T19:00:00.000");
-        assertThat(event.place).isEqualTo("Beachmitte");
-        assertThat(event.imagePath).isEqualTo("assets/icons/ball-volleyball.svg");
-        assertThat(event.tags).containsOnly(TagDto("myTag"), TagDto("mySecondTag"));
+        assertThat(event.from).isEqualTo("2022-02-27T18:00:00.000")
+        assertThat(event.name).isEqualTo("5 - Beachen")
+        assertThat(event.description).isEqualTo("Beachen")
+        assertThat(event.to).isEqualTo("2022-02-27T19:00:00.000")
+        assertThat(event.place).isEqualTo("Beachmitte")
+        assertThat(event.imagePath).isEqualTo("assets/icons/ball-volleyball.svg")
+        assertThat(event.tags).containsOnly(TagDto("ExistingTag1"), TagDto("ExistingTag2"))
     }
 
     @Test
@@ -89,13 +92,13 @@ class EventsAcceptanceTest : ServerTestSetup() {
         val body = "{" +
                 "\"name\": \"nameIt\"," +
                 "\"description\": \"desc\"," +
-                "\"date\": \"2020\"," +
-                "\"time\": \"18:00\"," +
+                "\"from\": \"2022-02-27T18:00:00.000\"," +
+                "\"to\": \"2022-02-27T19:00:00.000\"," +
                 "\"place\": \"Berlin\"," +
                 "\"imagePath\": \"img/path.jpg\"," +
                 "\"tags\":[]" +
-                "}";
-        addEvent(body);
+                "}"
+        addEvent(body)
 
         val eventBefore = getAllEvents()
         assertThat(eventBefore).hasSize(1)
@@ -108,6 +111,23 @@ class EventsAcceptanceTest : ServerTestSetup() {
 
     }
 
+    @Test
+    fun should_update_added_event() = runTest {
+        val body = "{" +
+                "\"name\": \"nameIt\"," +
+                "\"description\": \"desc\"," +
+                "\"from\": \"2022-02-27T18:00:00.000\"," +
+                "\"to\": \"2022-02-27T19:00:00.000\"," +
+                "\"place\": \"Berlin\"," +
+                "\"imagePath\": \"img/path.jpg\"," +
+                "\"tags\":[]" +
+                "}"
+
+        addEvent(body)
+
+        val events = getAllEvents()
+    }
+
     private suspend fun getAllEvents(): List<EventDto> {
         val url = "http://localhost:8080/v3/events"
 
@@ -115,7 +135,7 @@ class EventsAcceptanceTest : ServerTestSetup() {
         val askResponse = client.request(url)
 
         assertThat(askResponse.status)
-            .isEqualTo(HttpStatusCode.OK);
+            .isEqualTo(HttpStatusCode.OK)
 
         client.close()
 
